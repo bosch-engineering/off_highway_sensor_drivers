@@ -1,0 +1,14 @@
+# Frequency of watchdog to check if a radar input message was received
+watchdog_frequency: 10.0
+# Allowed age of radar input message to not filter it out
+allowed_age: 0.2
+# Timeout period. Sender goes into timeout error if for the specified period no radar input message
+# was received.
+timeout: 0.2
+
+# TF frame id for all published messages
+node_frame_id: base_link
+# CAN frame id of ego velocity message
+ego_velocity_id: 0x50
+# CAN frame id of yaw rate message
+yaw_rate_id: 0x174

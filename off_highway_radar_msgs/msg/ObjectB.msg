@@ -1,0 +1,9 @@
+uint32 can_id
+time stamp
+uint8 id
+float64 time_since_meas
+uint8 zone
+float64 rcs
+bool moving
+bool near
+float64 exist_probability

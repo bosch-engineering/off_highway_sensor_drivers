@@ -1,0 +1,24 @@
+# Frequency of watchdog to check if a sensor message was received
+watchdog_frequency: 10.0
+# Allowed age corresponding to output cycle time of sensor plus safety margin
+allowed_age: 0.06
+# Distance to sample segment of line objects for representing the segment in point cloud, zero
+# distance would result in only using both end points
+line_sample_distance: 0.1
+# Frequency at which current object list (point cloud) and distance list is published. Corresponds
+# to 40 ms USS sending cycle time.
+publish_frequency: 25.0
+# Timeout period. Receiver goes into timeout error if for the specified period no sensor message was
+# received.
+timeout: 0.2
+
+# TF frame id for all published messages of the receiver
+node_frame_id: base_link
+# CAN frame id of first object message
+object_base_id: 0x180
+# CAN frame id of first direct echo message
+direct_echo_base_id: 0x170
+# CAN frame id of max detection range message
+max_detection_range_id: 0x17D
+# CAN frame id of sensor info message
+info_id: 0x17C

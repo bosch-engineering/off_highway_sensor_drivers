@@ -1,0 +1,5 @@
+<launch>
+  <node pkg="off_highway_radar" type="off_highway_radar_sender" name="off_highway_radar_sender" output="screen">
+    <rosparam file="$(find off_highway_radar)/config/sender_params.yaml" command="load"/>
+  </node>
+</launch>

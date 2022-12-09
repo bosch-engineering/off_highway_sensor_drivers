@@ -1,0 +1,12 @@
+# Frequency of watchdog to check if a USS input message was received
+watchdog_frequency: 10.0
+# Allowed age of USS input message to not filter it out
+allowed_age: 0.2
+# Timeout period. Sender goes into timeout error if for the specified period no USS input message
+# was received.
+timeout: 0.2
+
+# TF frame id for all published messages
+node_frame_id: base_link
+# CAN frame id of outside temperature message
+outside_temperature_id: 0xB500000

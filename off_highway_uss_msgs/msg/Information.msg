@@ -1,0 +1,9 @@
+std_msgs/Header header
+uint8 number_sensors
+uint8 sending_pattern
+uint8 operating_mode
+float64 outside_temperature
+uint16 sensor_blindness
+uint8 sensitivity
+uint16 sensor_faulted
+bool failure_status

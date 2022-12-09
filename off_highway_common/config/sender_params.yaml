@@ -1,0 +1,7 @@
+# Frequency of watchdog to check if a can_msgs/Frame ROS message was sent
+watchdog_frequency: 10.0
+# Timeout period. Sender goes into timeout error if for the specified period no can_msgs/Frame ROS
+# message was sent.
+timeout: 0.2
+# TF frame id for all published messages
+node_frame_id: base_link

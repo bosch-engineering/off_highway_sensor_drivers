@@ -1,0 +1,4 @@
+<launch>
+  <rosparam file="$(find off_highway_uss)/config/sender_params.yaml" command="load" ns="test_sender"/>
+  <test test-name="test_sender" pkg="off_highway_uss" type="test_sender"/>
+</launch>
