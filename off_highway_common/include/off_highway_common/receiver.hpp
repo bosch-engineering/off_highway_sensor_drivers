@@ -142,7 +142,6 @@ private:
   std::shared_ptr<DiagCompositeTask> diag_composite_;
   diagnostic_updater::Updater diag_updater_;
 
-  ros::Publisher info_pub_;
   std::unique_ptr<ros::Subscriber> can_sub_;
 
   ros::Timer watchdog_timer_;
