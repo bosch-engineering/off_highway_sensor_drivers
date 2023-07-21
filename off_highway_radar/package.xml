@@ -7,6 +7,7 @@
   <maintainer email="robin.petereit@de.bosch.com">Robin Petereit</maintainer>
   <license>Apache-2.0</license>
 
+  <author email="robin.petereit@de.bosch.com">Robin Petereit</author>
   <author email="marcus.huenerbein@digital-workbench.de">Marcus Huenerbein</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
@@ -21,6 +22,8 @@
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_cmake_ros</test_depend>
+  <test_depend>ament_index_cpp</test_depend>
 
   <export>
    <build_type>ament_cmake</build_type>

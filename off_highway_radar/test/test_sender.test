@@ -1,4 +1,0 @@
-<launch>
-  <rosparam file="$(find off_highway_radar)/config/sender_params.yaml" command="load" ns="test_sender"/>
-  <test test-name="test_sender" pkg="off_highway_radar" type="test_sender"/>
-</launch>

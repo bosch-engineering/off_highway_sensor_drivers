@@ -7,6 +7,7 @@
   <maintainer email="robin.petereit@de.bosch.com">Robin Petereit</maintainer>
   <license>Apache-2.0</license>
 
+  <author email="robin.petereit@de.bosch.com">Robin Petereit</author>
   <author email="marcus.huenerbein@digital-workbench.de">Marcus Huenerbein</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

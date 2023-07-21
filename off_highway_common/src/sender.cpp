@@ -23,7 +23,7 @@ Sender::Sender(const std::string & node_name)
   last_message_sent_ = now();
   declare_and_get_parameters();
 
-  can_pub_ = create_publisher<can_msgs::msg::Frame>("sent_messages", 10);
+  can_pub_ = create_publisher<can_msgs::msg::Frame>("to_can_bus", 10);
 
   diag_task_ =
     std::make_shared<DiagTask>("sender", [this](auto & status) {this->diagnostics(status);});

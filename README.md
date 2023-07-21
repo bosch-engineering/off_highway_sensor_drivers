@@ -38,9 +38,10 @@ relevant information as CAN frames, converted from a ROS message interface.
 The sensor packages do **not** contain a CAN to ROS driver. Instead, their interface towards the
 sensor side are encoded as
 [`can_msgs/Frame`](http://docs.ros.org/en/noetic/api/can_msgs/html/msg/Frame.html) ROS messages.
-Such messages can be handled by e.g. the [socketcan_bridge](http://wiki.ros.org/socketcan_bridge),
-which converts between such ROS messages and physical CAN frames through the SocketCAN driver. See
-the following diagram for a system overview:
+Such messages can be handled by e.g., the
+[ros2_socketcan](https://github.com/autowarefoundation/ros2_socketcan) sender and receiver, which
+convert between such ROS messages and physical CAN frames through the SocketCAN driver. See the
+following diagram for a system overview:
 
 ![Sensor Driver Architecture](doc/media/system_setup.drawio.svg "Sensor Driver Architecture")
 

@@ -17,7 +17,13 @@
 
 #include "off_highway_common/crc.hpp"
 
+// Disable warnings from external header, we won't fix FOSS
+// TODO(rcp1-beg) Replace CAN encoding / decoding with own implementation
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wsign-compare"
 #include "off_highway_common/external/can_encode_decode_inl.h"
+#pragma GCC diagnostic pop
 
 namespace off_highway_common
 {

@@ -64,7 +64,7 @@ error.
 
 #### Subscribed Topics
 
-* **received_messages
+* **from_can_bus
   ([`can_msgs/Frame`](http://docs.ros.org/en/noetic/api/can_msgs/html/msg/Frame.html))**
   * USS CAN frames to decode
 
@@ -138,7 +138,7 @@ it will publish a diagnostic error on `/diagnostics`.
 
 #### Published Topics
 
-* **sent_messages
+* **to_can_bus
   ([`can_msgs/Frame`](http://docs.ros.org/en/noetic/api/can_msgs/html/msg/Frame.html))**
   * Encoded USS CAN frames
 * **/diagnostics

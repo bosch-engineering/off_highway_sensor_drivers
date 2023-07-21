@@ -49,7 +49,7 @@ void Receiver::start()
   initialize();
 
   can_sub_ = create_subscription<can_msgs::msg::Frame>(
-    "received_messages",
+    "from_can_bus",
     100,
     std::bind(&Receiver::callback_can, this, std::placeholders::_1)
   );

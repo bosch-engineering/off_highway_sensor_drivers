@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 project(off_highway_common)
 
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wdeprecated)
 endif()
 
 option(COMPILE_DEBUG_LOG "Compile ROS debug logging output" OFF)
@@ -30,49 +35,41 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-target_compile_features(${PROJECT_NAME} PUBLIC c_std_99 cxx_std_17)
-
-install(TARGETS
-  ${PROJECT_NAME}
-  DESTINATION lib/
-)
-
-install(DIRECTORY
-  include/
+install(
+  DIRECTORY include/
   DESTINATION include
 )
 
-ament_export_include_directories(
-  include
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
 )
 
-ament_export_libraries(${PROJECT_NAME})
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp can_msgs diagnostic_updater)
 
 if(BUILD_TESTING)
-  find_package(ament_cmake_copyright REQUIRED)
-  find_package(ament_cmake_cppcheck REQUIRED)
-  find_package(ament_cmake_cpplint REQUIRED)
-  find_package(ament_cmake_lint_cmake REQUIRED)
-  find_package(ament_cmake_uncrustify REQUIRED)
-  find_package(ament_cmake_xmllint REQUIRED)
-
-  set(
-    linter_excludes
+  find_package(ament_lint_auto REQUIRED)
+  # Exclude FOSS
+  list(APPEND AMENT_LINT_AUTO_FILE_EXCLUDE
+    test/test_encode_decode.cpp
     include/off_highway_common/external/can_encode_decode_inl.h
   )
+  ament_lint_auto_find_test_dependencies()
 
-  ament_copyright(EXCLUDE ${linter_excludes})
-  ament_cppcheck(
-    EXCLUDE ${linter_excludes}
-    LANGUAGE c++
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(test_encode_decode test/test_encode_decode.cpp)
+  # Disable warnings since we won't change FOSS
+  target_compile_options(test_encode_decode PRIVATE -Wno-sign-compare -Wno-unused-parameter)
+  target_include_directories(test_encode_decode PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
   )
-  ament_cpplint(EXCLUDE ${linter_excludes})
-  ament_lint_cmake()
-  ament_uncrustify(
-    EXCLUDE ${linter_excludes}
-    LANGUAGE c++
-  )
+  target_link_libraries(test_encode_decode ${PROJECT_NAME})
 endif()
 
 ament_package()

@@ -32,7 +32,7 @@ diagnostic error on the `/diagnostics` topic when a timeout occurs.
 
 #### Subscribed Topics
 
-* **received_messages
+* **from_can_bus
   ([`can_msgs/Frame`](http://docs.ros.org/en/noetic/api/can_msgs/html/msg/Frame.html))**
   * CAN frames to decode
 
@@ -53,7 +53,7 @@ The `off_highway_common::Sender` is an abstract base class and needs to be deriv
 behavior. It provides the functionality to send
 [`can_msgs/Frame`](http://docs.ros.org/en/noetic/api/can_msgs/html/msg/Frame.html) ROS messages by
 encoding configured CAN messages as bytes based on provided message definitions. The encoded signal
-values are published to the `sent_messages` topic.
+values are published to the `to_can_bus` topic.
 
 The encoding and publishing chain is just a method call and thus event-based. The needed processing
 time to encode and publish all configured messages can be logged as ROS debug message at runtime
@@ -65,7 +65,7 @@ was published in a defined by the parameter `timeout` and sends a diagnostic err
 
 #### Published Topics
 
-* **sent_messages
+* **to_can_bus
   ([`can_msgs/Frame`](http://docs.ros.org/en/noetic/api/can_msgs/html/msg/Frame.html))**
   * Encoded CAN frames
 * **/diagnostics
