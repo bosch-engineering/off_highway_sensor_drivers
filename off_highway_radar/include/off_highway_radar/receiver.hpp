@@ -1,13 +1,14 @@
 // Copyright 2022 Robert Bosch GmbH and its subsidiaries
+// Copyright 2023 digital workbench GmbH
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS
+// distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
@@ -16,18 +17,21 @@
 
 #include <memory>
 #include <optional>
+#include <string>
 
-#include "ros/ros.h"
-#include "diagnostic_updater/diagnostic_updater.h"
+#include "std_msgs/msg/header.hpp"
+#include "sensor_msgs/msg/point_cloud2.hpp"
+#include "can_msgs/msg/frame.hpp"
 
 #include "off_highway_common/receiver.hpp"
-#include "off_highway_radar_msgs/Object.h"
-#include "off_highway_radar_msgs/Objects.h"
-#include "off_highway_radar_msgs/Information.h"
+#include "off_highway_radar_msgs/msg/object.hpp"
+#include "off_highway_radar_msgs/msg/object_a.hpp"
+#include "off_highway_radar_msgs/msg/object_b.hpp"
+#include "off_highway_radar_msgs/msg/objects.hpp"
+#include "off_highway_radar_msgs/msg/information.hpp"
 
 namespace off_highway_radar
 {
-
 /**
  * \brief Radar receiver class to decode CAN frames into object list to publish.
  *
@@ -38,16 +42,16 @@ class Receiver : public off_highway_common::Receiver
 {
 public:
   using Message = off_highway_common::Message;
-  using Object = off_highway_radar_msgs::Object;
-  using ObjectA = off_highway_radar_msgs::ObjectA;
-  using ObjectB = off_highway_radar_msgs::ObjectB;
-  using Objects = off_highway_radar_msgs::Objects;
-  using Information = off_highway_radar_msgs::Information;
+  using Object = off_highway_radar_msgs::msg::Object;
+  using ObjectA = off_highway_radar_msgs::msg::ObjectA;
+  using ObjectB = off_highway_radar_msgs::msg::ObjectB;
+  using Objects = off_highway_radar_msgs::msg::Objects;
+  using Information = off_highway_radar_msgs::msg::Information;
 
   /**
    * \brief Construct a new Receiver object.
    */
-  Receiver();
+  explicit Receiver(const std::string & node_name = "receiver");
 
   /**
    * \brief Destroy the Receiver object.
@@ -71,7 +75,7 @@ private:
    * \param id Id of respective CAN frame
    * \param message Decoded message (values) of frame to use for processing
    */
-  void process(std_msgs::Header header, const FrameId & id, Message & message) override;
+  void process(std_msgs::msg::Header header, const FrameId & id, Message & message) override;
 
   /**
    * \brief Check if object is invalid.
@@ -84,7 +88,7 @@ private:
   /**
    * \brief Manage object list and publish it.
    */
-  void manage_and_publish(const ros::TimerEvent &);
+  void manage_and_publish();
 
   /**
    * \brief Filter objects and remove too old objects or too old B message information from objects.
@@ -109,30 +113,33 @@ private:
    *
    * \param stat Status wrapper of diagnostics.
    */
-  void diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat);
+  void diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat) const;
+
+  /**
+   * \brief Declare and get node parameters
+   */
+  void declare_and_get_parameters();
 
   static constexpr uint8_t kCountObjects = 40;
-
   // Doubled since each object consists of A and B message
   static constexpr uint8_t kCountObjectMessages = kCountObjects * 2;
 
   Information info_;
   std::shared_ptr<DiagTask> diag_task_;
 
-  ros::Publisher pub_objects_;
-  ros::Publisher pub_objects_pcl_;
-  ros::Publisher pub_info_;
-  ros::Timer publish_timer_;
+  rclcpp::Publisher<Objects>::SharedPtr pub_objects_;
+  rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_objects_pcl_;
+  rclcpp::Publisher<Information>::SharedPtr pub_info_;
+  rclcpp::TimerBase::SharedPtr publish_timer_;
 
   /// CAN id of first object message (Object_00_Data_A)
-  FrameId object_base_id_;
-  FrameId info_id_;
-
+  uint32_t object_base_id_;
+  uint32_t info_id_;
   /// Allowed age of objects and B message information
   double allowed_age_;
+  double publish_frequency_;
 
   /// Objects stored as optionals in fixed-size array to encode validity while ensuring order
   std::array<std::optional<Object>, kCountObjects> objects_;
 };
-
 }  // namespace off_highway_radar

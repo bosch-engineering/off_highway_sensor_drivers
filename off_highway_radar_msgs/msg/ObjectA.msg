@@ -1,5 +1,5 @@
 uint32 can_id
-time stamp
+builtin_interfaces/Time stamp
 uint8 id
 geometry_msgs/Point position
 geometry_msgs/Twist velocity

@@ -7,15 +7,22 @@
   <maintainer email="robin.petereit@de.bosch.com">Robin Petereit</maintainer>
   <license>Apache-2.0</license>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <author email="marcus.huenerbein@digital-workbench.de">Marcus Huenerbein</author>
 
-  <depend>diagnostic_updater</depend>
-  <depend>roscpp</depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>can_msgs</depend>
   <depend>off_highway_common</depend>
   <depend>off_highway_uss_msgs</depend>
   <depend>pcl_conversions</depend>
-  <depend>pcl_ros</depend>
-  <depend>sensor_msgs</depend>
+  <depend>libpcl-all-dev</depend>
 
-  <test_depend>rostest</test_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+   <build_type>ament_cmake</build_type>
+  </export>
 </package>
