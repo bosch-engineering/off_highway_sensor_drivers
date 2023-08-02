@@ -1,13 +1,14 @@
 // Copyright 2022 Robert Bosch GmbH and its subsidiaries
+// Copyright 2023 digital workbench GmbH
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS
+// distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
@@ -16,6 +17,12 @@
 
 #include <regex>
 
+#include "pcl/common/projection_matrix.h"
+#include "pcl/conversions.h"
+#include "pcl_conversions/pcl_conversions.h"
+
+#include "diagnostic_msgs/msg/diagnostic_status.hpp"
+
 #include "off_highway_common/helper.hpp"
 
 #include "off_highway_radar/pcl_point_object.hpp"
@@ -23,28 +30,28 @@
 namespace off_highway_radar
 {
 
-Receiver::Receiver()
-: off_highway_common::Receiver()
+Receiver::Receiver(const std::string & node_name)
+: off_highway_common::Receiver(node_name)
 {
-  using off_highway_common::get_param_or_throw;
+  declare_and_get_parameters();
 
-  pub_objects_ = private_nh_.advertise<Objects>("objects", 10);
-  pub_objects_pcl_ = private_nh_.advertise<sensor_msgs::PointCloud2>("objects_pcl", 10);
-  pub_info_ = private_nh_.advertise<Information>("info", 10);
+  pub_objects_ = create_publisher<off_highway_radar_msgs::msg::Objects>("objects", 10);
+  pub_objects_pcl_ = create_publisher<sensor_msgs::msg::PointCloud2>("objects_pcl", 10);
+  pub_info_ = create_publisher<off_highway_radar_msgs::msg::Information>("info", 10);
 
-  diag_task_ = std::make_shared<DiagTask>("radar", [this](auto & status) {diagnostics(status);});
+  diag_task_ =
+    std::make_shared<DiagTask>(
+    "radar", [this](auto & status) {diagnostics(status);});
   add_diag_task(diag_task_);
-
-  allowed_age_ = get_param_or_throw<double>(private_nh_, "allowed_age");
-  double publish_frequency = get_param_or_throw<double>(private_nh_, "publish_frequency");
-
-  object_base_id_ = get_param_or_throw<FrameId>(private_nh_, "object_base_id");
-  info_id_ = get_param_or_throw<FrameId>(private_nh_, "info_id");
 
   Receiver::start();
 
-  publish_timer_ = private_nh_.createTimer(
-    ros::Rate(publish_frequency), &Receiver::manage_and_publish, this);
+  publish_timer_ = rclcpp::create_timer(
+    this,
+    get_clock(),
+    std::chrono::duration<double>(1.0 / publish_frequency_),
+    std::bind(&Receiver::manage_and_publish, this)
+  );
 }
 
 Receiver::Messages Receiver::fillMessageDefinitions()
@@ -103,7 +110,7 @@ Receiver::Messages Receiver::fillMessageDefinitions()
   return m;
 }
 
-void Receiver::process(std_msgs::Header header, const FrameId & id, Message & message)
+void Receiver::process(std_msgs::msg::Header header, const FrameId & id, Message & message)
 {
   using off_highway_common::auto_static_cast;
 
@@ -122,8 +129,8 @@ void Receiver::process(std_msgs::Header header, const FrameId & id, Message & me
     auto_static_cast(info_.sensor_not_safe, message.signals["SensorNotSafe"].value);
     auto_static_cast(info_.reception_error, message.signals["ReceptionError"].value);
 
-    if (pub_info_.getNumSubscribers() > 0) {
-      pub_info_.publish(info_);
+    if (pub_info_->get_subscription_count() > 0) {
+      pub_info_->publish(info_);
     }
     force_diag_update();
     return;
@@ -172,7 +179,7 @@ bool Receiver::filter(const Object & object)
   return !object.a.valid;
 }
 
-void Receiver::manage_and_publish(const ros::TimerEvent &)
+void Receiver::manage_and_publish()
 {
   manage_objects();
   publish_objects();
@@ -184,30 +191,28 @@ void Receiver::manage_objects()
   auto & l = objects_;
 
   for (auto & o : l) {
-    auto now = ros::Time::now();
-    if (o && (filter(*o) || abs((now - o->header.stamp).toSec()) > allowed_age_)) {
+    if (o && (filter(*o) || abs((now() - o->header.stamp).seconds()) > allowed_age_)) {
       o = {};
     }
   }
 
   // Remove content of too old B messages
   for (auto & o : l) {
-    auto now = ros::Time::now();
-    if (o && abs((now - o->b.stamp).toSec()) > allowed_age_) {
-      o->b = {};
-      o->b.stamp = now;  // To not trigger each call
+    if (o && abs((now() - o->b.stamp).seconds()) > allowed_age_) {
+      o->b = ObjectB();
+      o->b.stamp = now();  // To not trigger each call
     }
   }
 }
 
 void Receiver::publish_objects()
 {
-  if (pub_objects_.getNumSubscribers() == 0) {
+  if (pub_objects_->get_subscription_count() == 0) {
     return;
   }
 
   Objects msg;
-  msg.header.stamp = ros::Time::now();
+  msg.header.stamp = now();
   msg.header.frame_id = node_frame_id_;
 
   for (const auto & object : objects_) {
@@ -216,19 +221,19 @@ void Receiver::publish_objects()
     }
   }
 
-  pub_objects_.publish(msg);
+  pub_objects_->publish(msg);
 }
 
 void Receiver::publish_pcl()
 {
-  if (pub_objects_pcl_.getNumSubscribers() == 0) {
+  if (pub_objects_pcl_->get_subscription_count() == 0) {
     return;
   }
 
   pcl::PointCloud<PclPointObject> objects_pcl;
   objects_pcl.is_dense = true;
   objects_pcl.header.frame_id = node_frame_id_;
-  pcl_conversions::toPCL(ros::Time::now(), objects_pcl.header.stamp);
+  pcl_conversions::toPCL(now(), objects_pcl.header.stamp);
 
   for (const auto & object : objects_) {
     if (object) {
@@ -236,12 +241,14 @@ void Receiver::publish_pcl()
     }
   }
 
-  pub_objects_pcl_.publish(objects_pcl);
+  sensor_msgs::msg::PointCloud2 pointcloud2;
+  pcl::toROSMsg(objects_pcl, pointcloud2);
+  pub_objects_pcl_->publish(pointcloud2);
 }
 
-void Receiver::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat)
+void Receiver::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat) const
 {
-  using diagnostic_msgs::DiagnosticStatus;
+  using diagnostic_msgs::msg::DiagnosticStatus;
 
   stat.add("Sensor type", std::to_string(info_.sensor_type));
   stat.add("HW temperature", info_.hw_temperature);
@@ -265,4 +272,29 @@ void Receiver::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat)
     stat.summary(DiagnosticStatus::OK, "Ok");
   }
 }
+
+void Receiver::declare_and_get_parameters()
+{
+  rcl_interfaces::msg::ParameterDescriptor param_desc;
+
+  param_desc.description = "CAN frame id of first object message";
+  declare_parameter<int>("object_base_id", 0x200, param_desc);
+  object_base_id_ = get_parameter("object_base_id").as_int();
+
+  param_desc.description = "CAN frame id of sensor info message";
+  declare_parameter<int>("info_id", 0x100);
+  info_id_ = get_parameter("info_id").as_int();
+
+  param_desc.description =
+    "Allowed age corresponding to output cycle time of sensor plus safety margin";
+  declare_parameter<double>("allowed_age", 0.2);
+  allowed_age_ = get_parameter("allowed_age").as_double();
+
+  param_desc.description =
+    "Frequency at which current object list (point cloud) is published. Corresponds to ~100 ms "
+    "radar sending cycle time.";
+  declare_parameter<double>("publish_frequency", 10.0);
+  publish_frequency_ = get_parameter("publish_frequency").as_double();
+}
+
 }  // namespace off_highway_radar

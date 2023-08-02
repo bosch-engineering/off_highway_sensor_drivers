@@ -1,29 +1,29 @@
 // Copyright 2022 Robert Bosch GmbH and its subsidiaries
+// Copyright 2023 digital workbench GmbH
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS
+// distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
 #pragma once
 
-#include "ros/ros.h"
-#include "diagnostic_updater/diagnostic_updater.h"
-#include "geometry_msgs/TwistStamped.h"
+#include <memory>
+#include <string>
 
 #include "off_highway_common/sender.hpp"
-#include "off_highway_common/helper.hpp"
+
+#include "geometry_msgs/msg/twist_stamped.hpp"
 
 namespace off_highway_radar
 {
-
 /**
  * \brief Radar sender class to encode CAN frames. Encodes twist (forward velocity and yaw rate)
  * input as CAN frame.
@@ -32,12 +32,12 @@ class Sender : public off_highway_common::Sender
 {
 public:
   using Message = off_highway_common::Message;
-  using RadarInput = geometry_msgs::TwistStamped;
+  using RadarInput = geometry_msgs::msg::TwistStamped;
 
   /**
    * \brief Construct a new Sender object.
    */
-  Sender();
+  explicit Sender(const std::string & node_name = "sender");
 
   /**
    * \brief Destroy the Sender object.
@@ -50,22 +50,27 @@ protected:
    *
    * \param msg Received message data
    */
-  void callback_input(const RadarInput & msg);
+  void callback_input(const RadarInput::SharedPtr msg);
 
   /**
    * \brief Fill message definitions to encode frames of CAN node. Only stored definitions are sent.
    */
   void fillMessageDefinitions();
 
-  ros::Subscriber input_sub_;
+  rclcpp::Subscription<RadarInput>::SharedPtr input_sub_;
 
-  FrameId ego_velocity_id_;
-  FrameId yaw_rate_id_;
+  uint32_t ego_velocity_id_;
+  uint32_t yaw_rate_id_;
 
   /// Allowed age of input message to process
   double allowed_age_;
 
-  static constexpr double kRadToDegree = 180. / M_PI;
-};
+  static constexpr double kRadToDegree = 180.0 / M_PI;
 
+private:
+  /**
+   * \brief Declare and get node parameters
+   */
+  void declare_and_get_parameters();
+};
 }  // namespace off_highway_radar

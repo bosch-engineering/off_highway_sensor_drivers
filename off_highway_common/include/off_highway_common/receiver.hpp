@@ -1,42 +1,46 @@
 // Copyright 2022 Robert Bosch GmbH and its subsidiaries
+// Copyright 2023 digital workbench GmbH
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS
+// distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
 #pragma once
 
-#include <cstdint>
+#include <chrono>
 #include <memory>
 #include <string>
 #include <unordered_map>
 
-#include "can_msgs/Frame.h"
-#include "diagnostic_updater/diagnostic_updater.h"
-#include "ros/ros.h"
+#include "rclcpp/node.hpp"
+#include "rclcpp/timer.hpp"
+#include "rclcpp/subscription.hpp"
 
-#include "can_message.hpp"
+#include "diagnostic_updater/diagnostic_updater.hpp"
+
+#include "can_msgs/msg/frame.hpp"
+
+#include "off_highway_common/can_message.hpp"
 
 namespace off_highway_common
 {
-
 /**
  * \brief Abstract receiver class to decode CAN node frames. Needs to be extended for specific CAN
  * node.
  */
-class Receiver
+class Receiver : public rclcpp::Node
 {
 public:
-  using FrameId = can_msgs::Frame::_id_type;
-  using FrameData = can_msgs::Frame::_data_type;
+  using FrameId = can_msgs::msg::Frame::_id_type;
+  using FrameData = can_msgs::msg::Frame::_data_type;
 
   using Messages = std::unordered_map<FrameId, Message>;
 
@@ -47,7 +51,7 @@ public:
   /**
    * \brief Construct a new Receiver object.
    */
-  Receiver();
+  explicit Receiver(const std::string & node_name = "receiver");
 
   /**
    * \brief Destroy the Receiver object.
@@ -77,7 +81,7 @@ public:
    *
    * \param frame ROS CAN frame
    */
-  void callback_can(const can_msgs::Frame & frame);
+  void callback_can(const can_msgs::msg::Frame::SharedPtr frame);
 
   /**
    * \brief Returns message definitions of configured CAN messages
@@ -113,12 +117,8 @@ protected:
    * \param id Id of respective CAN frame
    * \param message Decoded message (values) of frame to use for processing
    */
-  virtual void process(std_msgs::Header header, const FrameId & id, Message & message) = 0;
+  virtual void process(std_msgs::msg::Header header, const FrameId & id, Message & message) = 0;
 
-  /// Global node handle
-  ros::NodeHandle nh_;
-  /// Private node handle
-  ros::NodeHandle private_nh_{"~"};
   /// Node TF frame id, needed in derived implementations for publishing with correct frame in
   /// header
   std::string node_frame_id_;
@@ -127,7 +127,7 @@ private:
   /**
    * \brief Periodically check last received message time stamp to detect sensor timeout.
    */
-  void callback_watchdog(const ros::TimerEvent & /* event */);
+  void callback_watchdog();
 
   /**
    * \brief Update diagnostics status by checking timeout of CAN node.
@@ -136,22 +136,28 @@ private:
    */
   void diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat) const;
 
+  /**
+   * \brief Declare and get node parameters.
+   */
+  void declare_and_get_parameters();
+
   bool initialized_{false};
 
   std::shared_ptr<DiagTask> diag_task_;
   std::shared_ptr<DiagCompositeTask> diag_composite_;
-  diagnostic_updater::Updater diag_updater_;
+  std::shared_ptr<diagnostic_updater::Updater> diag_updater_;
 
-  ros::Publisher info_pub_;
-  std::unique_ptr<ros::Subscriber> can_sub_;
+  rclcpp::Subscription<can_msgs::msg::Frame>::SharedPtr can_sub_;
 
-  ros::Timer watchdog_timer_;
-  ros::Time last_message_received_;
-  ros::Duration timeout_;
+  rclcpp::TimerBase::SharedPtr watchdog_timer_;
+  rclcpp::Time last_message_received_;
 
   /// CAN message storage, maps CAN id to message data including signals and their en-/decoding
   /// information
   Messages messages_;
-};
 
+
+  double timeout_;
+  double watchdog_frequency_;
+};
 }  // namespace off_highway_common

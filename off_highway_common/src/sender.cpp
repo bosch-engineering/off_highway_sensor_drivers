@@ -1,86 +1,87 @@
 // Copyright 2022 Robert Bosch GmbH and its subsidiaries
+// Copyright 2023 digital workbench GmbH
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS
+// distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
 #include "off_highway_common/sender.hpp"
 
-#include "off_highway_common/helper.hpp"
-
 namespace off_highway_common
 {
-
-Sender::Sender()
+Sender::Sender(const std::string & node_name)
+: rclcpp::Node(node_name)
 {
-  double timeout = get_param_or_throw<double>(private_nh_, "timeout");
-  double watchdog_frequency = get_param_or_throw<double>(private_nh_, "watchdog_frequency");
-  node_frame_id_ = get_param_or_throw<std::string>(private_nh_, "node_frame_id");
+  last_message_sent_ = now();
+  declare_and_get_parameters();
 
-  can_pub_ = nh_.advertise<can_msgs::Frame>("sent_messages", 10);
+  can_pub_ = create_publisher<can_msgs::msg::Frame>("sent_messages", 10);
 
   diag_task_ =
-    std::make_shared<DiagTask>("sender", [this](auto & status) {diagnostics(status);});
+    std::make_shared<DiagTask>("sender", [this](auto & status) {this->diagnostics(status);});
 
   diag_composite_ = std::make_shared<DiagCompositeTask>("sender");
   diag_composite_->addTask(diag_task_.get());
 
-  diag_updater_.setHardwareID(ros::this_node::getName());
-  diag_updater_.add(*diag_composite_);
+  diag_updater_ = std::make_shared<diagnostic_updater::Updater>(this);
+  diag_updater_->setHardwareID(get_name());
+  diag_updater_->add(*diag_composite_);
 
-  timeout_ = ros::Duration(timeout);
-
-  watchdog_timer_ = private_nh_.createTimer(
-    ros::Rate(watchdog_frequency), &Sender::callback_watchdog, this);
+  watchdog_timer_ = rclcpp::create_timer(
+    this,
+    get_clock(),
+    std::chrono::duration<double>(1.0 / watchdog_frequency_),
+    std::bind(&Sender::callback_watchdog, this)
+  );
 }
 
-void Sender::callback_watchdog(const ros::TimerEvent & /* event */)
+void Sender::callback_watchdog()
 {
-  if (ros::Time::now() - last_message_sent_ > timeout_) {
-    ROS_WARN_STREAM("Timeout of watchdog for sending node " << ros::this_node::getName());
+  if ((now() - last_message_sent_).seconds() > timeout_) {
+    RCLCPP_WARN(get_logger(), "Timeout of watchdog for sending node %s", get_name());
     force_diag_update();
     // Reset to not trigger in each run
-    last_message_sent_ = ros::Time::now();
+    last_message_sent_ = now();
   }
 }
 
 void Sender::send_can()
 {
-#if (ROSCONSOLE_MIN_SEVERITY <= ROSCONSOLE_SEVERITY_DEBUG)
-  // Only used for debug timing output
-  using ros::SteadyTime;
-  using ros::this_node::getName;
-  auto start = SteadyTime::now();
+#if (RCLCPP_LOG_MIN_SEVERITY <= RCLCPP_LOG_MIN_SEVERITY_DEBUG)
+  using std::chrono::steady_clock;
+  using std::chrono::duration;
+  auto start = steady_clock::now();
 #endif
 
   for (auto &[id, message] : messages_) {
-    can_msgs::Frame frame;
+    can_msgs::msg::Frame frame;
 
-    frame.header.stamp = ros::Time::now();
+    frame.header.stamp = now();
     frame.header.frame_id = node_frame_id_;
 
     frame.id = id;
-    frame.dlc = can_msgs::Frame::_data_type::size();
+    frame.dlc = frame.data.size();
     frame.is_extended = id > kMaxBaseIdentifier;
 
     message.encode(frame.data);
 
-    can_pub_.publish(frame);
+    can_pub_->publish(frame);
 
-    last_message_sent_ = ros::Time::now();
-    diag_updater_.update();
+    last_message_sent_ = now();
+    diag_updater_->force_update();
   }
 
-  ROS_DEBUG_STREAM(
-    "Sending of messages in " << getName() << " took " << SteadyTime::now() - start << " s");
+  RCLCPP_DEBUG(
+    get_logger(), "Sending of messages in %s took %f s", get_name(),
+    duration<double>(steady_clock::now() - start).count());
 }
 
 Sender::Messages Sender::get_messages() const
@@ -95,14 +96,14 @@ void Sender::add_diag_task(const std::shared_ptr<diagnostic_updater::DiagnosticT
 
 void Sender::force_diag_update()
 {
-  diag_updater_.force_update();
+  diag_updater_->force_update();
 }
 
 void Sender::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat) const
 {
-  using diagnostic_msgs::DiagnosticStatus;
+  using diagnostic_msgs::msg::DiagnosticStatus;
 
-  bool timeout = ros::Time::now() - last_message_sent_ > timeout_;
+  bool timeout = (now() - last_message_sent_).seconds() > timeout_;
   stat.add("Timeout", timeout);
 
   if (timeout) {
@@ -110,5 +111,24 @@ void Sender::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat) con
   } else {
     stat.summary(DiagnosticStatus::OK, "Ok");
   }
+}
+
+void Sender::declare_and_get_parameters()
+{
+  rcl_interfaces::msg::ParameterDescriptor param_desc;
+
+  param_desc.description =
+    "Timeout period. Sender goes into timeout error if for the "
+    "specified period no input message was received.";
+  declare_parameter<double>("timeout", 0.2, param_desc);
+  timeout_ = this->get_parameter("timeout").as_double();
+
+  param_desc.description = "Frequency of watchdog to check if a input message was received";
+  declare_parameter<double>("watchdog_frequency", 10.0, param_desc);
+  watchdog_frequency_ = this->get_parameter("watchdog_frequency").as_double();
+
+  param_desc.description = "TF frame id for all published messages";
+  declare_parameter<std::string>("node_frame_id", "base_link", param_desc);
+  node_frame_id_ = this->get_parameter("node_frame_id").as_string();
 }
 }  // namespace off_highway_common

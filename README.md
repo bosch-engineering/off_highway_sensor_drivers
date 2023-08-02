@@ -2,7 +2,7 @@
 
 This project provides ROS drivers for Bosch Off-Highway sensor systems.
 
-The off_highway_sensor_drivers package is tested for ROS1 Noetic on Ubuntu 20.04. Connected sensors
+The off_highway_sensor_drivers package is tested for ROS 2 Humble on Ubuntu 22.04. Connected sensors
 were tested in a 500 kBd CAN configuration.
 
 The drivers offer the possibility to [log processing cycle times](off_highway_common/README.md).
@@ -68,8 +68,8 @@ Please see [LICENSE](LICENSE).
 
 Install:
 
-- Ubuntu focal 20.04
-- ROS noetic
+- Ubuntu jammy 22.04
+- ROS humble
 
 ### Install Dependencies
 
@@ -82,12 +82,6 @@ rosdep update && rosdep install --from-paths src --ignore-src -r -y
 ### Compile
 
 Execute in your workspace
-
-```bash
-catkin build --cmake-args '-DCMAKE_BUILD_TYPE=Release'
-```
-
-for using catkin or
 
 ```bash
 colcon build --cmake-args '-DCMAKE_BUILD_TYPE=Release'

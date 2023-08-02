@@ -1,25 +1,25 @@
 // Copyright 2022 Robert Bosch GmbH and its subsidiaries
+// Copyright 2023 digital workbench GmbH
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS
+// distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
 #pragma once
 
-#include "pcl_ros/point_cloud.h"
 #include "pcl/pcl_macros.h"
 #include "pcl/point_types.h"
 #include "pcl/register_point_struct.h"
 
-#include "off_highway_uss_msgs/Object.h"
+#include "off_highway_uss_msgs/msg/object.hpp"
 
 namespace off_highway_uss
 {
@@ -27,7 +27,7 @@ namespace off_highway_uss
 /**
  * \brief Object as PCL point
  */
-struct PclPointObject
+struct EIGEN_ALIGN16 PclPointObject
 {
   float x{0.};
   float y{0.};
@@ -42,7 +42,7 @@ struct PclPointObject
    * \param o Object input
    * \param id Object id
    */
-  PclPointObject(const off_highway_uss_msgs::Object & o, uint8_t id)
+  PclPointObject(const off_highway_uss_msgs::msg::Object & o, uint8_t id)
   : x(static_cast<float>(o.position_first.x)),
     y(static_cast<float>(o.position_first.y)),
     z(static_cast<float>(o.position_first.z)),
@@ -61,7 +61,7 @@ struct PclPointObject
    * \param id Object id
    */
   PclPointObject(
-    const geometry_msgs::Point & position, double exist_probability,
+    const geometry_msgs::msg::Point & position, double exist_probability,
     uint8_t object_type, uint8_t id)
   : x(static_cast<float>(position.x)),
     y(static_cast<float>(position.y)),
@@ -71,9 +71,7 @@ struct PclPointObject
     id(id)
   {
   }
-
-  PCL_MAKE_ALIGNED_OPERATOR_NEW
-} EIGEN_ALIGN16;  // SSE padding
+};  // SSE padding
 
 }  // namespace off_highway_uss
 

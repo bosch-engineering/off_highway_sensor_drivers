@@ -7,11 +7,22 @@
   <maintainer email="robin.petereit@de.bosch.com">Robin Petereit</maintainer>
   <license>Apache-2.0, MIT</license>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <author email="marcus.huenerbein@digital-workbench.de">Marcus Huenerbein</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>can_msgs</depend>
   <depend>diagnostic_updater</depend>
-  <depend>roscpp</depend>
+  <depend>rclcpp</depend>
 
-  <test_depend>rosunit</test_depend>
+  <test_depend>ament_cmake_copyright</test_depend>
+  <test_depend>ament_cmake_cppcheck</test_depend>
+  <test_depend>ament_cmake_cpplint</test_depend>
+  <test_depend>ament_cmake_lint_cmake</test_depend>
+  <test_depend>ament_cmake_uncrustify</test_depend>
+  <test_depend>ament_cmake_xmllint</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>

@@ -1,13 +1,14 @@
 // Copyright 2022 Robert Bosch GmbH and its subsidiaries
+// Copyright 2023 digital workbench GmbH
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS
+// distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
@@ -16,51 +17,49 @@
 
 #include <regex>
 
+#include "pcl/common/projection_matrix.h"
+#include "pcl/conversions.h"
+#include "pcl_conversions/pcl_conversions.h"
+
+#include "diagnostic_msgs/msg/diagnostic_status.hpp"
+
 #include "off_highway_common/helper.hpp"
 
-#include "off_highway_uss/pcl_point_object.hpp"
 #include "off_highway_uss/interpolate_line.hpp"
-
+#include "off_highway_uss/pcl_point_object.hpp"
 
 namespace off_highway_uss
 {
 
-Receiver::Receiver()
-: off_highway_common::Receiver()
+Receiver::Receiver(const std::string & node_name)
+: off_highway_common::Receiver(node_name)
 {
-  using off_highway_common::get_param_or_throw;
-  using off_highway_common::print_not_positive;
+  declare_and_get_parameters();
 
-  ros::NodeHandle private_nh{"~"};
-
-  pub_objects_ = private_nh_.advertise<Objects>("objects", 10);
-  pub_objects_pcl_ = private_nh_.advertise<sensor_msgs::PointCloud2>("objects_pcl", 10);
-  pub_direct_echos_ = private_nh_.advertise<DirectEchos>("direct_echos", 10);
-  pub_max_detection_range_ = private_nh_.advertise<MaxDetectionRange>("max_detection_range", 10);
-  pub_info_ = private_nh_.advertise<Information>("info", 10);
+  pub_objects_ = create_publisher<Objects>("objects", 10);
+  pub_objects_pcl_ = create_publisher<sensor_msgs::msg::PointCloud2>("objects_pcl", 10);
+  pub_direct_echos_ = create_publisher<DirectEchos>("direct_echos", 10);
+  pub_max_detection_range_ = create_publisher<MaxDetectionRange>("max_detection_range", 10);
+  pub_info_ = create_publisher<Information>("info", 10);
 
   diag_task_ = std::make_shared<DiagTask>("uss", [this](auto & status) {diagnostics(status);});
   add_diag_task(diag_task_);
 
-  allowed_age_ = get_param_or_throw<double>(private_nh, "allowed_age");
-  double publish_frequency = get_param_or_throw<double>(private_nh, "publish_frequency");
-
-  object_base_id_ = get_param_or_throw<FrameId>(private_nh, "object_base_id");
-  direct_echo_base_id_ = get_param_or_throw<FrameId>(private_nh, "direct_echo_base_id");
-  max_detection_range_id_ = get_param_or_throw<FrameId>(private_nh, "max_detection_range_id");
-  info_id_ = get_param_or_throw<FrameId>(private_nh, "info_id");
-
-  line_sample_distance_ = get_param_or_throw<double>(private_nh, "line_sample_distance");
-  if (line_sample_distance_ < 0.) {
-    throw std::runtime_error(print_not_positive("line_sample_distance", private_nh));
-  }
-
   Receiver::start();
 
-  publish_objects_timer_ = private_nh.createTimer(
-    ros::Rate(publish_frequency), &Receiver::manage_and_publish_objects, this);
-  publish_direct_echos_timer_ = private_nh.createTimer(
-    ros::Rate(publish_frequency), &Receiver::manage_and_publish_direct_echos, this);
+  publish_objects_timer_ = rclcpp::create_timer(
+    this,
+    get_clock(),
+    std::chrono::duration<double>(1.0 / publish_frequency_),
+    std::bind(&Receiver::manage_and_publish_objects, this)
+  );
+
+  publish_direct_echos_timer_ = rclcpp::create_timer(
+    this,
+    get_clock(),
+    std::chrono::duration<double>(1.0 / publish_frequency_),
+    std::bind(&Receiver::manage_and_publish_direct_echos, this)
+  );
 }
 
 Receiver::Messages Receiver::fillMessageDefinitions()
@@ -149,7 +148,7 @@ Receiver::Messages Receiver::fillMessageDefinitions()
   return m;
 }
 
-void Receiver::process(std_msgs::Header header, const FrameId & id, Message & message)
+void Receiver::process(std_msgs::msg::Header header, const FrameId & id, Message & message)
 {
   using off_highway_common::auto_static_cast;
 
@@ -163,8 +162,8 @@ void Receiver::process(std_msgs::Header header, const FrameId & id, Message & me
     auto_static_cast(info_.sensitivity, message.signals["Sensitivity"].value);
     auto_static_cast(info_.sensor_faulted, message.signals["SensorFaulted"].value);
     auto_static_cast(info_.failure_status, message.signals["FailureStatus"].value);
-    if (pub_info_.getNumSubscribers() > 0) {
-      pub_info_.publish(info_);
+    if (pub_info_->get_subscription_count() > 0) {
+      pub_info_->publish(info_);
     }
     force_diag_update();
     return;
@@ -209,8 +208,8 @@ void Receiver::process(std_msgs::Header header, const FrameId & id, Message & me
     auto_static_cast(
       max_detection_range.max_detection_ranges[11],
       message.signals["sens12_MaxDetRange"].value);
-    if (pub_max_detection_range_.getNumSubscribers() > 0) {
-      pub_max_detection_range_.publish(max_detection_range);
+    if (pub_max_detection_range_->get_subscription_count() > 0) {
+      pub_max_detection_range_->publish(max_detection_range);
     }
     return;
   }
@@ -260,7 +259,7 @@ bool Receiver::filter(const Object & object)
   return object.object_type == Object::TYPE_NONE;
 }
 
-void Receiver::manage_and_publish_objects(const ros::TimerEvent &)
+void Receiver::manage_and_publish_objects()
 {
   manage(objects_);
   publish_objects();
@@ -269,12 +268,12 @@ void Receiver::manage_and_publish_objects(const ros::TimerEvent &)
 
 void Receiver::publish_objects()
 {
-  if (pub_objects_.getNumSubscribers() == 0) {
+  if (pub_objects_->get_subscription_count() == 0) {
     return;
   }
 
   Objects msg;
-  msg.header.stamp = ros::Time::now();
+  msg.header.stamp = now();
   msg.header.frame_id = node_frame_id_;
 
   for (const auto & object : objects_) {
@@ -283,32 +282,33 @@ void Receiver::publish_objects()
     }
   }
 
-  pub_objects_.publish(msg);
+  pub_objects_->publish(msg);
 }
 
 void Receiver::publish_pcl()
 {
-  if (pub_objects_pcl_.getNumSubscribers() == 0) {
+  if (pub_objects_pcl_->get_subscription_count() == 0) {
     return;
   }
 
   pcl::PointCloud<PclPointObject> objects_pcl;
   objects_pcl.is_dense = true;
   objects_pcl.header.frame_id = node_frame_id_;
-  pcl_conversions::toPCL(ros::Time::now(), objects_pcl.header.stamp);
+  pcl_conversions::toPCL(now(), objects_pcl.header.stamp);
 
   uint8_t id = 0;
   for (const auto & object : objects_) {
     if (object) {
       switch (object->object_type) {
-        case off_highway_uss_msgs::Object::TYPE_POINT:
+        case off_highway_uss_msgs::msg::Object::TYPE_POINT:
           objects_pcl.emplace_back(*object, id);
           break;
-        case off_highway_uss_msgs::Object::TYPE_LINE:
+        case off_highway_uss_msgs::msg::Object::TYPE_LINE:
           {
             auto samples = interpolate_segment(
               object->position_first, object->position_second,
-              line_sample_distance_);
+              line_sample_distance_
+            );
             for (auto & sample : samples) {
               objects_pcl.emplace_back(sample, object->exist_probability, object->object_type, id);
             }
@@ -323,7 +323,9 @@ void Receiver::publish_pcl()
     ++id;
   }
 
-  pub_objects_pcl_.publish(objects_pcl);
+  sensor_msgs::msg::PointCloud2 pointcloud2;
+  pcl::toROSMsg(objects_pcl, pointcloud2);
+  pub_objects_pcl_->publish(pointcloud2);
 }
 
 bool Receiver::filter(const DirectEcho &)
@@ -331,7 +333,7 @@ bool Receiver::filter(const DirectEcho &)
   return false;
 }
 
-void Receiver::manage_and_publish_direct_echos(const ros::TimerEvent &)
+void Receiver::manage_and_publish_direct_echos()
 {
   manage(direct_echos_);
   publish_direct_echos();
@@ -340,7 +342,7 @@ void Receiver::manage_and_publish_direct_echos(const ros::TimerEvent &)
 void Receiver::publish_direct_echos()
 {
   DirectEchos msg;
-  msg.header.stamp = ros::Time::now();
+  msg.header.stamp = now();
   msg.header.frame_id = node_frame_id_;
 
   for (const auto & direct_echo : direct_echos_) {
@@ -349,12 +351,12 @@ void Receiver::publish_direct_echos()
     }
   }
 
-  pub_direct_echos_.publish(msg);
+  pub_direct_echos_->publish(msg);
 }
 
-void Receiver::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat)
+void Receiver::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat) const
 {
-  using diagnostic_msgs::DiagnosticStatus;
+  using diagnostic_msgs::msg::DiagnosticStatus;
 
   stat.add("Number sensors", std::to_string(info_.number_sensors));
   stat.add("Sending pattern", std::to_string(info_.sending_pattern));
@@ -372,5 +374,43 @@ void Receiver::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat)
   } else {
     stat.summary(DiagnosticStatus::OK, "Ok");
   }
+}
+
+void Receiver::declare_and_get_parameters()
+{
+  rcl_interfaces::msg::ParameterDescriptor param_desc;
+
+  param_desc.description =
+    "Allowed age corresponding to output cycle time of sensor plus safety margin";
+  declare_parameter<double>("allowed_age", 0.06, param_desc);
+  allowed_age_ = get_parameter("allowed_age").as_double();
+
+  param_desc.description =
+    "Distance to sample segment of line objects for representing the segment in point "
+    "cloud, zero distance would result in only using both end points";
+  declare_parameter<double>("line_sample_distance", 0.1, param_desc);
+  line_sample_distance_ = get_parameter("line_sample_distance").as_double();
+
+  param_desc.description =
+    "Frequency at which current object list (point cloud) and distance list is published. "
+    "Corresponds to 40 ms USS sending cycle time.";
+  declare_parameter<double>("publish_frequency", 25.0, param_desc);
+  publish_frequency_ = get_parameter("publish_frequency").as_double();
+
+  param_desc.description = "CAN frame id of first object message";
+  declare_parameter<int>("object_base_id", 0x180, param_desc);
+  object_base_id_ = get_parameter("object_base_id").as_int();
+
+  param_desc.description = "CAN frame id of first direct echo message";
+  declare_parameter<int>("direct_echo_base_id", 0x170, param_desc);
+  direct_echo_base_id_ = get_parameter("direct_echo_base_id").as_int();
+
+  param_desc.description = "CAN frame id of max detection range message";
+  declare_parameter<int>("max_detection_range_id", 0x17d, param_desc);
+  max_detection_range_id_ = get_parameter("max_detection_range_id").as_int();
+
+  param_desc.description = "CAN frame id of sensor info message";
+  declare_parameter<int>("info_id", 0x17c, param_desc);
+  info_id_ = get_parameter("info_id").as_int();
 }
 }  // namespace off_highway_uss

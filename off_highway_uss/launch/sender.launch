@@ -1,5 +1,0 @@
-<launch>
-  <node pkg="off_highway_uss" type="off_highway_uss_sender" name="off_highway_uss_sender" output="screen">
-    <rosparam file="$(find off_highway_uss)/config/sender_params.yaml" command="load"/>
-  </node>
-</launch>

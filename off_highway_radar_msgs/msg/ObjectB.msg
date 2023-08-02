@@ -1,5 +1,5 @@
 uint32 can_id
-time stamp
+builtin_interfaces/Time stamp
 uint8 id
 float64 time_since_meas
 uint8 zone

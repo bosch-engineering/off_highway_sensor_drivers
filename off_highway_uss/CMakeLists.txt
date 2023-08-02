@@ -1,114 +1,92 @@
 cmake_minimum_required(VERSION 3.16)
 project(off_highway_uss)
 
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
-endif()
-
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wdeprecated)
+  add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(catkin REQUIRED
-  COMPONENTS
-    diagnostic_updater
-    roscpp
-    off_highway_common
-    off_highway_uss_msgs
-    pcl_conversions
-    pcl_ros
-    sensor_msgs
-)
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(can_msgs REQUIRED)
+find_package(off_highway_common REQUIRED)
+find_package(off_highway_uss_msgs REQUIRED)
+find_package(pcl_conversions REQUIRED)
+find_package(PCL REQUIRED COMPONENTS common)
 
-catkin_package(
-  INCLUDE_DIRS
-    include
-  LIBRARIES
-    ${PROJECT_NAME}
-  CATKIN_DEPENDS
-    diagnostic_updater
-    roscpp
-    off_highway_common
-    off_highway_uss_msgs
-    pcl_conversions
-    pcl_ros
-    sensor_msgs
-  DEPENDS
-)
-
-include_directories(
-  include
-)
-include_directories(SYSTEM
-  ${catkin_INCLUDE_DIRS}
-)
-
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} SHARED
   src/interpolate_line.cpp
   src/receiver.cpp
   src/sender.cpp
 )
 
-add_dependencies(${PROJECT_NAME}
-  ${catkin_EXPORTED_TARGETS}
-)
-
-target_link_libraries(${PROJECT_NAME}
-  ${catkin_LIBRARIES}
-)
-
-add_executable(${PROJECT_NAME}_receiver
+add_executable(receiver
   src/receiver_node.cpp
 )
 
-add_dependencies(${PROJECT_NAME}_receiver
-  ${catkin_EXPORTED_TARGETS}
-)
-
-target_link_libraries(${PROJECT_NAME}_receiver
-  ${catkin_LIBRARIES}
-  ${PROJECT_NAME}
-)
-
-add_executable(${PROJECT_NAME}_sender
+add_executable(sender
   src/sender_node.cpp
 )
 
-add_dependencies(${PROJECT_NAME}_sender
-  ${catkin_EXPORTED_TARGETS}
+target_compile_features(${PROJECT_NAME} PUBLIC c_std_99 cxx_std_17)
+target_compile_features(receiver PUBLIC c_std_99 cxx_std_17)
+target_compile_features(sender PUBLIC c_std_99 cxx_std_17)
+
+target_link_libraries(receiver ${PROJECT_NAME})
+target_link_libraries(sender ${PROJECT_NAME})
+
+ament_target_dependencies(${PROJECT_NAME} SYSTEM rclcpp sensor_msgs can_msgs off_highway_common off_highway_uss_msgs pcl_conversions PCL)
+ament_target_dependencies(receiver rclcpp)
+ament_target_dependencies(sender rclcpp)
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+target_include_directories(receiver PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+target_include_directories(sender PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(${PROJECT_NAME}_sender
-  ${catkin_LIBRARIES}
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+
+install(TARGETS
   ${PROJECT_NAME}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION lib
+  INCLUDES DESTINATION include
 )
 
-install(TARGETS ${PROJECT_NAME}_receiver ${PROJECT_NAME}_sender
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+install(TARGETS
+  receiver
+  sender
+  DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+install(DIRECTORY
+  config
+  launch
+  DESTINATION share/${PROJECT_NAME}/
 )
 
-install(DIRECTORY launch
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
-
-install(DIRECTORY config
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
-
-if(CATKIN_ENABLE_TESTING)
-  find_package(rostest REQUIRED)
-
-  add_rostest_gtest(test_sender test/test_sender.test test/test_sender.cpp)
-  target_include_directories(test_sender PUBLIC include ${catkin_INCLUDE_DIRS})
-  target_link_libraries(test_sender ${catkin_LIBRARIES} ${PROJECT_NAME})
-
-  add_rostest_gtest(test_receiver test/test_receiver.test test/test_receiver.cpp)
-  target_include_directories(test_receiver PUBLIC include ${catkin_INCLUDE_DIRS})
-  target_link_libraries(test_receiver ${catkin_LIBRARIES} ${PROJECT_NAME})
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
 endif()
+
+ament_export_include_directories(
+  include
+)
+
+ament_export_libraries(${PROJECT_NAME})
+ament_export_dependencies(${PROJECT_NAME})
+
+ament_package()
