@@ -1,11 +1,11 @@
 # off_highway_radar
 
-The off_highway_radar package provides a receiver node to receive and decode CAN frames of the
-Bosch Off-Highway radar into ROS messages - it implements an `off_highway_common::Receiver`.
-Furthermore, the package provides a sender node to encode and send needed radar input data as CAN
-frames - an implementation of an `off_highway_common::Sender`.
+The off_highway_radar package provides a receiver node to receive and decode CAN frames of the Bosch
+Radar Off-Highway into ROS messages - it implements an `off_highway_can::Receiver`. Furthermore, the
+package provides a sender node to encode and send needed radar input data as CAN frames - an
+implementation of an `off_highway_can::Sender`.
 
-Further information on the Bosch Off-Highway radar, it's inputs, outputs and how they can be
+Further information on the Bosch Radar Off-Highway, it's inputs, outputs and how they can be
 interpreted can be found in the corresponding [Technical Customer Documentation (TCD) of the sensor
 system](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/radar-systems-ohw/).
 
@@ -18,7 +18,7 @@ system](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems
 Further information: [Radar systems for off-highway
   applications](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/radar-systems-ohw/)
 
-Contact: [**off-highway.beg@bosch.com**](mailto:off-highway.beg@bosch.com?subject=off_highway_sensor_drivers%20Radar%20Sensors)
+Contact: [**off-highway.beg@bosch.com**](mailto:off-highway.beg@bosch.com?subject=off_highway_sensor_drivers%20Radar%20OHW%20Sensors)
 
 ## Nodes
 

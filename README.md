@@ -2,34 +2,44 @@
 
 This project provides ROS drivers for Bosch Off-Highway sensor systems.
 
-The off_highway_sensor_drivers package is tested for ROS 2 Humble on Ubuntu 22.04. Connected sensors
-were tested in a 500 kBd CAN configuration.
-
-The drivers offer the possibility to [log processing cycle times](off_highway_common/README.md).
-This allows you to check if your hardware in combination with these drivers is capable of processing
-your system's specific CAN load.
-
-## Package Organization
+The off_highway_sensor_drivers package is developed for ROS 2 Humble on Ubuntu 22.04.
 
 The [**off_highway_sensor_drivers**](off_highway_sensor_drivers/package.xml) package acts as
-metapackage for the following packages:
+metapackage for all of the following packages.
 
-- [**off_highway_common**](off_highway_common/README.md): Library containing receiver and sender
-  classes to decode / encode sensor CAN frames
-- [**off_highway_radar**](off_highway_radar/README.md): Receiver and sender nodes for the Bosch
-  Off-Highway radar
-- [**off_highway_radar_msgs**](off_highway_radar_msgs/README.md): The custom message interface for
-  the Bosch Off-Highway radar
-- [**off_highway_uss**](off_highway_uss/README.md): Receiver and sender nodes for the Bosch
-  Off-Highway ultrasonic sensor system
-- [**off_highway_uss_msgs**](off_highway_uss_msgs/README.md): The custom message interface for the
-  Bosch Off-Highway ultrasonic sensor system
+## Ethernet Based Drivers
+
+- [**off_highway_premium_radar**](off_highway_premium_radar/README.md): Driver library and node for
+  the Bosch Radar Off-Highway Premium
+- [**off_highway_premium_radar_msgs**](off_highway_premium_radar_msgs/README.md): The custom message
+  interface for the off_highway_premium_radar package
 
 For further information, have a look at the linked package readmes.
 
-## Sensor Driver Architecture
+## CAN Based Drivers
 
-The most relevant packages for an application of the sensors are the
+- [**off_highway_can**](off_highway_can/README.md): Library containing receiver and sender
+  classes to decode / encode sensor CAN frames
+- [**off_highway_radar**](off_highway_radar/README.md): Receiver and sender nodes for the Bosch
+  Radar Off-Highway
+- [**off_highway_radar_msgs**](off_highway_radar_msgs/README.md): The custom message interface for
+  the off_highway_radar package
+- [**off_highway_uss**](off_highway_uss/README.md): Receiver and sender nodes for the Bosch
+  Ultrasonic Sensor System Off-Highway
+- [**off_highway_uss_msgs**](off_highway_uss_msgs/README.md): The custom message interface for the
+  off_highway_uss package
+
+The CAN communication based sensors were tested in a 500 kBd CAN configuration.
+
+The CAN communication based drivers offer the possibility to [log processing cycle
+times](off_highway_can/README.md). This allows you to check if your hardware in combination with
+these drivers is capable of processing your system's specific CAN load.
+
+For further information, have a look at the linked package readmes.
+
+### Architecture
+
+The most relevant packages for an application of the CAN communication based sensors are the
 [**off_highway_radar**](off_highway_radar/README.md) and
 [**off_highway_uss**](off_highway_uss/README.md) packages, which provide a `receiver` node to
 convert CAN frames received from the sensor into ROS messages and a `sender` node to provide
@@ -47,6 +57,7 @@ following diagram for a system overview:
 
 ## Further Information about the Hardware
 
+- [Radar OHW Premium](https://www.bosch-engineering.com/stories/stories-detailpages/hd-radar.html)
 - [Radar systems for off-highway
   applications](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/radar-systems-ohw/)
 - [Ultrasonic system variants and

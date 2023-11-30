@@ -1,0 +1,3 @@
+uint16 physical_address
+uint16 functional_address
+uint16 target_address

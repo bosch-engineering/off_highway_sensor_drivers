@@ -17,11 +17,11 @@
 #include "gtest/gtest.h"
 
 #include "off_highway_radar/receiver.hpp"
-#include "off_highway_common/helper.hpp"
+#include "off_highway_can/helper.hpp"
 
 #include "ament_index_cpp/get_package_share_directory.hpp"
 
-using off_highway_common::auto_static_cast;
+using off_highway_can::auto_static_cast;
 using namespace std::chrono_literals;
 
 class ObjectsPublisher : public rclcpp::Node
@@ -44,7 +44,7 @@ public:
       if (send_a) {
         auto_static_cast(can_msg_object.id, test_object.a.can_id);
         auto_static_cast(can_msg_object.header.stamp, now());
-        off_highway_common::Message & object_a_msg = msg_def[can_msg_object.id];
+        off_highway_can::Message & object_a_msg = msg_def[can_msg_object.id];
         auto_static_cast(object_a_msg.signals["ID"].value, test_object.a.id);
         auto_static_cast(object_a_msg.signals["dx"].value, test_object.a.position.x);
         auto_static_cast(object_a_msg.signals["dy"].value, test_object.a.position.y);
@@ -70,7 +70,7 @@ public:
         // Cast object B message
         auto_static_cast(can_msg_object.id, test_object.b.can_id);
         auto_static_cast(can_msg_object.header.stamp, now());
-        off_highway_common::Message & object_b_msg = msg_def[can_msg_object.id];
+        off_highway_can::Message & object_b_msg = msg_def[can_msg_object.id];
         auto_static_cast(object_b_msg.signals["ID"].value, test_object.b.id);
         auto_static_cast(
           object_b_msg.signals["timeSinceMeas"].value,

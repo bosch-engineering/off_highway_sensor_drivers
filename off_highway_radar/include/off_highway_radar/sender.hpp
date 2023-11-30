@@ -18,7 +18,7 @@
 #include <memory>
 #include <string>
 
-#include "off_highway_common/sender.hpp"
+#include "off_highway_can/sender.hpp"
 
 #include "geometry_msgs/msg/twist_stamped.hpp"
 
@@ -28,10 +28,10 @@ namespace off_highway_radar
  * \brief Radar sender class to encode CAN frames. Encodes twist (forward velocity and yaw rate)
  * input as CAN frame.
  */
-class Sender : public off_highway_common::Sender
+class Sender : public off_highway_can::Sender
 {
 public:
-  using Message = off_highway_common::Message;
+  using Message = off_highway_can::Message;
   using RadarInput = geometry_msgs::msg::TwistStamped;
 
   /**

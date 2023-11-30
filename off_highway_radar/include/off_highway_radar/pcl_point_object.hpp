@@ -29,9 +29,7 @@ namespace off_highway_radar
  */
 struct EIGEN_ALIGN16 PclPointObject
 {
-  float x{0.};
-  float y{0.};
-  float z{0.};
+  PCL_ADD_POINT4D;
   float v_x{0.};
   float v_y{0.};
   float time_since_meas{0.};

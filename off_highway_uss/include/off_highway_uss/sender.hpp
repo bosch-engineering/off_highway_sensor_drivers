@@ -17,7 +17,7 @@
 
 #include <string>
 
-#include "off_highway_common/sender.hpp"
+#include "off_highway_can/sender.hpp"
 #include "sensor_msgs/msg/temperature.hpp"
 
 namespace off_highway_uss
@@ -25,7 +25,7 @@ namespace off_highway_uss
 /**
  * \brief Uss sender class to encode CAN frames. Encodes temperature input as CAN frame.
  */
-class Sender : public off_highway_common::Sender
+class Sender : public off_highway_can::Sender
 {
 public:
   using UssInput = sensor_msgs::msg::Temperature;

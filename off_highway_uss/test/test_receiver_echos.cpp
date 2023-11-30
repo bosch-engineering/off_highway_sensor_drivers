@@ -18,11 +18,11 @@
 
 #include "test_helper.hpp"
 #include "off_highway_uss/receiver.hpp"
-#include "off_highway_common/helper.hpp"
+#include "off_highway_can/helper.hpp"
 
 #include "ament_index_cpp/get_package_share_directory.hpp"
 
-using off_highway_common::auto_static_cast;
+using off_highway_can::auto_static_cast;
 using namespace std::chrono_literals;
 
 static constexpr double kMetersToCentimeters = 0.01;
@@ -47,7 +47,7 @@ public:
       // Cast echo
       auto_static_cast(can_msg_echo.id, 0x170 + test_echo.id);
       auto_static_cast(can_msg_echo.header.stamp, now());
-      off_highway_common::Message & echo_msg = msg_def[can_msg_echo.id];
+      off_highway_can::Message & echo_msg = msg_def[can_msg_echo.id];
       auto_static_cast(echo_msg.signals["De1Distance"].value, test_echo.first.distance);
       auto_static_cast(echo_msg.signals["De2Distance"].value, test_echo.second.distance);
       auto_static_cast(

@@ -26,8 +26,8 @@
 #include "sensor_msgs/msg/point_cloud2.hpp"
 #include "can_msgs/msg/frame.hpp"
 
-#include "off_highway_common/receiver.hpp"
-#include "off_highway_common/can_message.hpp"
+#include "off_highway_can/receiver.hpp"
+#include "off_highway_can/can_message.hpp"
 #include "off_highway_uss_msgs/msg/objects.hpp"
 #include "off_highway_uss_msgs/msg/direct_echos.hpp"
 #include "off_highway_uss_msgs/msg/max_detection_range.hpp"
@@ -43,10 +43,10 @@ namespace off_highway_uss
  *
  * Line objects in point cloud are sampled along the line.
  */
-class Receiver : public off_highway_common::Receiver
+class Receiver : public off_highway_can::Receiver
 {
 public:
-  using Message = off_highway_common::Message;
+  using Message = off_highway_can::Message;
   using Object = off_highway_uss_msgs::msg::Object;
   using Objects = off_highway_uss_msgs::msg::Objects;
   using Echo = off_highway_uss_msgs::msg::Echo;

@@ -1,0 +1,21 @@
+float32 theta
+float32 theta_variance
+float32 phi
+float32 phi_variance
+float32 phi_eme
+float32 phi_eme_variance
+uint16 status
+uint16 status_eme
+float32 percent_negative_theta
+float32 min_theta_sos
+float32 max_theta_sos
+float32 theta_sos_variance
+float32 theta_sos_mean
+float32 min_phi_sos
+float32 max_phi_sos
+float32 phi_sos_variance
+float32 phi_sos_mean
+float32 phi_sos_spread
+uint16 num_sos
+uint16 num_eme
+

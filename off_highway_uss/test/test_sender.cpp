@@ -15,11 +15,11 @@
 #include "gtest/gtest.h"
 
 #include "off_highway_uss/sender.hpp"
-#include "off_highway_common/helper.hpp"
+#include "off_highway_can/helper.hpp"
 
 #include "ament_index_cpp/get_package_share_directory.hpp"
 
-using off_highway_common::auto_static_cast;
+using off_highway_can::auto_static_cast;
 using namespace std::chrono_literals;
 
 class TemperaturePublisher : public rclcpp::Node

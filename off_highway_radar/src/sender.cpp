@@ -18,7 +18,7 @@
 namespace off_highway_radar
 {
 Sender::Sender(const std::string & node_name)
-: off_highway_common::Sender(node_name)
+: off_highway_can::Sender(node_name)
 {
   declare_and_get_parameters();
 

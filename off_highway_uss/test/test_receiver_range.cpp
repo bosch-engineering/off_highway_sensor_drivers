@@ -17,11 +17,11 @@
 #include "gtest/gtest.h"
 
 #include "off_highway_uss/receiver.hpp"
-#include "off_highway_common/helper.hpp"
+#include "off_highway_can/helper.hpp"
 
 #include "ament_index_cpp/get_package_share_directory.hpp"
 
-using off_highway_common::auto_static_cast;
+using off_highway_can::auto_static_cast;
 using namespace std::chrono_literals;
 
 static constexpr double kMetersToCentimeters = 0.01;
@@ -45,7 +45,7 @@ public:
     // Cast and encode range values
     auto_static_cast(can_msg_range.id, 0x17D);
     auto_static_cast(can_msg_range.header.stamp, now());
-    off_highway_common::Message & range_msg = msg_def[can_msg_range.id];
+    off_highway_can::Message & range_msg = msg_def[can_msg_range.id];
     auto_static_cast(range_msg.signals["sens01_MaxDetRange"].value, range.max_detection_ranges[0]);
     auto_static_cast(range_msg.signals["sens02_MaxDetRange"].value, range.max_detection_ranges[1]);
     auto_static_cast(range_msg.signals["sens03_MaxDetRange"].value, range.max_detection_ranges[2]);

@@ -23,7 +23,7 @@
 
 #include "diagnostic_msgs/msg/diagnostic_status.hpp"
 
-#include "off_highway_common/helper.hpp"
+#include "off_highway_can/helper.hpp"
 
 #include "off_highway_radar/pcl_point_object.hpp"
 
@@ -31,7 +31,7 @@ namespace off_highway_radar
 {
 
 Receiver::Receiver(const std::string & node_name)
-: off_highway_common::Receiver(node_name)
+: off_highway_can::Receiver(node_name)
 {
   declare_and_get_parameters();
 
@@ -112,7 +112,7 @@ Receiver::Messages Receiver::fillMessageDefinitions()
 
 void Receiver::process(std_msgs::msg::Header header, const FrameId & id, Message & message)
 {
-  using off_highway_common::auto_static_cast;
+  using off_highway_can::auto_static_cast;
 
   if (id == info_id_) {
     info_.header = header;

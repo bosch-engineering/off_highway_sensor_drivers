@@ -29,9 +29,7 @@ namespace off_highway_uss
  */
 struct EIGEN_ALIGN16 PclPointObject
 {
-  float x{0.};
-  float y{0.};
-  float z{0.};
+  PCL_ADD_POINT4D;
   float exist_probability{0.};
   uint8_t object_type{0};
   uint8_t id{0};

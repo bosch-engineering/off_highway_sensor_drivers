@@ -18,11 +18,11 @@
 
 #include "test_helper.hpp"
 #include "off_highway_uss/receiver.hpp"
-#include "off_highway_common/helper.hpp"
+#include "off_highway_can/helper.hpp"
 
 #include "ament_index_cpp/get_package_share_directory.hpp"
 
-using off_highway_common::auto_static_cast;
+using off_highway_can::auto_static_cast;
 using namespace std::chrono_literals;
 
 static constexpr double kMetersToCentimeters = 0.01;
@@ -54,7 +54,7 @@ public:
       }
       // Cast object
       auto_static_cast(can_msg_object.header.stamp, now());
-      off_highway_common::Message & object_msg = msg_def[can_msg_object.id];
+      off_highway_can::Message & object_msg = msg_def[can_msg_object.id];
       auto_static_cast(object_msg.signals["1stPointX"].value, test_object.position_first.x);
       auto_static_cast(object_msg.signals["1stPointY"].value, test_object.position_first.y);
       auto_static_cast(object_msg.signals["ExistProbability"].value, test_object.exist_probability);

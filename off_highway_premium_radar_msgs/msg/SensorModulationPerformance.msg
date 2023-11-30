@@ -1,0 +1,12 @@
+uint8 detection_of_measurement_program
+uint8 modulation_id
+float32 distance_range_scaling
+float32 separability_distance
+float32 separability_relative_velocity
+float32 precision_distance
+float32 precision_relative_velocity
+float32 covariance_of_distance_and_relative_velocity
+float32 minimum_measurable_distance
+float32 maximum_measurable_distance
+float32 minimum_measurable_relative_velocity
+float32 maximum_measurable_relative_velocity

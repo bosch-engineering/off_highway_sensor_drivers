@@ -1,0 +1,5 @@
+uint32 lgp_version
+uint8 block_counter
+Time start_measurement
+OperationMode operation_mode
+bool data_measured

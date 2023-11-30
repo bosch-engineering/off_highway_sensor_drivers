@@ -17,11 +17,11 @@
 #include "gtest/gtest.h"
 
 #include "off_highway_uss/receiver.hpp"
-#include "off_highway_common/helper.hpp"
+#include "off_highway_can/helper.hpp"
 
 #include "ament_index_cpp/get_package_share_directory.hpp"
 
-using off_highway_common::auto_static_cast;
+using off_highway_can::auto_static_cast;
 using namespace std::chrono_literals;
 
 class InfoPublisher : public rclcpp::Node
@@ -42,7 +42,7 @@ public:
     // Cast and encode information values
     auto_static_cast(can_msg_info.id, 0x17C);
     auto_static_cast(can_msg_info.header.stamp, now());
-    off_highway_common::Message & info_msg = msg_def[can_msg_info.id];
+    off_highway_can::Message & info_msg = msg_def[can_msg_info.id];
     auto_static_cast(info_msg.signals["NumberSensors"].value, information.number_sensors);
     auto_static_cast(info_msg.signals["SendingPattern"].value, information.sending_pattern);
     auto_static_cast(info_msg.signals["OperatingMode"].value, information.operating_mode);

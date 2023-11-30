@@ -1,0 +1,8 @@
+uint8 INITIALIZATION = 13
+uint8 NORMAL = 20
+uint8 MODULATION_OFF = 22
+uint8 ALIGNMENT_MODE = 40
+uint8 RADAR_OFF = 51
+uint8 DRIVE_TEST = 61
+uint8 ERROR = 100
+uint8 operation_mode

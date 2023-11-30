@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>off_highway_uss</name>
-  <version>0.1.0</version>
+  <version>0.3.0</version>
   <description>The off_highway_uss package</description>
   <maintainer email="robin.petereit@de.bosch.com">Robin Petereit</maintainer>
   <license>Apache-2.0</license>
@@ -15,7 +15,7 @@
   <depend>rclcpp</depend>
   <depend>sensor_msgs</depend>
   <depend>can_msgs</depend>
-  <depend>off_highway_common</depend>
+  <depend>off_highway_can</depend>
   <depend>off_highway_uss_msgs</depend>
   <depend>pcl_conversions</depend>
   <depend>libpcl-all-dev</depend>

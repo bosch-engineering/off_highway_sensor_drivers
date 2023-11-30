@@ -1,11 +1,11 @@
 # off_highway_uss
 
 The off_highway_uss package provides a receiver node to receive and decode CAN frames of the Bosch
-Off-Highway Ultrasonic Sensor System (USS) into ROS messages - it implements an
-`off_highway_common::Receiver`. Furthermore, the package provides a sender node to encode and send
-needed USS input data as CAN frames - an implementation of an `off_highway_common::Sender`.
+Ultrasonic Sensor System (USS) Off-Highway into ROS messages - it implements an
+`off_highway_can::Receiver`. Furthermore, the package provides a sender node to encode and send
+needed USS input data as CAN frames - an implementation of an `off_highway_can::Sender`.
 
-Further information on the Bosch Off-Highway USS, it's inputs, outputs and how they can be
+Further information on the Bosch USS Off-Highway, it's inputs, outputs and how they can be
 interpreted can be found in the corresponding [Technical Customer Documentation (TCD) of the sensor
 system](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/ultrasonic-sensor-systems-ohw/).
 
@@ -13,13 +13,13 @@ system](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems
 
 | **Device name** | **Part Number** | **Description** |
 | - | - | - |
-| Ultrasonic Sensor System Premium | - F037.000.125  (series) <br> - F037.B00.672-01 (sample) <br> both of it from software version SW2.0.0 | - Ultrasonic sensor system with up to 12 sensors <br> - Up to 20 objects and up to 36 distances <br> - Object and distance output on automotive CAN is supported |
-| Ultrasonic Sensor System Entry | - F037.000.145 (series) <br> - F037.000.105 (series - 12V version) <br> both of it from software version SW2.0.0 | - Ultrasonic sensor system with up to 12 sensors <br> - Up to 36 distances <br> - Distance output on automotive CAN is supported |
+| Ultrasonic Sensor System OHW Premium | - F037.000.125  (series) <br> - F037.B00.672-01 (sample) <br> both of it from software version SW2.0.0 | - Ultrasonic sensor system with up to 12 sensors <br> - Up to 20 objects and up to 36 distances <br> - Object and distance output on automotive CAN is supported |
+| Ultrasonic Sensor System OHW Entry | - F037.000.145 (series) <br> - F037.000.105 (series - 12V version) <br> both of it from software version SW2.0.0 | - Ultrasonic sensor system with up to 12 sensors <br> - Up to 36 distances <br> - Distance output on automotive CAN is supported |
 
 Further information: [Ultrasonic system variants and
   sensors](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/ultrasonic-sensor-systems-ohw/)
 
-Contact: [**off-highway.beg@bosch.com**](mailto:off-highway.beg@bosch.com?subject=off_highway_sensor_drivers%20Ultrasonic%20Sensors)
+Contact: [**off-highway.beg@bosch.com**](mailto:off-highway.beg@bosch.com?subject=off_highway_sensor_drivers%20Ultrasonic%20OHW%20Sensors)
 
 ## Nodes
 

@@ -1,0 +1,29 @@
+/**:
+  ros__parameters:
+    # Specify as 0.0.0.0 or do not specify to use all local interfaces.
+    # (Then, one network interface needs to be configured to the destination IP configured on the
+    # sensor)
+    host_ip: "192.168.40.2"
+    host_port: 0x76C0
+    sensor_ip: "192.168.40.51"
+    sensor_port: 0x76C6
+
+    # Set to true to connect socket to sensor IP.
+    # This enables running multiple drivers for different sensors in parallel for the same host
+    # port, but each driver socket will not be able to receive, process and publish sensor broadcast
+    # messages.
+    connect_socket: false
+
+    # Frame used for all data
+    frame_id: "base_link"
+
+    # Stamp messages with time from sensor if possible for message or with ROS time
+    use_sensor_time: false
+
+    # Subscribe to ego vehicle data and send it to sensor
+    send_ego_vehicle_data: false
+
+    # Synchronize measurement cycle
+    synchronize_measurement_cycle: false
+    # Sensor time offset to send to sensor if measurement cycle synchronization is active
+    sensor_time_offset: 0  # [ns]

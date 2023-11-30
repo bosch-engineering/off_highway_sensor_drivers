@@ -1,0 +1,7 @@
+std_msgs/Header header
+Time start_measurement
+uint32 lgp_version
+uint8 block_counter
+OperationMode operation_mode
+bool data_measured
+uint16 num_locations

@@ -18,7 +18,7 @@
 namespace off_highway_uss
 {
 Sender::Sender(const std::string & node_name)
-: off_highway_common::Sender(node_name)
+: off_highway_can::Sender(node_name)
 {
   declare_and_get_parameters();
 
@@ -48,7 +48,7 @@ void Sender::callback_input(const UssInput::SharedPtr msg)
 
 void Sender::fillMessageDefinitions()
 {
-  using Message = off_highway_common::Message;
+  using Message = off_highway_can::Message;
 
   Message vehicle_data_1;
   vehicle_data_1.name = "VehicleData1";

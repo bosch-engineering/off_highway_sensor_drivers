@@ -1,0 +1,2 @@
+bool sync
+builtin_interfaces/Time sensor_time_offset

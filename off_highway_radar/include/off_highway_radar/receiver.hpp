@@ -23,7 +23,7 @@
 #include "sensor_msgs/msg/point_cloud2.hpp"
 #include "can_msgs/msg/frame.hpp"
 
-#include "off_highway_common/receiver.hpp"
+#include "off_highway_can/receiver.hpp"
 #include "off_highway_radar_msgs/msg/object.hpp"
 #include "off_highway_radar_msgs/msg/object_a.hpp"
 #include "off_highway_radar_msgs/msg/object_b.hpp"
@@ -38,10 +38,10 @@ namespace off_highway_radar
  * Object list is published as simple list or as point cloud. Sensor information frame is used as
  * diagnostic input and also published directly.
  */
-class Receiver : public off_highway_common::Receiver
+class Receiver : public off_highway_can::Receiver
 {
 public:
-  using Message = off_highway_common::Message;
+  using Message = off_highway_can::Message;
   using Object = off_highway_radar_msgs::msg::Object;
   using ObjectA = off_highway_radar_msgs::msg::ObjectA;
   using ObjectB = off_highway_radar_msgs::msg::ObjectB;
