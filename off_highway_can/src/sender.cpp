@@ -17,8 +17,10 @@
 
 namespace off_highway_can
 {
-Sender::Sender(const std::string & node_name)
-: rclcpp::Node(node_name)
+Sender::Sender(
+  const std::string & node_name,
+  const rclcpp::NodeOptions & options)
+: rclcpp::Node(node_name, options)
 {
   last_message_sent_ = now();
   declare_and_get_parameters();

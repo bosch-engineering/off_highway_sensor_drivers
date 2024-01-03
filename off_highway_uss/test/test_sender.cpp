@@ -17,8 +17,6 @@
 #include "off_highway_uss/sender.hpp"
 #include "off_highway_can/helper.hpp"
 
-#include "ament_index_cpp/get_package_share_directory.hpp"
-
 using off_highway_can::auto_static_cast;
 using namespace std::chrono_literals;
 
@@ -93,18 +91,15 @@ private:
 
 void TestUssSender::create_sender()
 {
-  node_ = std::make_shared<off_highway_uss::Sender>("uss_sender_test_node");
-
-  // Get parameter values from yaml file
-  std::string package_directory =
-    ament_index_cpp::get_package_share_directory("off_highway_uss");
-  std::string filename = "/config/sender_params.yaml";
-  auto params = rclcpp::parameter_map_from_yaml_file(package_directory + filename);
-  ASSERT_TRUE(
-    node_->set_parameters_atomically(params.at("/off_highway_uss_sender")).successful);
-
   // Overwrite allowed age to avoid timing issues in unit tests
-  ASSERT_TRUE(node_->set_parameter(rclcpp::Parameter("allowed_age", 0.1)).successful);
+  std::vector<rclcpp::Parameter> params = {
+    rclcpp::Parameter("allowed_age", 1.0)
+  };
+  auto node_options = rclcpp::NodeOptions();
+  node_options.parameter_overrides(params);
+  node_ = std::make_shared<off_highway_uss::Sender>("uss_sender_test_node", node_options);
+
+  ASSERT_EQ(node_->get_parameter("allowed_age").as_double(), 1.0);
 
   temperature_subscriber_ = std::make_shared<TemperatureSubscriber>();
 }
@@ -113,7 +108,7 @@ void TestUssSender::publish_temperature(double temperature)
 {
   temperature_publisher_ = std::make_shared<TemperaturePublisher>(temperature);
 
-  spin_sender(10ms);
+  spin_sender(500ms);
 
   // Generate and encode expected CAN values
   off_highway_uss::Sender sender;
@@ -127,7 +122,7 @@ void TestUssSender::publish_temperature(double temperature)
 
 std::vector<can_msgs::msg::Frame> TestUssSender::get_can_buffer()
 {
-  spin_subscriber(20ms);  // Needs to spin twice to receive both can messages
+  spin_subscriber(500ms);  // Needs to spin at least twice to receive both can messages
   return temperature_subscriber_->get_can_buffer();
 }
 
@@ -136,7 +131,7 @@ void TestUssSender::spin_sender(const std::chrono::nanoseconds & duration)
   rclcpp::Time start_time = node_->now();
   while (rclcpp::ok() && node_->now() - start_time <= duration) {
     rclcpp::spin_some(node_);
-    rclcpp::sleep_for(10ms);
+    rclcpp::sleep_for(100ms);
   }
 }
 
@@ -145,7 +140,7 @@ void TestUssSender::spin_subscriber(const std::chrono::nanoseconds & duration)
   rclcpp::Time start_time = node_->now();
   while (rclcpp::ok() && node_->now() - start_time <= duration) {
     rclcpp::spin_some(temperature_subscriber_);
-    rclcpp::sleep_for(10ms);
+    rclcpp::sleep_for(100ms);
   }
 }
 

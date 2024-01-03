@@ -16,12 +16,6 @@ off_highway_uss_receiver:
 
     # TF frame id for all published messages of the receiver
     node_frame_id: base_link
-    # CAN frame id of first object message
-    object_base_id: 0x180
-    # CAN frame id of first direct echo message
-    direct_echo_base_id: 0x170
-    # CAN frame id of max detection range message
-    max_detection_range_id: 0x17D
-    # CAN frame id of sensor info message
-    info_id: 0x17C
+    # CAN frame id offset for functional frames
+    can_id_offset: 0x170
 

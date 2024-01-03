@@ -17,8 +17,10 @@
 
 namespace off_highway_uss
 {
-Sender::Sender(const std::string & node_name)
-: off_highway_can::Sender(node_name)
+Sender::Sender(
+  const std::string & node_name,
+  const rclcpp::NodeOptions & options)
+: off_highway_can::Sender(node_name, options)
 {
   declare_and_get_parameters();
 

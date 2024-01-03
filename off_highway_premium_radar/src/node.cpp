@@ -19,8 +19,10 @@
 namespace off_highway_premium_radar
 {
 
-Node::Node(const std::string & node_name)
-: rclcpp::Node(node_name)
+Node::Node(
+  const std::string & node_name,
+  const rclcpp::NodeOptions & options)
+: rclcpp::Node(node_name, options)
 {
 }
 

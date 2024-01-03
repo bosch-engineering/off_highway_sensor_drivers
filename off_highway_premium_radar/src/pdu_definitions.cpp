@@ -348,10 +348,10 @@ std::vector<uint8_t> EgoVehicleInput::serialize()
 {
   pdu_id = htobe32(kPduId);
   pdu_payload_length = htobe32(kPduPayloadLength);
-  vehicle_data.EgoData_RelYawRate = htobe32(vehicle_data.EgoData_RelYawRate);
-  vehicle_data.EgoData_VehSpd = htobe32(vehicle_data.EgoData_VehSpd);
-  vehicle_data.EgoData_VehSpdStdDev = htobe32(vehicle_data.EgoData_VehSpdStdDev);
-  vehicle_data.EgoData_LogAcc = htobe32(vehicle_data.EgoData_LogAcc);
+  vehicle_data.EgoData_RelYawRate = htobe32f(vehicle_data.EgoData_RelYawRate);
+  vehicle_data.EgoData_VehSpd = htobe32f(vehicle_data.EgoData_VehSpd);
+  vehicle_data.EgoData_VehSpdStdDev = htobe32f(vehicle_data.EgoData_VehSpdStdDev);
+  vehicle_data.EgoData_LogAcc = htobe32f(vehicle_data.EgoData_LogAcc);
 
   std::vector<uint8_t> buffer;
   buffer.resize(sizeof(*this));

@@ -13,13 +13,12 @@
 // limitations under the License.
 
 #include <random>
+#include <stdexcept>
 
 #include "gtest/gtest.h"
 
 #include "off_highway_radar/receiver.hpp"
 #include "off_highway_can/helper.hpp"
-
-#include "ament_index_cpp/get_package_share_directory.hpp"
 
 using off_highway_can::auto_static_cast;
 using namespace std::chrono_literals;
@@ -166,18 +165,15 @@ class TestRadarReceiver : public ::testing::Test
 protected:
   void SetUp() override
   {
-    node_ = std::make_shared<off_highway_radar::Receiver>("radar_receiver_test_node");
-
-    // Get parameter values from yaml file
-    std::string package_directory =
-      ament_index_cpp::get_package_share_directory("off_highway_radar");
-    std::string filename = "/config/receiver_params.yaml";
-    auto params = rclcpp::parameter_map_from_yaml_file(package_directory + filename);
-    ASSERT_TRUE(
-      node_->set_parameters_atomically(params.at("/off_highway_radar_receiver")).successful);
-
     // Overwrite allowed age to avoid timing issues in unit tests
-    ASSERT_TRUE(node_->set_parameter(rclcpp::Parameter("allowed_age", 0.1)).successful);
+    std::vector<rclcpp::Parameter> params = {
+      rclcpp::Parameter("allowed_age", 1.0)
+    };
+    auto node_options = rclcpp::NodeOptions();
+    node_options.parameter_overrides(params);
+    node_ = std::make_shared<off_highway_radar::Receiver>("radar_receiver_test_node", node_options);
+
+    ASSERT_EQ(node_->get_parameter("allowed_age").as_double(), 1.0);
 
     objects_subscriber_ = std::make_shared<ObjectsSubscriber>();
   }
@@ -209,7 +205,7 @@ void TestRadarReceiver::publish_objects(
 
 off_highway_radar_msgs::msg::Objects TestRadarReceiver::get_objects()
 {
-  spin_subscriber(10ms);
+  spin_subscriber(500ms);
   off_highway_radar_msgs::msg::Objects subscribed_objects_ = objects_subscriber_->get_objects();
   return subscribed_objects_;
 }
@@ -227,7 +223,7 @@ void TestRadarReceiver::spin_subscriber(const std::chrono::nanoseconds & duratio
   rclcpp::Time start_time = node_->now();
   while (rclcpp::ok() && node_->now() - start_time <= duration) {
     rclcpp::spin_some(objects_subscriber_);
-    rclcpp::sleep_for(10ms);
+    rclcpp::sleep_for(100ms);
   }
 }
 
@@ -541,6 +537,37 @@ TEST_F(TestRadarReceiver, test40RandomValidObjects) {
   bool send_b = true;
   publish_objects(test_objects, send_a, send_b);
   verify_objects(test_objects, get_objects(), send_a, send_b);
+}
+
+TEST_F(TestRadarReceiver, testInvalidObjectIdA) {
+  off_highway_radar_msgs::msg::Objects test_objects;
+  off_highway_radar_msgs::msg::Object test_object;
+  // Set values for object A message
+  test_object.a.id = 40;
+  test_object.a.can_id = 0x200;
+  test_object.a.valid = true;
+
+  test_objects.objects.push_back(test_object);
+
+  bool send_a = true;
+  bool send_b = false;
+
+  EXPECT_THROW(publish_objects(test_objects, send_a, send_b), std::runtime_error);
+}
+
+TEST_F(TestRadarReceiver, testInvalidObjectIdB) {
+  off_highway_radar_msgs::msg::Objects test_objects;
+  off_highway_radar_msgs::msg::Object test_object;
+  // Set values for object B message
+  test_object.b.id = 40;
+  test_object.b.can_id = 0x201;
+
+  test_objects.objects.push_back(test_object);
+
+  bool send_a = false;
+  bool send_b = true;
+
+  EXPECT_THROW(publish_objects(test_objects, send_a, send_b), std::runtime_error);
 }
 
 int main(int argc, char ** argv)

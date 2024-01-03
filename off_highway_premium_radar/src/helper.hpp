@@ -17,9 +17,10 @@
 #include <endian.h>
 
 #include <cstdint>
-#include <stdexcept>
+#include <limits>
 #include <utility>
 #include <vector>
+#include <stdexcept>
 
 namespace off_highway_premium_radar
 {
@@ -65,15 +66,30 @@ inline uint16_t read_uint16_be(const uint8_t * buffer)
   return be16toh(memcpy_from_bytes<uint16_t>(buffer));
 }
 
+// Require standard 32-bit float representation
+static_assert(std::numeric_limits<float>::is_iec559, "IEC559 / IEEE754 floating point required!");
+static_assert(sizeof(float) == sizeof(uint32_t), "32-bit floating point required!");
+
 /**
- * \brief Convert big-endian 32-bit float to host-ordered float
- *
+ * \brief Convert big-endian 32-bit float to host-ordered 32-bit float
+ * \note Requires / assumes IEEE754 floating point representation
  * \param in Big-endian ordered 32-bit float
- * \return Host-ordered float
+ * \return Host-ordered 32-bit float
  */
 inline float be32tohf(float in)
 {
   return std::bit_cast<float>(be32toh(std::bit_cast<uint32_t>(in)));
+}
+
+/**
+ * \brief Convert host-ordered 32-bit float to big-endian 32-bit float
+ * \note Requires / assumes IEEE754 floating point representation
+ * \param in Host-ordered 32-bit float
+ * \return Big-endian ordered 32-bit float
+ */
+inline float htobe32f(float in)
+{
+  return std::bit_cast<float>(htobe32(std::bit_cast<uint32_t>(in)));
 }
 
 /**

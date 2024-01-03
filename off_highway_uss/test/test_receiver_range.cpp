@@ -19,8 +19,6 @@
 #include "off_highway_uss/receiver.hpp"
 #include "off_highway_can/helper.hpp"
 
-#include "ament_index_cpp/get_package_share_directory.hpp"
-
 using off_highway_can::auto_static_cast;
 using namespace std::chrono_literals;
 
@@ -100,18 +98,15 @@ class TestUssReceiver : public ::testing::Test
 protected:
   void SetUp() override
   {
-    node_ = std::make_shared<off_highway_uss::Receiver>("uss_receiver_test_node");
-
-    // Get parameter values from yaml file
-    std::string package_directory =
-      ament_index_cpp::get_package_share_directory("off_highway_uss");
-    std::string filename = "/config/receiver_params.yaml";
-    auto params = rclcpp::parameter_map_from_yaml_file(package_directory + filename);
-    ASSERT_TRUE(
-      node_->set_parameters_atomically(params.at("/off_highway_uss_receiver")).successful);
-
     // Overwrite allowed age to avoid timing issues in unit tests
-    ASSERT_TRUE(node_->set_parameter(rclcpp::Parameter("allowed_age", 0.1)).successful);
+    std::vector<rclcpp::Parameter> params = {
+      rclcpp::Parameter("allowed_age", 1.0)
+    };
+    auto node_options = rclcpp::NodeOptions();
+    node_options.parameter_overrides(params);
+    node_ = std::make_shared<off_highway_uss::Receiver>("uss_receiver_test_node", node_options);
+
+    ASSERT_EQ(node_->get_parameter("allowed_age").as_double(), 1.0);
 
     range_subscriber_ = std::make_shared<RangeSubscriber>();
 
@@ -136,7 +131,7 @@ private:
 void TestUssReceiver::publish_range(off_highway_uss_msgs::msg::MaxDetectionRange range)
 {
   range_publisher_ = std::make_shared<RangePublisher>(range);
-  wait_some(100ms);
+  wait_some(500ms);
 }
 
 off_highway_uss_msgs::msg::MaxDetectionRange TestUssReceiver::get_range()

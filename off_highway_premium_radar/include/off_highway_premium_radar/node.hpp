@@ -45,7 +45,9 @@ public:
    *
    * \param node_name Name of node
    */
-  explicit Node(const std::string & node_name);
+  explicit Node(
+    const std::string & node_name,
+    const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
   /**
    * \brief Create driver, configure converters, register receivers and start receiving

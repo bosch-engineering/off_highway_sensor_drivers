@@ -58,7 +58,9 @@ public:
   /**
    * \brief Construct a new Receiver object.
    */
-  explicit Receiver(const std::string & node_name = "receiver");
+  explicit Receiver(
+    const std::string & node_name = "receiver",
+    const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
   /**
    * \brief Destroy the Receiver object.
@@ -146,6 +148,10 @@ protected:
    */
   void declare_and_get_parameters();
 
+  static constexpr uint8_t kDirectEchoBaseIdOffset = 0x0;
+  static constexpr uint8_t kInfoIdOffset = 0x0C;
+  static constexpr uint8_t kMaxDetectionRangeIdOffset = 0xD;
+  static constexpr uint8_t kObjectBaseIdOffset = 0x10;
   static constexpr uint8_t kCountObjects = 20;
   static constexpr uint8_t kCountObjectFrames = kCountObjects / 2;
   static constexpr uint8_t kCountDirectEchos = 12;
@@ -164,6 +170,8 @@ protected:
   rclcpp::TimerBase::SharedPtr publish_objects_timer_;
   rclcpp::TimerBase::SharedPtr publish_direct_echos_timer_;
 
+  /// CAN frame id offset for functional frames
+  uint32_t can_id_offset_;
   /// CAN id of first object message (USS_MAP_OBJ_01)
   uint32_t object_base_id_;
   /// CAN id of first direct echo message (USS_DEMsg_Sens_01)

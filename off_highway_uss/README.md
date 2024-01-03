@@ -32,11 +32,11 @@ All received messages are checked for their cyclic redundancy check (CRC), rolli
 and age (message not older than parameter `allowed_age`). If any of these checks do not succeed the
 received message is not further processed and skipped.
 
-The relevant USS CAN frame IDs to process are specified by the `object_base_id`,
-`direct_echo_base_id`, `max_detection_range_id` and `info_id` parameters. They should correspond to
-the first object / echo frame ID, the max detection range frame ID and the info signal frame ID of
-the USS CAN node and need to be adapted for the specific bus setup. If multiple USS systems need to
-be decoded on the same bus just launch multiple receiver nodes with individual `*_id` parameters.
+The relevant USS CAN frame IDs to process (`object_base_id`, `direct_echo_base_id`,
+`max_detection_range_id` and `info_id`) are calculated from the `can_id_offset` parameter with
+constant offsets. It should correspond to the value configured in the USS ECU and needs to be
+adapted for the specific bus setup. If multiple USS systems need to be decoded on the same bus just
+launch multiple receiver nodes with individual `can_id_offset` parameters.
 
 The object data is published as a list of objects or as a point cloud and contains up to 20 objects
 (sensor limit). Only valid objects in the list are published (type not `TYPE_NONE`). Line objects in

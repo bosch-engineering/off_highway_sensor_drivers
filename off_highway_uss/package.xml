@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>off_highway_uss</name>
-  <version>0.3.0</version>
+  <version>0.4.0</version>
   <description>The off_highway_uss package</description>
   <maintainer email="robin.petereit@de.bosch.com">Robin Petereit</maintainer>
   <license>Apache-2.0</license>
@@ -18,12 +18,12 @@
   <depend>off_highway_can</depend>
   <depend>off_highway_uss_msgs</depend>
   <depend>pcl_conversions</depend>
+  <depend>pcl_ros</depend>
   <depend>libpcl-all-dev</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
   <test_depend>ament_cmake_ros</test_depend>
-  <test_depend>ament_index_cpp</test_depend>
 
   <export>
    <build_type>ament_cmake</build_type>

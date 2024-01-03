@@ -19,8 +19,10 @@
 
 namespace off_highway_can
 {
-Receiver::Receiver(const std::string & node_name)
-: rclcpp::Node(node_name)
+Receiver::Receiver(
+  const std::string & node_name,
+  const rclcpp::NodeOptions & options)
+: rclcpp::Node(node_name, options)
 {
   this->last_message_received_ = now();
   this->declare_and_get_parameters();

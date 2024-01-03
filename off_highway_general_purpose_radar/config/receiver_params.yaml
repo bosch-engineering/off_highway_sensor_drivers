@@ -1,0 +1,19 @@
+off_highway_general_purpose_radar_receiver:
+  ros__parameters:
+    # Frequency of watchdog to check if a sensor message was received
+    watchdog_frequency: 10.0
+    # Allowed age corresponding to output cycle time of sensor plus safety margin
+    allowed_age: 0.2
+    # Frequency at which current object list (point cloud) is published. Corresponds
+    # to ~100 ms radar sending cycle time.
+    publish_frequency: 10.0
+    # Timeout period. Receiver goes into timeout error if for the specified period no sensor message was
+    # received.
+    timeout: 0.2
+
+    # TF frame id for all published messages of the receiver
+    node_frame_id: base_link
+    # CAN frame id of first target message
+    target_base_id: 0x200
+    # CAN frame id of sensor info message
+    info_id: 0x100

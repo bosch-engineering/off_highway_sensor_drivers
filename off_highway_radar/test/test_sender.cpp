@@ -17,8 +17,6 @@
 #include "off_highway_radar/sender.hpp"
 #include "off_highway_can/helper.hpp"
 
-#include "ament_index_cpp/get_package_share_directory.hpp"
-
 using off_highway_can::auto_static_cast;
 using namespace std::chrono_literals;
 static constexpr double kRadToDegree = 180. / M_PI;
@@ -97,18 +95,15 @@ private:
 
 void TestRadarSender::create_sender()
 {
-  node_ = std::make_shared<off_highway_radar::Sender>("radar_sender_test_node");
-
-  // Get parameter values from yaml file
-  std::string package_directory =
-    ament_index_cpp::get_package_share_directory("off_highway_radar");
-  std::string filename = "/config/sender_params.yaml";
-  auto params = rclcpp::parameter_map_from_yaml_file(package_directory + filename);
-  ASSERT_TRUE(
-    node_->set_parameters_atomically(params.at("/off_highway_radar_sender")).successful);
-
   // Overwrite allowed age to avoid timing issues in unit tests
-  ASSERT_TRUE(node_->set_parameter(rclcpp::Parameter("allowed_age", 0.1)).successful);
+  std::vector<rclcpp::Parameter> params = {
+    rclcpp::Parameter("allowed_age", 1.0)
+  };
+  auto node_options = rclcpp::NodeOptions();
+  node_options.parameter_overrides(params);
+  node_ = std::make_shared<off_highway_radar::Sender>("radar_sender_test_node", node_options);
+
+  ASSERT_EQ(node_->get_parameter("allowed_age").as_double(), 1.0);
 
   velocity_subscriber_ = std::make_shared<VelocitySubscriber>();
 }
@@ -117,7 +112,7 @@ void TestRadarSender::publish_velocity(double velocity, double yaw)
 {
   velocity_publisher_ = std::make_shared<VelocityPublisher>(velocity, yaw);
 
-  spinSender(10ms);
+  spinSender(500ms);
 
   // Generate and encode expected CAN values
   static const uint32_t velocity_id = 0x50;
@@ -139,7 +134,7 @@ void TestRadarSender::publish_velocity(double velocity, double yaw)
 
 std::vector<can_msgs::msg::Frame> TestRadarSender::get_can_buffer()
 {
-  spinSubscriber(20ms);  // Needs to spin twice to receive both can messages
+  spinSubscriber(500ms);  // Needs to spin at least twice to receive both can messages
   return velocity_subscriber_->get_can_buffer();
 }
 
@@ -148,7 +143,7 @@ void TestRadarSender::spinSender(const std::chrono::nanoseconds & duration)
   rclcpp::Time start_time = node_->now();
   while (rclcpp::ok() && node_->now() - start_time <= duration) {
     rclcpp::spin_some(node_);
-    rclcpp::sleep_for(10ms);
+    rclcpp::sleep_for(100ms);
   }
 }
 
@@ -157,7 +152,7 @@ void TestRadarSender::spinSubscriber(const std::chrono::nanoseconds & duration)
   rclcpp::Time start_time = node_->now();
   while (rclcpp::ok() && node_->now() - start_time <= duration) {
     rclcpp::spin_some(velocity_subscriber_);
-    rclcpp::sleep_for(10ms);
+    rclcpp::sleep_for(100ms);
   }
 }
 

@@ -33,7 +33,9 @@ public:
   /**
    * \brief Construct a new Sender object.
    */
-  explicit Sender(const std::string & node_name = "sender");
+  explicit Sender(
+    const std::string & node_name = "sender",
+    const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
   /**
    * \brief Destroy the Receiver object.

@@ -17,6 +17,7 @@ find_package(can_msgs REQUIRED)
 find_package(off_highway_can REQUIRED)
 find_package(off_highway_uss_msgs REQUIRED)
 find_package(pcl_conversions REQUIRED)
+find_package(pcl_ros REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common)
 
 set(dependencies
@@ -26,6 +27,7 @@ set(dependencies
   off_highway_can
   off_highway_uss_msgs
   pcl_conversions
+  pcl_ros
   PCL
 )
 
@@ -95,14 +97,12 @@ if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 
-  find_package(ament_index_cpp REQUIRED)
   find_package(ament_cmake_ros REQUIRED)
   ament_add_ros_isolated_gtest(test_uss_receiver_information test/test_receiver_information.cpp)
   target_include_directories(test_uss_receiver_information PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
   )
-  ament_target_dependencies(test_uss_receiver_information SYSTEM ament_index_cpp)
   target_link_libraries(test_uss_receiver_information ${PROJECT_NAME})
 
   ament_add_ros_isolated_gtest(test_receiver_objects test/test_receiver_objects.cpp)
@@ -110,7 +110,6 @@ if(BUILD_TESTING)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
   )
-  ament_target_dependencies(test_receiver_objects SYSTEM ament_index_cpp)
   target_link_libraries(test_receiver_objects ${PROJECT_NAME})
 
   ament_add_ros_isolated_gtest(test_receiver_echos test/test_receiver_echos.cpp)
@@ -118,7 +117,6 @@ if(BUILD_TESTING)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
   )
-  ament_target_dependencies(test_receiver_echos SYSTEM ament_index_cpp)
   target_link_libraries(test_receiver_echos ${PROJECT_NAME})
 
   ament_add_ros_isolated_gtest(test_receiver_range test/test_receiver_range.cpp)
@@ -126,7 +124,6 @@ if(BUILD_TESTING)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
   )
-  ament_target_dependencies(test_receiver_range SYSTEM ament_index_cpp)
   target_link_libraries(test_receiver_range ${PROJECT_NAME})
 
   ament_add_ros_isolated_gtest(test_sender test/test_sender.cpp)
@@ -134,8 +131,14 @@ if(BUILD_TESTING)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
   )
-  ament_target_dependencies(test_sender SYSTEM ament_index_cpp)
   target_link_libraries(test_sender ${PROJECT_NAME})
+
+  ament_add_ros_isolated_gtest(test_pcl_point_object test/test_pcl_point_object.cpp)
+  target_include_directories(test_pcl_point_object PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_link_libraries(test_pcl_point_object ${PROJECT_NAME})
 endif()
 
 ament_package()

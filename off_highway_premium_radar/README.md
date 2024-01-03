@@ -69,8 +69,8 @@ with custom converter classes. See [design](doc/design.md) for an overview.
 
 * **~/ego_vehicle_data
   ([`off_highway_premium_radar_msgs/EgoVehicleData`](../off_highway_premium_radar_msgs/msg/EgoVehicleInput.msg))**
-  * **Optional, not supported by sensor firmware yet**, subscription is deactivated per default. Can
-    be activated via `send_ego_vehicle_data` ROS parameter.
+  * **Optional**, subscription is deactivated per default. Can be activated via
+    `send_ego_vehicle_data` ROS parameter.
   * Expected cycle time: 10 ms
   * Contains current velocity with covariance and acceleration. Only forward speed, forward speed
     variance, forward acceleration and yaw rate are used by the driver / sensor.
@@ -141,10 +141,8 @@ with custom converter classes. See [design](doc/design.md) for an overview.
     indicators.
 * **/diagnostics
   ([`diagnostic_msgs/msg/DiagnosticArray`](http://docs.ros.org/en/noetic/api/diagnostic_msgs/html/msg/DiagnosticArray.html))**
-  * Update Rate: On each sensor information CAN frame or if receiver timed out periodically with
-    timeout period
-  * Diagnostic status contains statuses from the latest received sensor information and timeout
-    status.
+  * Frequency: 1 Hz
+  * Diagnostic status contains statuses for all published and subscribed topics.
 
 #### Services
 

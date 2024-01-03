@@ -20,8 +20,6 @@
 #include "off_highway_uss/receiver.hpp"
 #include "off_highway_can/helper.hpp"
 
-#include "ament_index_cpp/get_package_share_directory.hpp"
-
 using off_highway_can::auto_static_cast;
 using namespace std::chrono_literals;
 
@@ -117,18 +115,15 @@ class TestUssReceiver : public ::testing::Test
 protected:
   void SetUp() override
   {
-    node_ = std::make_shared<off_highway_uss::Receiver>("uss_receiver_test_node");
-
-    // Get parameter values from yaml file
-    std::string package_directory =
-      ament_index_cpp::get_package_share_directory("off_highway_uss");
-    std::string filename = "/config/receiver_params.yaml";
-    auto params = rclcpp::parameter_map_from_yaml_file(package_directory + filename);
-    ASSERT_TRUE(
-      node_->set_parameters_atomically(params.at("/off_highway_uss_receiver")).successful);
-
     // Overwrite allowed age to avoid timing issues in unit tests
-    ASSERT_TRUE(node_->set_parameter(rclcpp::Parameter("allowed_age", 0.1)).successful);
+    std::vector<rclcpp::Parameter> params = {
+      rclcpp::Parameter("allowed_age", 1.0)
+    };
+    auto node_options = rclcpp::NodeOptions();
+    node_options.parameter_overrides(params);
+    node_ = std::make_shared<off_highway_uss::Receiver>("uss_receiver_test_node", node_options);
+
+    ASSERT_EQ(node_->get_parameter("allowed_age").as_double(), 1.0);
 
     objects_subscriber_ = std::make_shared<ObjectsSubscriber>();
   }
@@ -157,7 +152,7 @@ void TestUssReceiver::publish_objects(off_highway_uss_msgs::msg::Objects objects
 
 off_highway_uss_msgs::msg::Objects TestUssReceiver::get_objects()
 {
-  spin_subscriber(10ms);
+  spin_subscriber(500ms);
   off_highway_uss_msgs::msg::Objects subscribed_objects_ = objects_subscriber_->get_objects();
   return subscribed_objects_;
 }
@@ -175,7 +170,7 @@ void TestUssReceiver::spin_subscriber(const std::chrono::nanoseconds & duration)
   rclcpp::Time start_time = node_->now();
   while (rclcpp::ok() && node_->now() - start_time <= duration) {
     rclcpp::spin_some(objects_subscriber_);
-    rclcpp::sleep_for(10ms);
+    rclcpp::sleep_for(100ms);
   }
 }
 

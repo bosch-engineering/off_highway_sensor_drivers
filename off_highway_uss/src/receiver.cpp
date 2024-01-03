@@ -31,8 +31,10 @@
 namespace off_highway_uss
 {
 
-Receiver::Receiver(const std::string & node_name)
-: off_highway_can::Receiver(node_name)
+Receiver::Receiver(
+  const std::string & node_name,
+  const rclcpp::NodeOptions & options)
+: off_highway_can::Receiver(node_name, options)
 {
   declare_and_get_parameters();
 
@@ -397,20 +399,12 @@ void Receiver::declare_and_get_parameters()
   declare_parameter<double>("publish_frequency", 25.0, param_desc);
   publish_frequency_ = get_parameter("publish_frequency").as_double();
 
-  param_desc.description = "CAN frame id of first object message";
-  declare_parameter<int>("object_base_id", 0x180, param_desc);
-  object_base_id_ = get_parameter("object_base_id").as_int();
-
-  param_desc.description = "CAN frame id of first direct echo message";
-  declare_parameter<int>("direct_echo_base_id", 0x170, param_desc);
-  direct_echo_base_id_ = get_parameter("direct_echo_base_id").as_int();
-
-  param_desc.description = "CAN frame id of max detection range message";
-  declare_parameter<int>("max_detection_range_id", 0x17d, param_desc);
-  max_detection_range_id_ = get_parameter("max_detection_range_id").as_int();
-
-  param_desc.description = "CAN frame id of sensor info message";
-  declare_parameter<int>("info_id", 0x17c, param_desc);
-  info_id_ = get_parameter("info_id").as_int();
+  param_desc.description = "CAN frame id offset for functional frames";
+  declare_parameter<int>("can_id_offset", 0x170, param_desc);
+  can_id_offset_ = get_parameter("can_id_offset").as_int();
+  direct_echo_base_id_ = can_id_offset_ + kDirectEchoBaseIdOffset;
+  info_id_ = can_id_offset_ + kInfoIdOffset;
+  max_detection_range_id_ = can_id_offset_ + kMaxDetectionRangeIdOffset;
+  object_base_id_ = can_id_offset_ + kObjectBaseIdOffset;
 }
 }  // namespace off_highway_uss

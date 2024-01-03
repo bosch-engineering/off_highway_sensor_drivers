@@ -1,0 +1,12 @@
+std_msgs/Header header
+uint8 sensor_type
+float64 hw_temperature
+bool sensor_blind
+bool sw_fail
+bool hw_fail
+bool can_fail
+bool config_fail
+bool diag_mode
+uint32 dtc
+uint8 dtc_order_id
+bool sensor_not_safe

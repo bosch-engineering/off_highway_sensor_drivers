@@ -20,6 +20,10 @@ For further information, have a look at the linked package readmes.
 
 - [**off_highway_can**](off_highway_can/README.md): Library containing receiver and sender
   classes to decode / encode sensor CAN frames
+- [**off_highway_general_purpose_radar**](off_highway_general_purpose_radar/README.md): Receiver
+  node for the Bosch General Purpose Radar Off-Highway (GPR)
+- [**off_highway_general_purpose_radar_msgs**](off_highway_general_purpose_radar_msgs/README.md):
+  The custom message interface for the Bosch General Purpose Radar Off-Highway (GPR)
 - [**off_highway_radar**](off_highway_radar/README.md): Receiver and sender nodes for the Bosch
   Radar Off-Highway
 - [**off_highway_radar_msgs**](off_highway_radar_msgs/README.md): The custom message interface for
@@ -40,6 +44,7 @@ For further information, have a look at the linked package readmes.
 ### Architecture
 
 The most relevant packages for an application of the CAN communication based sensors are the
+[**off_highway_general_purpose_radar**](off_highway_general_purpose_radar/README.md),
 [**off_highway_radar**](off_highway_radar/README.md) and
 [**off_highway_uss**](off_highway_uss/README.md) packages, which provide a `receiver` node to
 convert CAN frames received from the sensor into ROS messages and a `sender` node to provide

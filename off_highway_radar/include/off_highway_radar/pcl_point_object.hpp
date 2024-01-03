@@ -72,6 +72,7 @@ struct EIGEN_ALIGN16 PclPointObject
     near(o.b.near)
   {
   }
+  PclPointObject() {}
 };  // SSE padding
 
 }  // namespace off_highway_radar

@@ -69,6 +69,7 @@ struct EIGEN_ALIGN16 PclPointObject
     id(id)
   {
   }
+  PclPointObject() {}
 };  // SSE padding
 
 }  // namespace off_highway_uss
