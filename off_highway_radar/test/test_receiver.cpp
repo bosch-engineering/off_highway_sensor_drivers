@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <random>
+#include <stdexcept>
 
 #include "ros/ros.h"
 
@@ -525,6 +526,32 @@ TEST(TestRadarReceiver, test40RandomValidObjects) {
   }
 
   test_receiver_input_objects(test_objects, true, true);
+}
+
+TEST(TestRadarReceiver, testInvalidObjectIdA) {
+  off_highway_radar::Receiver::Objects test_objects;
+  off_highway_radar::Receiver::Object test_object;
+
+  // Set values for object A message
+  test_object.a.id = 40;
+  test_object.a.can_id = 0x200;
+
+  test_objects.objects.push_back(test_object);
+
+  EXPECT_THROW(test_receiver_input_objects(test_objects, true, true), std::runtime_error);
+}
+
+TEST(TestRadarReceiver, testInvalidObjectIdB) {
+  off_highway_radar::Receiver::Objects test_objects;
+  off_highway_radar::Receiver::Object test_object;
+
+  // Set values for object A message
+  test_object.b.id = 40;
+  test_object.b.can_id = 0x201;
+
+  test_objects.objects.push_back(test_object);
+
+  EXPECT_THROW(test_receiver_input_objects(test_objects, true, true), std::runtime_error);
 }
 
 int main(int argc, char ** argv)

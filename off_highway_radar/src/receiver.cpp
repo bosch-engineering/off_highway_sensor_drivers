@@ -15,6 +15,7 @@
 #include "off_highway_radar/receiver.hpp"
 
 #include <regex>
+#include <stdexcept>
 
 #include "off_highway_common/helper.hpp"
 
@@ -142,6 +143,14 @@ void Receiver::process(std_msgs::Header header, const FrameId & id, Message & me
     auto_static_cast(b.near, message.signals["Near"].value);
     auto_static_cast(b.exist_probability, message.signals["wExist"].value);
 
+    if (b.id >= kCountObjects) {
+      throw std::runtime_error{
+              "Received message with invalid object id (" +
+              std::to_string(b.id) +
+              "). Please ensure that the connected sensor is a \"Radar Off-Highway\" " +
+              "with part number F037.000.127 (series) or F037.B00.575-04 (sample)."
+      };
+    }
     if (!objects_[b.id]) {
       return;
     }
@@ -159,6 +168,15 @@ void Receiver::process(std_msgs::Header header, const FrameId & id, Message & me
     auto_static_cast(a.valid, message.signals["Valid"].value);
     auto_static_cast(a.hist, message.signals["Hist"].value);
 
+
+    if (a.id >= kCountObjects) {
+      throw std::runtime_error{
+              "Received message with invalid object id (" +
+              std::to_string(a.id) +
+              "). Please ensure that the connected sensor is a \"Radar Off-Highway\" " +
+              "with part number F037.000.127 (series) or F037.B00.575-04 (sample)."
+      };
+    }
     if (!objects_[a.id]) {
       objects_[a.id] = Object();
     }

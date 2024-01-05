@@ -15,6 +15,7 @@
 #include "off_highway_general_purpose_radar/receiver.hpp"
 
 #include <regex>
+#include <stdexcept>
 
 #include "off_highway_common/helper.hpp"
 
@@ -147,6 +148,15 @@ void Receiver::process(std_msgs::Header header, const FrameId & id, Message & me
     auto_static_cast(b.radial_distance_std, message.signals["drSdv"].value);
     auto_static_cast(b.exist_probability, message.signals["pExist"].value);
 
+    if (b.id >= kCountTargets) {
+      throw std::runtime_error{
+              "Received message with invalid target id (" +
+              std::to_string(b.id) +
+              "). Please ensure that the connected sensor is a " +
+              "\"General Purpose Radar Off-Highway\" " +
+              "with part number F037.000.100 (series) or F037.B00.255-11 (sample)."
+      };
+    }
     if (!targets_[b.id]) {
       return;
     }
@@ -165,6 +175,15 @@ void Receiver::process(std_msgs::Header header, const FrameId & id, Message & me
     auto_static_cast(a.azimuth_angle, message.signals["phi"].value);
     auto_static_cast(a.measured, message.signals["measured"].value);
 
+    if (a.id >= kCountTargets) {
+      throw std::runtime_error{
+              "Received message with invalid target id (" +
+              std::to_string(a.id) +
+              "). Please ensure that the connected sensor is a " +
+              "\"General Purpose Radar Off-Highway\" " +
+              "with part number F037.000.100 (series) or F037.B00.255-11 (sample)."
+      };
+    }
     if (!targets_[a.id]) {
       targets_[a.id] = Target();
     }

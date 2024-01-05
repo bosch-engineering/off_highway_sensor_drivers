@@ -1,3 +1,6 @@
+> :warning: **The ROS 1 / noetic branch is deprecated and will not receive future features! Please
+> use the most recent ROS 2 branch.** :warning:
+
 # off_highway_sensor_drivers
 
 This project provides ROS drivers for Bosch Off-Highway sensor systems.
