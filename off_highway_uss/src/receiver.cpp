@@ -71,7 +71,7 @@ Receiver::Messages Receiver::fillMessageDefinitions()
   Message object;
   object.name = "MAP_OBJ_XX";
   // Start bit, length, big endian, signed, factor, offset
-  object.message_counter = {54, 2, false, false, 1, 0};
+  object.message_counter = {{54, 2, false, false, 1, 0}};
   // Lengths are directly converted to SI unit [m]
   object.signals["1stPointX"] = {0, 10, false, true, 2 * kCentimeterToMeter, 0};
   object.signals["1stPointY"] = {10, 10, false, true, 2 * kCentimeterToMeter, 0};
@@ -83,7 +83,7 @@ Receiver::Messages Receiver::fillMessageDefinitions()
 
   Message direct_echo;
   direct_echo.name = "DEMsg_Sens_XX";
-  direct_echo.message_counter = {48, 2, false, false, 1, 0};
+  direct_echo.message_counter = {{48, 2, false, false, 1, 0}};
   direct_echo.signals["De1Distance"] = {0, 10, false, false, 1, 0};
   direct_echo.signals["De2Distance"] = {10, 10, false, false, 1, 0};
   direct_echo.signals["De1FilteredDistance"] = {20, 10, false, false, 1, 0};
@@ -93,7 +93,7 @@ Receiver::Messages Receiver::fillMessageDefinitions()
 
   Message max_detection_range;
   max_detection_range.name = "USS_MaxDetRange";
-  max_detection_range.message_counter = {48, 2, false, false, 1, 0};
+  max_detection_range.message_counter = {{48, 2, false, false, 1, 0}};
   max_detection_range.signals["sens01_MaxDetRange"] =
   {0, 4, false, false, 36.667 * kCentimeterToMeter, 0};
   max_detection_range.signals["sens02_MaxDetRange"] =
@@ -121,7 +121,7 @@ Receiver::Messages Receiver::fillMessageDefinitions()
 
   Message info;
   info.name = "Info";
-  info.message_counter = {44, 2, false, false, 1, 0};
+  info.message_counter = {{44, 2, false, false, 1, 0}};
   info.signals["NumberSensors"] = {0, 4, false, false, 1, 0};
   info.signals["SendingPattern"] = {4, 2, false, false, 1, 0};
   info.signals["OperatingMode"] = {6, 3, false, false, 1, 0};
