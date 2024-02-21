@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "gtest/gtest.h"
+#include "rclcpp/executors.hpp"
 
 #include "off_highway_uss/sender.hpp"
 #include "off_highway_can/helper.hpp"
