@@ -15,6 +15,7 @@
 #include <random>
 
 #include "gtest/gtest.h"
+#include "rclcpp/executors.hpp"
 
 #include "test_helper.hpp"
 #include "off_highway_uss/receiver.hpp"
@@ -22,8 +23,6 @@
 
 using off_highway_can::auto_static_cast;
 using namespace std::chrono_literals;
-
-static constexpr double kMetersToCentimeters = 0.01;
 
 class EchosPublisher : public rclcpp::Node
 {

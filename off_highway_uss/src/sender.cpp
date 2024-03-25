@@ -55,7 +55,7 @@ void Sender::fillMessageDefinitions()
   Message vehicle_data_1;
   vehicle_data_1.name = "VehicleData1";
   // Start bit, length, big endian, signed, factor, offset, min, max
-  vehicle_data_1.message_counter = {8, 2, false, false, 1, 0};
+  vehicle_data_1.message_counter = {{8, 2, false, false, 1, 0}};
   vehicle_data_1.signals["OutsideTemperature"] = {0, 7, false, false, 1, -40, -40, 87};
   messages_[outside_temperature_id_] = vehicle_data_1;
 }

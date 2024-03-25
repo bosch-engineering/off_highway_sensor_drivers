@@ -7,7 +7,10 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wdeprecated)
+  add_compile_options(-Wall -Wextra -Werror -Wdeprecated)
+endif()
+if(CMAKE_COMPILER_IS_GNUCXX)
+  add_compile_options(-Wpedantic) # clang doesn't compile with -Wpedantic
 endif()
 
 find_package(ament_cmake REQUIRED)
