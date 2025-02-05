@@ -30,6 +30,21 @@
 
 namespace off_highway_can
 {
+
+inline uint64_t round_from_physical_value(float physical_value, float factor, float offset)
+{
+  return (int64_t)std::round((physical_value - offset) / factor);
+}
+
+inline void encode_by_round(
+  uint8_t * frame, const float value, const uint16_t startbit, const uint16_t length,
+  bool is_big_endian, bool is_signed, float factor, float offset)
+{
+  ::storeSignal(
+    frame, round_from_physical_value(value, factor, offset), startbit, length, is_big_endian,
+    is_signed);
+}
+
 template<typename FrameData>
 void Signal::decode(const FrameData & frame)
 {
@@ -42,7 +57,7 @@ void Signal::decode(const ros2_socketcan_msgs::msg::FdFrame::_data_type & frame)
 template<typename FrameData>
 void Signal::encode(FrameData & frame)
 {
-  ::encode(frame.data(), value, start_bit, length, is_big_endian, is_signed, factor, offset);
+  encode_by_round(frame.data(), value, start_bit, length, is_big_endian, is_signed, factor, offset);
 }
 
 template<>

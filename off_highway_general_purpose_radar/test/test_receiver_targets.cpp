@@ -29,11 +29,6 @@ inline double sgn(double x)
   return (x > 0) - (x < 0);
 }
 
-inline void apply_half_increment_offset(double & value, double increment)
-{
-  value += sgn(value) * increment * 0.5;
-}
-
 class TargetsPublisher : public rclcpp::Node
 {
 public:
@@ -85,11 +80,6 @@ public:
         auto_static_cast(
           target_b_msg.signals["timeSinceMeas"].value,
           test_target.b.time_since_meas);
-
-        // Apply physical equivalent of half an increment to compensate truncation during encoding
-        apply_half_increment_offset(
-          test_target.b.azimuth_angle_std,
-          target_b_msg.signals["phiSdv"].factor);
         auto_static_cast(target_b_msg.signals["phiSdv"].value, test_target.b.azimuth_angle_std);
 
         auto_static_cast(

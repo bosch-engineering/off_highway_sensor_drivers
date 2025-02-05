@@ -35,7 +35,7 @@ void Signal::encode(ros2_socketcan_msgs::msg::FdFrame::_data_type & frame)
 {
   // Needed due to https://github.com/ros2/rosidl/issues/799
   uint8_t * data = static_cast<uint8_t *>(frame.data<void>());
-  ::encode(data, value, start_bit, length, is_big_endian, is_signed, factor, offset);
+  encode_by_round(data, value, start_bit, length, is_big_endian, is_signed, factor, offset);
 }
 
 template<>
