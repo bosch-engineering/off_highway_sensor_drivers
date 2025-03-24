@@ -2,8 +2,8 @@
 Changelog for package off_highway_can
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.0 (2025-03-24)
+------------------
 * Move test to emphasize external FOSS
 * Add tests for encoding by round
 * Replace truncation of physical value with round outside of FOSS

@@ -2,8 +2,8 @@
 Changelog for package off_highway_general_purpose_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.0 (2025-03-24)
+------------------
 * Replace truncation of physical value with round outside of FOSS
   Minimizes the floating point error such that half
   offset of resolution in tests is not needed

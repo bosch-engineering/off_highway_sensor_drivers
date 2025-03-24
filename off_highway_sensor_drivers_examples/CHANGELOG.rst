@@ -2,8 +2,8 @@
 Changelog for package off_highway_sensor_drivers_examples
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.0 (2025-03-24)
+------------------
 * Fix path for checkout
 * Checkout compatible pcl_ros version (#14)
   Update README.md
