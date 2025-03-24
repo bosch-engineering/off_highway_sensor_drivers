@@ -22,7 +22,7 @@ of your workspace and execute
 
 ```bash
 git clone -b ros2 https://github.com/ros-perception/perception_pcl
-git checkout c1ccdd2776043ba1477926acceab7df75f64bf22
+git -C perception_pcl checkout c1ccdd2776043ba1477926acceab7df75f64bf22
 cd ..
 rosdep update && rosdep install --from-paths src --ignore-src -r -y
 colcon build --cmake-args '-DCMAKE_BUILD_TYPE=Release'
