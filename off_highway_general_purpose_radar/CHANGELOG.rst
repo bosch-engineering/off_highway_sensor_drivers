@@ -2,6 +2,16 @@
 Changelog for package off_highway_general_purpose_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Replace truncation of physical value with round outside of FOSS
+  Minimizes the floating point error such that half
+  offset of resolution in tests is not needed
+  anymore.
+* Do not force warnings as errors for General Purpose Radar (#12)
+  Fixup of #11.
+* Contributors: Robin Petereit, Tim Clephas
+
 0.7.0 (2024-12-04)
 ------------------
 * Register GPR component

@@ -2,6 +2,14 @@
 Changelog for package off_highway_sensor_drivers_examples
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix path for checkout
+* Checkout compatible pcl_ros version (#14)
+  Update README.md
+  Compatible pcl_ros versione with off_highway_sensor_drivers_examples
+* Contributors: Jacopo Zecchi, Robin Petereit
+
 0.7.0 (2024-12-04)
 ------------------
 

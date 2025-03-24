@@ -2,6 +2,12 @@
 Changelog for package off_highway_premium_radar_sample_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* `rosidl_default_generators` is technically a `<buildtool_depend>` (#13)
+  rosidl_default_generators is technically a buildtool_depend
+* Contributors: Tim Clephas
+
 0.7.0 (2024-12-04)
 ------------------
 * Do not force warnings as errors to fix rolling (#11)

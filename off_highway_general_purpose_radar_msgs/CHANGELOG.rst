@@ -2,6 +2,14 @@
 Changelog for package off_highway_general_purpose_radar_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* `rosidl_default_generators` is technically a `<buildtool_depend>` (#13)
+  rosidl_default_generators is technically a buildtool_depend
+* Do not force warnings as errors for General Purpose Radar (#12)
+  Fixup of #11.
+* Contributors: Tim Clephas
+
 0.7.0 (2024-12-04)
 ------------------
 

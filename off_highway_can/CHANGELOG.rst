@@ -2,6 +2,16 @@
 Changelog for package off_highway_can
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Move test to emphasize external FOSS
+* Add tests for encoding by round
+* Replace truncation of physical value with round outside of FOSS
+  Minimizes the floating point error such that half
+  offset of resolution in tests is not needed
+  anymore.
+* Contributors: Calin-Vasile Sopterean, Robin Petereit
+
 0.7.0 (2024-12-04)
 ------------------
 * Update docs for CAN FD

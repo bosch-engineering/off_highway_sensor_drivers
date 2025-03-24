@@ -2,6 +2,9 @@
 Changelog for package off_highway_uss
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.7.0 (2024-12-04)
 ------------------
 * Add object type SNA and filter such objects
