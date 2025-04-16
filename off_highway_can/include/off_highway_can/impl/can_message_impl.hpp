@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include <cmath>
 #include <type_traits>
 
 #include "off_highway_can/crc.hpp"
@@ -33,7 +34,7 @@ namespace off_highway_can
 
 inline uint64_t round_from_physical_value(float physical_value, float factor, float offset)
 {
-  return (int64_t)std::round((physical_value - offset) / factor);
+  return static_cast<uint64_t>(std::lround((physical_value - offset) / factor));
 }
 
 inline void encode_by_round(
