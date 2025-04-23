@@ -20,34 +20,34 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    off_highway_premium_radar_sample_params = PathJoinSubstitution([
-        FindPackageShare('off_highway_premium_radar_sample'),
+    off_highway_premium_radar_params = PathJoinSubstitution([
+        FindPackageShare('off_highway_premium_radar'),
         'config',
         'driver.yaml'
     ])
     rviz_config = PathJoinSubstitution([
         FindPackageShare('off_highway_sensor_drivers_examples'),
         'config',
-        'off_highway_premium_radar_sample_filter.rviz'
+        'off_highway_premium_radar_filter.rviz'
     ])
     return LaunchDescription([
-        DeclareLaunchArgument('off_highway_premium_radar_sample_params',
-                              default_value=off_highway_premium_radar_sample_params,
+        DeclareLaunchArgument('off_highway_premium_radar_params',
+                              default_value=off_highway_premium_radar_params,
                               description='Parameters for premium radar driver'),
         DeclareLaunchArgument('rviz_config',
                               default_value=rviz_config,
                               description='rviz configuration file'),
         ComposableNodeContainer(
-            name='filtered_off_highway_premium_radar_sample_container',
+            name='filtered_off_highway_premium_radar_container',
             namespace='',
             package='rclcpp_components',
             executable='component_container',
             composable_node_descriptions=[
                 ComposableNode(
-                    package='off_highway_premium_radar_sample',
-                    plugin='off_highway_premium_radar_sample::NodeWithDefaultConverter',
-                    name='off_highway_premium_radar_sample_driver',
-                    parameters=[LaunchConfiguration('off_highway_premium_radar_sample_params')],
+                    package='off_highway_premium_radar',
+                    plugin='off_highway_premium_radar::NodeWithDefaultConverter',
+                    name='off_highway_premium_radar_driver',
+                    parameters=[LaunchConfiguration('off_highway_premium_radar_params')],
                     extra_arguments=[{'use_intra_process_comms': True}],
                 ),
                 ComposableNode(
@@ -55,7 +55,7 @@ def generate_launch_description():
                     plugin='pcl_ros::PassThrough',
                     name='pcl_filter_z',
                     remappings=[
-                        ('/input', '/off_highway_premium_radar_sample_driver/locations'),
+                        ('/input', '/off_highway_premium_radar_driver/locations'),
                         ('/output', '/filter/z_filtered'),
                     ],
                     parameters=[
