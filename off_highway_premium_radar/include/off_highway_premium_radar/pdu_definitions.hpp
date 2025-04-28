@@ -445,7 +445,6 @@ struct SenStInfo_SwNu_Int
 
 struct SensorStateData
 {
-  std::array<uint8_t, 9> SenStInfo_Unassigned1;
   /**
    * \brief Sensor State
    * \note Refer Diagnostic_Specification_Document.pdf for detailed use cases
@@ -494,17 +493,6 @@ struct SensorStateData
    *        255 Invalid
    */
   uint8_t SenStInfo_SenSt;
-  /**
-   * \brief Software version - Customer release version
-   * \note Format: 0xWWXXYYZZ
-   *         Byte1 ZZ: Patch Version,
-   *         Byte2 YY: Minor Version,
-   *         Byte3 XX: Major Version,
-   *         Byte4 WW: Fixed to 0x00
-   *       Example for customer version V3.0.1: 0x00030001
-   */
-  uint32_t SenStInfo_SwNu_Cust;
-  struct SenStInfo_SwNu_Int sen_st_info_sw_nu_int;
 } __attribute__((packed));
 
 struct SensorStateInformation
@@ -515,7 +503,7 @@ struct SensorStateInformation
   std::vector<uint8_t> serialize();
 
   static constexpr uint32_t kPduId{0x1338DDCF};
-  static constexpr uint32_t kPduPayloadLength{64u};
+  static constexpr uint32_t kPduPayloadLength{13u};
   static constexpr uint32_t kPduSize{kPduPayloadLength + kPduHeaderLength};
 
   explicit SensorStateInformation(const std::array<uint8_t, kPduSize> & buffer);
@@ -529,12 +517,7 @@ struct SensorStateInformation
    */
   uint32_t pdu_payload_length;
   struct E2E_Header e2e_header;
-  /**
-   * \brief LGP Version
-   */
-  uint32_t SenStInfo_LgpVer;
   struct SensorStateData sensor_state_data;
-  std::array<uint8_t, 29> SenStInfo_Unassigned;
 } __attribute__((packed));
 
 static_assert(
@@ -889,6 +872,8 @@ struct Misalignment
   static constexpr Range<float> r_LocAtr_SpreadPhiMalSOs{-0.785398163F, 0.785398163F, NAN};
   static constexpr Range<uint16_t> r_LocAtr_NumSOs{0u, 1023u, 0xFFFF};
   static constexpr Range<uint16_t> r_LocAtr_NumEmeLocs{0u, 1023u, 0xFFFF};
+  static constexpr Range<float> r_LocAtr_MalEstQuality{std::numeric_limits<float>::min(),
+    std::numeric_limits<float>::max(), NAN};
 
   /**
    * \brief Convert content from big endian to host byte order (for each member)
@@ -997,6 +982,10 @@ struct Misalignment
    * \brief Number of selected locations used by EME algorithm
    */
   uint16_t LocAtr_NumEmeLocs;
+  /**
+   * \brief Misalignment Estimated Quality
+   */
+  float LocAtr_MalEstQuality;
 } __attribute__((packed));
 
 /**
@@ -1060,12 +1049,12 @@ struct SensorFieldOfView
    *       is 0 of the sensor
    * \note Unit: m
    */
-  std::array<float, 25> LocAtr_FoVRange;
+  std::array<float, 99> LocAtr_FoVRange;
   /**
    * \brief Azimuth angle array (cone angle) for FoV
    * \note Unit: rad
    */
-  std::array<float, 25> LocAtr_AziAngArr;
+  std::array<float, 99> LocAtr_AziAngArr;
   /**
    * \brief Range scaling for elevation angle (cone angle)
    */
@@ -1075,6 +1064,64 @@ struct SensorFieldOfView
    * \note Unit: rad
    */
   std::array<float, 11> LocAtr_EleAngArr;
+} __attribute__((packed));
+
+
+/**
+ * \brief Location Attributes Header
+ * \note i indicates the PDU number
+ */
+struct SensorCoating
+{
+  static constexpr Range<float> r_mdThetaIndcrMIMO{0.0F,1.0F, NAN};
+  static constexpr Range<float> r_mdPhiIndcr{0.0F,1.0F, NAN};
+  static constexpr Range<float> r_nRefIndcr{0.0F,1.0F, NAN};
+  static constexpr Range<float> r_thetaMIMORate{0.0F,1.0F, NAN};
+
+  /**
+   * \brief Convert content from big endian to host byte order (for each member)
+   */
+  void betoh();
+
+  /**
+   * \brief Check signals in struct for range and replace with SNA if out of range
+   */
+  void check();
+
+  /**
+   * \brief Average azimuth angle quality for MIMO angles
+   */
+  float mdThetaIndcrMIMO;
+  /**
+   * \brief Validity average azimuth angle quality for MIMO angles
+   */
+  uint8_t mdThetaIndcrMIMOVldFlg;
+  /**
+   * \brief High elevation quality share
+   */
+  float mdPhiIndcr;
+  /**
+   * \brief Validity high elevation quality share
+   */
+  uint8_t mdPhiIndcrVldFlg;
+  /**
+   * \brief Number of valid reflections
+   */
+  float nRefIndcr;
+  /**
+   * \brief Validity number of valid reflections
+   */
+  uint8_t nRefIndcrVldFlg;
+  /**
+   * \brief Quotient of high quality angle fits divided by the number of all available MIMO angle
+   *        fits
+   */
+  float thetaMIMORate;
+  /**
+   * \brief Validity quotient of high quality angle fits divided by the number of all available MIMO
+   *        angle fits
+   */
+  uint8_t thetaMIMORteVldFlag;
 } __attribute__((packed));
 
 /**
@@ -1097,7 +1144,7 @@ struct LocAttributes_Packet
   struct Misalignment misalignment;
   struct InterferenceIndicator interference_indicator;
   struct SensorFieldOfView sensor_field_of_view;
-  std::array<uint8_t, 50> LocAtr_CoatingIndicationRes;   // 0xFF (all 50 Bytes)
+  struct SensorCoating sensor_coating;
 } __attribute__((packed));
 
 /**
@@ -1162,7 +1209,7 @@ struct LocationAttributes
   std::vector<uint8_t> serialize();
 
   static constexpr uint32_t kPduId{0x133BDDCF};
-  static constexpr uint32_t kPduPayloadLength{514u};
+  static constexpr uint32_t kPduPayloadLength{1080u};
   static constexpr uint32_t kPduSize{kPduPayloadLength + kPduHeaderLength};
 
   explicit LocationAttributes(const std::array<uint8_t, kPduSize> & buffer);

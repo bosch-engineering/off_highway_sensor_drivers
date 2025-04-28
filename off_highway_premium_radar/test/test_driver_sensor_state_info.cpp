@@ -104,8 +104,7 @@ void TestRadarDriver::send_sensor_state_info(
   udp_socket_.send(data);
 }
 
-off_highway_premium_radar_msgs::msg::SensorStateInformation TestRadarDriver::
-get_sensor_state_info()
+off_highway_premium_radar_msgs::msg::SensorStateInformation TestRadarDriver::get_sensor_state_info()
 {
   auto ret = executor_.spin_until_future_complete(future_, spin_timeout_);
   EXPECT_EQ(ret, rclcpp::FutureReturnCode::SUCCESS);
@@ -116,16 +115,9 @@ void TestRadarDriver::verify_sensor_state_info(
   off_highway_premium_radar::SensorStateInformation ref_sensor_state_info,
   off_highway_premium_radar_msgs::msg::SensorStateInformation sub_sensor_state_info)
 {
-  EXPECT_EQ(sub_sensor_state_info.lgp_version, ref_sensor_state_info.SenStInfo_LgpVer);
-  EXPECT_EQ(
-    sub_sensor_state_info.internal_version,
-    ref_sensor_state_info.sensor_state_data.sen_st_info_sw_nu_int.CommitId);
   EXPECT_EQ(
     sub_sensor_state_info.sensor_state,
     ref_sensor_state_info.sensor_state_data.SenStInfo_SenSt);
-  EXPECT_EQ(
-    sub_sensor_state_info.customer_version,
-    ref_sensor_state_info.sensor_state_data.SenStInfo_SwNu_Cust);
 }
 
 TEST_F(TestRadarDriver, testSensorStateInformationZeroValues)
@@ -134,16 +126,11 @@ TEST_F(TestRadarDriver, testSensorStateInformationZeroValues)
   buffer.resize(off_highway_premium_radar::SensorStateInformation::kPduSize);
   off_highway_premium_radar::SensorStateInformation test_sensor_state_information_ =
     to_pdu<off_highway_premium_radar::SensorStateInformation>(buffer);
-  test_sensor_state_information_.SenStInfo_LgpVer = 0;
   test_sensor_state_information_.e2e_header.E2E_Counter = 0xFF;
   test_sensor_state_information_.e2e_header.E2E_Crc = 0xFF;
   test_sensor_state_information_.e2e_header.E2E_DataId = 0xFF;
   test_sensor_state_information_.e2e_header.E2E_length = 0xFF;
-  test_sensor_state_information_.sensor_state_data.sen_st_info_sw_nu_int.CommitId = {0, 0, 0, 0, 0};
   test_sensor_state_information_.sensor_state_data.SenStInfo_SenSt = 0;
-  test_sensor_state_information_.sensor_state_data.SenStInfo_SwNu_Cust = 0;
-  test_sensor_state_information_.sensor_state_data.SenStInfo_Unassigned1 =
-  {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
   send_sensor_state_info(test_sensor_state_information_);
   verify_sensor_state_info(test_sensor_state_information_, get_sensor_state_info());
 }
@@ -154,17 +141,11 @@ TEST_F(TestRadarDriver, testSensorStateInformationAnyValues)
   buffer.resize(off_highway_premium_radar::SensorStateInformation::kPduSize);
   off_highway_premium_radar::SensorStateInformation test_sensor_state_information_ =
     to_pdu<off_highway_premium_radar::SensorStateInformation>(buffer);
-  test_sensor_state_information_.SenStInfo_LgpVer = 0x42;
   test_sensor_state_information_.e2e_header.E2E_Counter = 0xFF;
   test_sensor_state_information_.e2e_header.E2E_Crc = 0xFF;
   test_sensor_state_information_.e2e_header.E2E_DataId = 0xFF;
   test_sensor_state_information_.e2e_header.E2E_length = 0xFF;
-  test_sensor_state_information_.sensor_state_data.sen_st_info_sw_nu_int.CommitId =
-  {0xAA, 0xBB, 0xCC, 0xDD, 0xEE};
   test_sensor_state_information_.sensor_state_data.SenStInfo_SenSt = 115;
-  test_sensor_state_information_.sensor_state_data.SenStInfo_SwNu_Cust = 0x00030001;
-  test_sensor_state_information_.sensor_state_data.SenStInfo_Unassigned1 =
-  {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
   send_sensor_state_info(test_sensor_state_information_);
   verify_sensor_state_info(test_sensor_state_information_, get_sensor_state_info());
 }

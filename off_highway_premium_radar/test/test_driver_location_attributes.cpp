@@ -116,29 +116,29 @@ void TestRadarDriver::verify_location_attributes(
   off_highway_premium_radar_msgs::msg::LocationAttributes sub_location_attributes)
 {
   EXPECT_EQ(
-    sub_location_attributes.location_attributes_packet.blindness_indicators.theta_indicator_mimo,
-    ref_location_attributes.loc_atr_packet.blindness_indicators.mdThetaIndcrMIMO);
+    sub_location_attributes.location_attributes_packet.sensor_coating.theta_indicator_mimo,
+    ref_location_attributes.loc_atr_packet.sensor_coating.mdThetaIndcrMIMO);
   EXPECT_EQ(
-    sub_location_attributes.location_attributes_packet.blindness_indicators.theta_indicator_mimo_valid,
-    ref_location_attributes.loc_atr_packet.blindness_indicators.mdThetaIndcrMIMOVldFlg);
+    sub_location_attributes.location_attributes_packet.sensor_coating.theta_indicator_mimo_valid,
+    ref_location_attributes.loc_atr_packet.sensor_coating.mdThetaIndcrMIMOVldFlg);
   EXPECT_EQ(
-    sub_location_attributes.location_attributes_packet.blindness_indicators.phi_indicator,
-    ref_location_attributes.loc_atr_packet.blindness_indicators.mdPhiIndcr);
+    sub_location_attributes.location_attributes_packet.sensor_coating.phi_indicator,
+    ref_location_attributes.loc_atr_packet.sensor_coating.mdPhiIndcr);
   EXPECT_EQ(
-    sub_location_attributes.location_attributes_packet.blindness_indicators.phi_indicator_valid,
-    ref_location_attributes.loc_atr_packet.blindness_indicators.mdPhiIndcrVldFlg);
+    sub_location_attributes.location_attributes_packet.sensor_coating.phi_indicator_valid,
+    ref_location_attributes.loc_atr_packet.sensor_coating.mdPhiIndcrVldFlg);
   EXPECT_EQ(
-    sub_location_attributes.location_attributes_packet.blindness_indicators.reflections_indicator,
-    ref_location_attributes.loc_atr_packet.blindness_indicators.nRefIndcr);
+    sub_location_attributes.location_attributes_packet.sensor_coating.reflections_indicator,
+    ref_location_attributes.loc_atr_packet.sensor_coating.nRefIndcr);
   EXPECT_EQ(
-    sub_location_attributes.location_attributes_packet.blindness_indicators.reflections_indicator_valid,
-    ref_location_attributes.loc_atr_packet.blindness_indicators.nRefIndcrVldFlg);
+    sub_location_attributes.location_attributes_packet.sensor_coating.reflections_indicator_valid,
+    ref_location_attributes.loc_atr_packet.sensor_coating.nRefIndcrVldFlg);
   EXPECT_EQ(
-    sub_location_attributes.location_attributes_packet.blindness_indicators.theta_mimo_rate,
-    ref_location_attributes.loc_atr_packet.blindness_indicators.thetaMIMORate);
+    sub_location_attributes.location_attributes_packet.sensor_coating.theta_mimo_rate,
+    ref_location_attributes.loc_atr_packet.sensor_coating.thetaMIMORate);
   EXPECT_EQ(
-    sub_location_attributes.location_attributes_packet.blindness_indicators.theta_mimo_rate_valid,
-    ref_location_attributes.loc_atr_packet.blindness_indicators.thetaMIMORteVldFlag);
+    sub_location_attributes.location_attributes_packet.sensor_coating.theta_mimo_rate_valid,
+    ref_location_attributes.loc_atr_packet.sensor_coating.thetaMIMORteVldFlag);
 }
 
 TEST_F(TestRadarDriver, testLocationAttributesZeroValues)
@@ -147,14 +147,14 @@ TEST_F(TestRadarDriver, testLocationAttributesZeroValues)
   buffer.resize(off_highway_premium_radar::LocationAttributes::kPduSize);
   off_highway_premium_radar::LocationAttributes test_location_attributes_ =
     to_pdu<off_highway_premium_radar::LocationAttributes>(buffer);
-  test_location_attributes_.loc_atr_packet.blindness_indicators.mdThetaIndcrMIMO = 0.0F;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.mdThetaIndcrMIMOVldFlg = 0;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.mdPhiIndcr = 0.0F;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.mdPhiIndcrVldFlg = 0;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.nRefIndcr = 0.0F;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.nRefIndcrVldFlg = 0;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.thetaMIMORate = 0.0F;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.thetaMIMORteVldFlag = 0;
+  test_location_attributes_.loc_atr_packet.sensor_coating.mdThetaIndcrMIMO = 0.0F;
+  test_location_attributes_.loc_atr_packet.sensor_coating.mdThetaIndcrMIMOVldFlg = 0;
+  test_location_attributes_.loc_atr_packet.sensor_coating.mdPhiIndcr = 0.0F;
+  test_location_attributes_.loc_atr_packet.sensor_coating.mdPhiIndcrVldFlg = 0;
+  test_location_attributes_.loc_atr_packet.sensor_coating.nRefIndcr = 0.0F;
+  test_location_attributes_.loc_atr_packet.sensor_coating.nRefIndcrVldFlg = 0;
+  test_location_attributes_.loc_atr_packet.sensor_coating.thetaMIMORate = 0.0F;
+  test_location_attributes_.loc_atr_packet.sensor_coating.thetaMIMORteVldFlag = 0;
   send_location_attributes(test_location_attributes_);
   verify_location_attributes(test_location_attributes_, get_location_attributes());
 }
@@ -165,14 +165,14 @@ TEST_F(TestRadarDriver, testLocationAttributesAnyValues)
   buffer.resize(off_highway_premium_radar::LocationAttributes::kPduSize);
   off_highway_premium_radar::LocationAttributes test_location_attributes_ =
     to_pdu<off_highway_premium_radar::LocationAttributes>(buffer);
-  test_location_attributes_.loc_atr_packet.blindness_indicators.mdThetaIndcrMIMO = 0.42F;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.mdThetaIndcrMIMOVldFlg = 1;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.mdPhiIndcr = 0.42F;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.mdPhiIndcrVldFlg = 1;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.nRefIndcr = 0.42F;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.nRefIndcrVldFlg = 1;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.thetaMIMORate = 0.42F;
-  test_location_attributes_.loc_atr_packet.blindness_indicators.thetaMIMORteVldFlag = 1;
+  test_location_attributes_.loc_atr_packet.sensor_coating.mdThetaIndcrMIMO = 0.42F;
+  test_location_attributes_.loc_atr_packet.sensor_coating.mdThetaIndcrMIMOVldFlg = 1;
+  test_location_attributes_.loc_atr_packet.sensor_coating.mdPhiIndcr = 0.42F;
+  test_location_attributes_.loc_atr_packet.sensor_coating.mdPhiIndcrVldFlg = 1;
+  test_location_attributes_.loc_atr_packet.sensor_coating.nRefIndcr = 0.42F;
+  test_location_attributes_.loc_atr_packet.sensor_coating.nRefIndcrVldFlg = 1;
+  test_location_attributes_.loc_atr_packet.sensor_coating.thetaMIMORate = 0.42F;
+  test_location_attributes_.loc_atr_packet.sensor_coating.thetaMIMORteVldFlag = 1;
   send_location_attributes(test_location_attributes_);
   verify_location_attributes(test_location_attributes_, get_location_attributes());
 }

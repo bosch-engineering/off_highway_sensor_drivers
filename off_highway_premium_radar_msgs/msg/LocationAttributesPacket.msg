@@ -2,3 +2,4 @@ SensorModulationPerformance sensor_modulation_performance
 MisalignmentPacket misalignment
 InterferenceIndicator interference_indicator
 SensorFieldOfView sensor_field_of_view
+SensorCoatingPacket sensor_coating

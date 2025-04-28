@@ -42,6 +42,7 @@
 #include "off_highway_premium_radar_msgs/msg/operation_mode.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_broadcast_data.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_broadcast.hpp"
+#include "off_highway_premium_radar_msgs/msg/sensor_coating_packet.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_dtc_information.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_ethernet_configuration_information.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_feedback.hpp"
@@ -129,10 +130,7 @@ auto to_msg(
 {
   return build<msg::SensorStateInformation>()
          .header(std_msgs::build<std_msgs::msg::Header>().stamp(stamp).frame_id(frame_id))
-         .lgp_version(d.SenStInfo_LgpVer)
-         .sensor_state(d.sensor_state_data.SenStInfo_SenSt)
-         .customer_version(d.sensor_state_data.SenStInfo_SwNu_Cust)
-         .internal_version(d.sensor_state_data.sen_st_info_sw_nu_int.CommitId);
+         .sensor_state(d.sensor_state_data.SenStInfo_SenSt);
 }
 
 inline
@@ -241,7 +239,8 @@ auto to_msg(const Misalignment & d)
          .phi_sos_mean(d.LocAtr_MeanPhiMalSOs)
          .phi_sos_spread(d.LocAtr_SpreadPhiMalSOs)
          .num_sos(d.LocAtr_NumSOs)
-         .num_eme(d.LocAtr_NumEmeLocs);
+         .num_eme(d.LocAtr_NumEmeLocs)
+         .mal_est_quality(d.LocAtr_MalEstQuality);
 }
 
 inline
@@ -263,13 +262,28 @@ auto to_msg(const SensorFieldOfView & d)
 }
 
 inline
+auto to_msg(const SensorCoating & d)
+{
+  return build<msg::SensorCoatingPacket>()
+         .theta_indicator_mimo(d.mdThetaIndcrMIMO)
+         .theta_indicator_mimo_valid(d.mdThetaIndcrMIMOVldFlg)
+         .phi_indicator(d.mdPhiIndcr)
+         .phi_indicator_valid(d.mdPhiIndcrVldFlg)
+         .reflections_indicator(d.nRefIndcr)
+         .reflections_indicator_valid(d.nRefIndcrVldFlg)
+         .theta_mimo_rate(d.thetaMIMORate)
+         .theta_mimo_rate_valid(d.thetaMIMORteVldFlag);
+}
+
+inline
 auto to_msg(const LocAttributes_Packet & d)
 {
   return build<msg::LocationAttributesPacket>()
          .sensor_modulation_performance(to_msg(d.sensor_modulation_performance))
          .misalignment(to_msg(d.misalignment))
          .interference_indicator(to_msg(d.interference_indicator))
-         .sensor_field_of_view(to_msg(d.sensor_field_of_view));
+         .sensor_field_of_view(to_msg(d.sensor_field_of_view))
+         .sensor_coating(to_msg(d.sensor_coating));
 }
 
 inline
