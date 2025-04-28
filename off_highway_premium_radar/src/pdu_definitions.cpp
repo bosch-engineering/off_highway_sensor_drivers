@@ -394,4 +394,32 @@ std::vector<uint8_t> MeasurementProgram::serialize()
   return buffer;
 }
 
+std::vector<uint8_t> SensorStateInformation::serialize()
+{
+  pdu_id = htobe32(kPduId);
+  pdu_payload_length = htobe32(kPduPayloadLength);
+  SenStInfo_LgpVer = htobe32(SenStInfo_LgpVer);
+  sensor_state_data.SenStInfo_SwNu_Cust = htobe32(sensor_state_data.SenStInfo_SwNu_Cust);
+
+  std::vector<uint8_t> buffer;
+  buffer.resize(sizeof(*this));
+  std::memcpy(buffer.data(), this, sizeof(*this));
+  return buffer;
+}
+
+std::vector<uint8_t> LocationAttributes::serialize()
+{
+  pdu_id = htobe32(kPduId);
+  pdu_payload_length = htobe32(kPduPayloadLength);
+  loc_atr_packet.blindness_indicators.mdThetaIndcrMIMO = htobe32f(loc_atr_packet.blindness_indicators.mdThetaIndcrMIMO);
+  loc_atr_packet.blindness_indicators.mdPhiIndcr = htobe32f(loc_atr_packet.blindness_indicators.mdPhiIndcr);
+  loc_atr_packet.blindness_indicators.nRefIndcr = htobe32f(loc_atr_packet.blindness_indicators.nRefIndcr);
+  loc_atr_packet.blindness_indicators.thetaMIMORate = htobe32f(loc_atr_packet.blindness_indicators.thetaMIMORate);
+
+  std::vector<uint8_t> buffer;
+  buffer.resize(sizeof(*this));
+  std::memcpy(buffer.data(), this, sizeof(*this));
+  return buffer;
+}
+
 }  // namespace off_highway_premium_radar
