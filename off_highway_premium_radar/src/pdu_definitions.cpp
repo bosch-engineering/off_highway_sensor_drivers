@@ -113,8 +113,6 @@ SensorStateInformation::SensorStateInformation(const std::array<uint8_t, kPduSiz
   pdu_id = be32toh(pdu_id);
   pdu_payload_length = be32toh(pdu_payload_length);
   // e2e_header is always FF
-  SenStInfo_LgpVer = be32toh(SenStInfo_LgpVer);
-  sensor_state_data.SenStInfo_SwNu_Cust = be32toh(sensor_state_data.SenStInfo_SwNu_Cust);
 }
 
 void SensorEthernetConfigurationInformation::betoh()
@@ -222,6 +220,7 @@ void Misalignment::betoh()
   LocAtr_SpreadPhiMalSOs = be32tohf(LocAtr_SpreadPhiMalSOs);
   LocAtr_NumSOs = be16toh(LocAtr_NumSOs);
   LocAtr_NumEmeLocs = be16toh(LocAtr_NumEmeLocs);
+  LocAtr_MalEstQuality = be32tohf(LocAtr_MalEstQuality);
 }
 
 void Misalignment::check()
@@ -246,6 +245,7 @@ void Misalignment::check()
   CHECK_SIGNAL(LocAtr_SpreadPhiMalSOs);
   CHECK_SIGNAL(LocAtr_NumSOs);
   CHECK_SIGNAL(LocAtr_NumEmeLocs);
+  CHECK_SIGNAL(LocAtr_MalEstQuality);
 }
 
 void InterferenceIndicator::betoh()
@@ -292,12 +292,29 @@ void SensorFieldOfView::check()
   }
 }
 
+void SensorCoating::betoh()
+{
+  mdThetaIndcrMIMO = be32tohf(mdThetaIndcrMIMO);
+  mdPhiIndcr = be32tohf(mdPhiIndcr);
+  nRefIndcr = be32tohf(nRefIndcr);
+  thetaMIMORate = be32tohf(thetaMIMORate);
+}
+
+void SensorCoating::check()
+{
+  CHECK_SIGNAL(mdThetaIndcrMIMO);
+  CHECK_SIGNAL(mdPhiIndcr);
+  CHECK_SIGNAL(nRefIndcr);
+  CHECK_SIGNAL(thetaMIMORate);
+}
+
 void LocAttributes_Packet::betoh()
 {
   sensor_modulation_performance.betoh();
   misalignment.betoh();
   interference_indicator.betoh();
   sensor_field_of_view.betoh();
+  sensor_coating.betoh();
 }
 
 void LocAttributes_Packet::check()
@@ -306,6 +323,7 @@ void LocAttributes_Packet::check()
   misalignment.check();
   interference_indicator.check();
   sensor_field_of_view.check();
+  sensor_coating.check();
 }
 
 void LocAtr_MountingPosition::betoh()
@@ -398,8 +416,6 @@ std::vector<uint8_t> SensorStateInformation::serialize()
 {
   pdu_id = htobe32(kPduId);
   pdu_payload_length = htobe32(kPduPayloadLength);
-  SenStInfo_LgpVer = htobe32(SenStInfo_LgpVer);
-  sensor_state_data.SenStInfo_SwNu_Cust = htobe32(sensor_state_data.SenStInfo_SwNu_Cust);
 
   std::vector<uint8_t> buffer;
   buffer.resize(sizeof(*this));
@@ -411,10 +427,14 @@ std::vector<uint8_t> LocationAttributes::serialize()
 {
   pdu_id = htobe32(kPduId);
   pdu_payload_length = htobe32(kPduPayloadLength);
-  loc_atr_packet.blindness_indicators.mdThetaIndcrMIMO = htobe32f(loc_atr_packet.blindness_indicators.mdThetaIndcrMIMO);
-  loc_atr_packet.blindness_indicators.mdPhiIndcr = htobe32f(loc_atr_packet.blindness_indicators.mdPhiIndcr);
-  loc_atr_packet.blindness_indicators.nRefIndcr = htobe32f(loc_atr_packet.blindness_indicators.nRefIndcr);
-  loc_atr_packet.blindness_indicators.thetaMIMORate = htobe32f(loc_atr_packet.blindness_indicators.thetaMIMORate);
+  loc_atr_packet.sensor_coating.mdThetaIndcrMIMO = htobe32f(
+    loc_atr_packet.sensor_coating.mdThetaIndcrMIMO);
+  loc_atr_packet.sensor_coating.mdPhiIndcr = htobe32f(
+    loc_atr_packet.sensor_coating.mdPhiIndcr);
+  loc_atr_packet.sensor_coating.nRefIndcr = htobe32f(
+    loc_atr_packet.sensor_coating.nRefIndcr);
+  loc_atr_packet.sensor_coating.thetaMIMORate = htobe32f(
+    loc_atr_packet.sensor_coating.thetaMIMORate);
 
   std::vector<uint8_t> buffer;
   buffer.resize(sizeof(*this));

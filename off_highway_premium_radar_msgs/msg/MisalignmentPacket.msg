@@ -40,4 +40,6 @@ float32 phi_sos_spread
 uint16 num_sos
 # LocAtr_NumEmeLocs
 uint16 num_eme
+# LocAtr_MalEstQuality
+float32 mal_est_quality
 

@@ -32,6 +32,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/OperationMode.msg"
   "msg/SensorBroadcast.msg"
   "msg/SensorBroadcastData.msg"
+  "msg/SensorCoatingPacket.msg"
   "msg/SensorDtcInformation.msg"
   "msg/SensorEthernetConfigurationInformation.msg"
   "msg/SensorFeedback.msg"
