@@ -17,10 +17,9 @@
 #include <array>
 #include <cassert>
 #include <cmath>
+#include <cstdint>
 #include <limits>
 #include <vector>
-
-#include "off_highway_premium_radar/range.hpp"
 
 namespace off_highway_premium_radar
 {
@@ -146,33 +145,10 @@ struct LocData_Header_i
  */
 struct LocData_Packet_i_j
 {
-  static constexpr Range<float> r_LocData_RadDist_i_j{0.0F, 302.0F, NAN};
-  static constexpr Range<float> r_LocData_RadRelVel_i_j{-110.0F, 55.0F, NAN};
-  static constexpr Range<float> r_LocData_AziAng_i_j{-1.5708F, 1.5708F, NAN};
-  static constexpr Range<float> r_LocData_EleAng_i_j{-0.785398F, 0.785398F, NAN};
-  static constexpr Range<float> r_LocData_Rcs_i_j{-50.0F, 70.0F, NAN};
-  static constexpr Range<float> r_LocData_Snr_i_j{0.0F, 31.0F, NAN};
-  static constexpr Range<float> r_LocData_RadDistVar_i_j{0.0F, 0.05F, NAN};
-  static constexpr Range<float> r_LocData_RadRelVelVar_i_j{0.0F, 0.1F, NAN};
-  static constexpr Range<float> r_LocData_VarAzi_i_j{0.0F, 0.0174533F, NAN};
-  static constexpr Range<float> r_LocData_VarEle_i_j{0.0F, 0.0174533F, NAN};
-  static constexpr Range<float> r_LocData_DistVelCov_i_j{-0.1F, 0.1F, NAN};
-  // Probability ranges are wrongly stated in interface documentation V11.0 as [0, 1]...
-  static constexpr Range<float> r_LocData_ProVelRes_i_j{0.0F, 255.0F, NAN};
-  static constexpr Range<float> r_LocData_ProAziAng_i_j{0.0F, 255.0F, NAN};
-  static constexpr Range<float> r_LocData_ProEleAng_i_j{0.0F, 255.0F, NAN};
-  static constexpr Range<uint16_t> r_LocData_MeasStat_i_j{0u, 255u, 0xFFFF};
-  static constexpr Range<uint16_t> r_LocData_IdAngAmb_i_j{0u, 1023u, 0xFFFF};
-
   /**
    * \brief Convert content from big endian to host byte order (for each member)
    */
   void betoh();
-
-  /**
-   * \brief Check signals in struct for range and replace with SNA if out of range
-   */
-  void check();
 
   /**
    * \brief Radial Distance
@@ -748,28 +724,10 @@ struct LocAtr_Header_i
  */
 struct SensorModulationPerformance
 {
-  static constexpr Range<uint8_t> r_LocAtr_DmpID{0u, 254u, 0xFF};
-  static constexpr Range<uint16_t> r_LocAtr_ModID{0u, 1023u, 0xFFFF};
-  static constexpr Range<float> r_LocAtr_DistRangScalFact{0.0F, 1.0F, NAN};
-  static constexpr Range<float> r_LocAtr_SepRadDist{0.0F, 300.0F, NAN};
-  static constexpr Range<float> r_LocAtr_SepRadVelo{0.0F, 10.0F, NAN};
-  static constexpr Range<float> r_LocAtr_PrecRadDist{0.0F, 10.0F, NAN};
-  static constexpr Range<float> r_LocAtr_PrecRadVelo{0.0F, 10.0F, NAN};
-  static constexpr Range<float> r_LocAtr_RadDistVeloCovVar{-0.1F, 0.1F, NAN};
-  static constexpr Range<float> r_LocAtr_MinRadDist{0.0F, 10.0F, NAN};
-  static constexpr Range<float> r_LocAtr_MaxRadDist{0.0F, 300.0F, NAN};
-  static constexpr Range<float> r_LocAtr_MinRadVelo{-150.0F, 0.0F, NAN};
-  static constexpr Range<float> r_LocAtr_MaxRadVelo{0.0F, 150.0F, NAN};
-
   /**
    * \brief Convert content from big endian to host byte order (for each member)
    */
   void betoh();
-
-  /**
-   * \brief Check signals in struct for range and replace with SNA if out of range
-   */
-  void check();
 
   /**
    * \brief Detection of measurement program
@@ -849,43 +807,10 @@ struct SensorModulationPerformance
  */
 struct Misalignment
 {
-  static constexpr Range<float> r_LocAtr_ThetaMalAng{-3.141592654F, 3.141592654F, NAN};
-  static constexpr Range<float> r_LocAtr_ThetaMalAngVar{std::numeric_limits<float>::min(),
-    std::numeric_limits<float>::max(), NAN};
-  static constexpr Range<float> r_LocAtr_PhiMalAng{-0.785398163F, 0.785398163F, NAN};
-  static constexpr Range<float> r_LocAtr_PhiMalAngVar{std::numeric_limits<float>::min(),
-    std::numeric_limits<float>::max(), NAN};
-  static constexpr Range<float> r_LocAtr_PhiMalAngEme{-0.785398163F, 0.785398163F, NAN};
-  static constexpr Range<float> r_LocAtr_PhiMalAngEmeVar{std::numeric_limits<float>::min(),
-    std::numeric_limits<float>::max(), NAN};
-  static constexpr Range<uint16_t> r_LocAtr_MalStatus{0u, 255u, 0xFFFF};
-  static constexpr Range<uint16_t> r_LocAtr_MalStatusEme{0u, 255u, 0xFFFF};
-  static constexpr Range<float> r_LocAtr_PercNegativeTheta{0.0F, 100.0F, NAN};
-  static constexpr Range<float> r_LocAtr_MinThetaMalSOs{-3.141592654F, 3.141592654F, NAN};
-  static constexpr Range<float> r_LocAtr_MaxThetaMalSOs{-3.141592654F, 3.141592654F, NAN};
-  static constexpr Range<float> r_LocAtr_VarThetaMalSOs{std::numeric_limits<float>::min(),
-    std::numeric_limits<float>::max(), NAN};
-  static constexpr Range<float> r_LocAtr_MeanThetaMalSOs{-3.141592654F, 3.141592654F, NAN};
-  static constexpr Range<float> r_LocAtr_MinPhiMalSOs{-0.785398163F, 0.785398163F, NAN};
-  static constexpr Range<float> r_LocAtr_MaxPhiMalSOs{-0.785398163F, 0.785398163F, NAN};
-  static constexpr Range<float> r_LocAtr_VarPhiMalSOs{std::numeric_limits<float>::min(),
-    std::numeric_limits<float>::max(), NAN};
-  static constexpr Range<float> r_LocAtr_MeanPhiMalSOs{-0.785398163F, 0.785398163F, NAN};
-  static constexpr Range<float> r_LocAtr_SpreadPhiMalSOs{-0.785398163F, 0.785398163F, NAN};
-  static constexpr Range<uint16_t> r_LocAtr_NumSOs{0u, 1023u, 0xFFFF};
-  static constexpr Range<uint16_t> r_LocAtr_NumEmeLocs{0u, 1023u, 0xFFFF};
-  static constexpr Range<float> r_LocAtr_MalEstQuality{std::numeric_limits<float>::min(),
-    std::numeric_limits<float>::max(), NAN};
-
   /**
    * \brief Convert content from big endian to host byte order (for each member)
    */
   void betoh();
-
-  /**
-   * \brief Check signals in struct for range and replace with SNA if out of range
-   */
-  void check();
 
   /**
    * \brief Estimated Misalignment angle in Azimuth (Spherical Coordinates)
@@ -996,18 +921,10 @@ struct Misalignment
  */
 struct InterferenceIndicator
 {
-  static constexpr Range<float> r_LocAtr_FovRedInt{0.0F, 1.0F, NAN};
-  static constexpr Range<uint8_t> r_LocAtr_IntStat{0u, 2u, 0xFF};
-
   /**
    * \brief Convert content from big endian to host byte order (for each member)
    */
   void betoh();
-
-  /**
-   * \brief Check signals in struct for range and replace with SNA if out of range
-   */
-  void check();
 
   /**
    * \brief FoV reduction due to interference
@@ -1030,20 +947,10 @@ struct InterferenceIndicator
  */
 struct SensorFieldOfView
 {
-  static constexpr Range<float> r_LocAtr_FoVRange{0.0F, 511.0F, NAN};
-  static constexpr Range<float> r_LocAtr_AziAngArr{-1.5708F, 1.5708F, NAN};
-  static constexpr Range<float> r_LocAtr_RangScaEle{0.0F, 1.0F, NAN};
-  static constexpr Range<float> r_LocAtr_EleAngArr{-0.785398F, 0.785398F, NAN};
-
   /**
    * \brief Convert content from big endian to host byte order (for each member)
    */
   void betoh();
-
-  /**
-   * \brief Check signals in struct for range and replace with SNA if out of range
-   */
-  void check();
 
   /**
    * \brief Field of view
@@ -1075,20 +982,10 @@ struct SensorFieldOfView
  */
 struct SensorCoating
 {
-  static constexpr Range<float> r_mdThetaIndcrMIMO{0.0F,1.0F, NAN};
-  static constexpr Range<float> r_mdPhiIndcr{0.0F,1.0F, NAN};
-  static constexpr Range<float> r_nRefIndcr{0.0F,1.0F, NAN};
-  static constexpr Range<float> r_thetaMIMORate{0.0F,1.0F, NAN};
-
   /**
    * \brief Convert content from big endian to host byte order (for each member)
    */
   void betoh();
-
-  /**
-   * \brief Check signals in struct for range and replace with SNA if out of range
-   */
-  void check();
 
   /**
    * \brief Average azimuth angle quality for MIMO angles
@@ -1136,11 +1033,6 @@ struct LocAttributes_Packet
    * \brief Convert content from big endian to host byte order (for each member)
    */
   void betoh();
-
-  /**
-   * \brief Check signals in struct for range and replace with SNA if out of range
-   */
-  void check();
 
   struct SensorModulationPerformance sensor_modulation_performance;
   struct Misalignment misalignment;

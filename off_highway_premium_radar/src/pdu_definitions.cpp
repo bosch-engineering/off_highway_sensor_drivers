@@ -51,26 +51,6 @@ void LocData_Packet_i_j::betoh()
   LocData_IdAngAmb_i_j = be16toh(LocData_IdAngAmb_i_j);
 }
 
-void LocData_Packet_i_j::check()
-{
-  CHECK_SIGNAL(LocData_RadDist_i_j);
-  CHECK_SIGNAL(LocData_RadRelVel_i_j);
-  CHECK_SIGNAL(LocData_AziAng_i_j);
-  CHECK_SIGNAL(LocData_EleAng_i_j);
-  CHECK_SIGNAL(LocData_Rcs_i_j);
-  CHECK_SIGNAL(LocData_Snr_i_j);
-  CHECK_SIGNAL(LocData_RadDistVar_i_j);
-  CHECK_SIGNAL(LocData_RadRelVelVar_i_j);
-  CHECK_SIGNAL(LocData_VarAzi_i_j);
-  CHECK_SIGNAL(LocData_VarEle_i_j);
-  CHECK_SIGNAL(LocData_DistVelCov_i_j);
-  CHECK_SIGNAL(LocData_ProVelRes_i_j);
-  CHECK_SIGNAL(LocData_ProAziAng_i_j);
-  CHECK_SIGNAL(LocData_ProEleAng_i_j);
-  CHECK_SIGNAL(LocData_MeasStat_i_j);
-  CHECK_SIGNAL(LocData_IdAngAmb_i_j);
-}
-
 LocationDataPdu::LocationDataPdu(const std::array<uint8_t, kPduSize> & buffer)
 : LocationDataPdu(std::bit_cast<LocationDataPdu>(buffer))
 {
@@ -81,7 +61,6 @@ LocationDataPdu::LocationDataPdu(const std::array<uint8_t, kPduSize> & buffer)
 
   for (auto & loc_data_packet : loc_data_packets) {
     loc_data_packet.betoh();
-    loc_data_packet.check();
   }
 }
 
@@ -182,22 +161,6 @@ void SensorModulationPerformance::betoh()
   LocAtr_MaxRadVelo = be32tohf(LocAtr_MaxRadVelo);
 }
 
-void SensorModulationPerformance::check()
-{
-  CHECK_SIGNAL(LocAtr_DmpID);
-  CHECK_SIGNAL(LocAtr_ModID);
-  CHECK_SIGNAL(LocAtr_DistRangScalFact);
-  CHECK_SIGNAL(LocAtr_SepRadDist);
-  CHECK_SIGNAL(LocAtr_SepRadVelo);
-  CHECK_SIGNAL(LocAtr_PrecRadDist);
-  CHECK_SIGNAL(LocAtr_PrecRadVelo);
-  CHECK_SIGNAL(LocAtr_RadDistVeloCovVar);
-  CHECK_SIGNAL(LocAtr_MinRadDist);
-  CHECK_SIGNAL(LocAtr_MaxRadDist);
-  CHECK_SIGNAL(LocAtr_MinRadVelo);
-  CHECK_SIGNAL(LocAtr_MaxRadVelo);
-}
-
 void Misalignment::betoh()
 {
   LocAtr_ThetaMalAng = be32tohf(LocAtr_ThetaMalAng);
@@ -223,40 +186,9 @@ void Misalignment::betoh()
   LocAtr_MalEstQuality = be32tohf(LocAtr_MalEstQuality);
 }
 
-void Misalignment::check()
-{
-  CHECK_SIGNAL(LocAtr_ThetaMalAng);
-  CHECK_SIGNAL(LocAtr_ThetaMalAngVar);
-  CHECK_SIGNAL(LocAtr_PhiMalAng);
-  CHECK_SIGNAL(LocAtr_PhiMalAngVar);
-  CHECK_SIGNAL(LocAtr_PhiMalAngEme);
-  CHECK_SIGNAL(LocAtr_PhiMalAngEmeVar);
-  CHECK_SIGNAL(LocAtr_MalStatus);
-  CHECK_SIGNAL(LocAtr_MalStatusEme);
-  CHECK_SIGNAL(LocAtr_PercNegativeTheta);
-  CHECK_SIGNAL(LocAtr_MinThetaMalSOs);
-  CHECK_SIGNAL(LocAtr_MaxThetaMalSOs);
-  CHECK_SIGNAL(LocAtr_VarThetaMalSOs);
-  CHECK_SIGNAL(LocAtr_MeanThetaMalSOs);
-  CHECK_SIGNAL(LocAtr_MinPhiMalSOs);
-  CHECK_SIGNAL(LocAtr_MaxPhiMalSOs);
-  CHECK_SIGNAL(LocAtr_VarPhiMalSOs);
-  CHECK_SIGNAL(LocAtr_MeanPhiMalSOs);
-  CHECK_SIGNAL(LocAtr_SpreadPhiMalSOs);
-  CHECK_SIGNAL(LocAtr_NumSOs);
-  CHECK_SIGNAL(LocAtr_NumEmeLocs);
-  CHECK_SIGNAL(LocAtr_MalEstQuality);
-}
-
 void InterferenceIndicator::betoh()
 {
   LocAtr_FovRedInt = be32tohf(LocAtr_FovRedInt);
-}
-
-void InterferenceIndicator::check()
-{
-  CHECK_SIGNAL(LocAtr_FovRedInt);
-  CHECK_SIGNAL(LocAtr_IntStat);
 }
 
 void SensorFieldOfView::betoh()
@@ -275,37 +207,12 @@ void SensorFieldOfView::betoh()
   }
 }
 
-void SensorFieldOfView::check()
-{
-  // Need to use counter-based loop due to packed struct
-  for (size_t i = 0; i < LocAtr_FoVRange.size(); ++i) {
-    LocAtr_FoVRange[i] = r_LocAtr_FoVRange.check(LocAtr_FoVRange[i]);
-  }
-  for (size_t i = 0; i < LocAtr_AziAngArr.size(); ++i) {
-    LocAtr_AziAngArr[i] = r_LocAtr_AziAngArr.check(LocAtr_AziAngArr[i]);
-  }
-  for (size_t i = 0; i < LocAtr_RangScaEle.size(); ++i) {
-    LocAtr_RangScaEle[i] = r_LocAtr_RangScaEle.check(LocAtr_RangScaEle[i]);
-  }
-  for (size_t i = 0; i < LocAtr_EleAngArr.size(); ++i) {
-    LocAtr_EleAngArr[i] = r_LocAtr_EleAngArr.check(LocAtr_EleAngArr[i]);
-  }
-}
-
 void SensorCoating::betoh()
 {
   mdThetaIndcrMIMO = be32tohf(mdThetaIndcrMIMO);
   mdPhiIndcr = be32tohf(mdPhiIndcr);
   nRefIndcr = be32tohf(nRefIndcr);
   thetaMIMORate = be32tohf(thetaMIMORate);
-}
-
-void SensorCoating::check()
-{
-  CHECK_SIGNAL(mdThetaIndcrMIMO);
-  CHECK_SIGNAL(mdPhiIndcr);
-  CHECK_SIGNAL(nRefIndcr);
-  CHECK_SIGNAL(thetaMIMORate);
 }
 
 void LocAttributes_Packet::betoh()
@@ -315,15 +222,6 @@ void LocAttributes_Packet::betoh()
   interference_indicator.betoh();
   sensor_field_of_view.betoh();
   sensor_coating.betoh();
-}
-
-void LocAttributes_Packet::check()
-{
-  sensor_modulation_performance.check();
-  misalignment.check();
-  interference_indicator.check();
-  sensor_field_of_view.check();
-  sensor_coating.check();
 }
 
 void LocAtr_MountingPosition::betoh()
@@ -344,7 +242,6 @@ LocationAttributes::LocationAttributes(const std::array<uint8_t, kPduSize> & buf
   loc_atr_header.betoh();
   loc_atr_packet.betoh();
   loc_atr_mounting_position.betoh();
-  loc_atr_packet.check();
 }
 
 
