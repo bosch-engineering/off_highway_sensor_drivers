@@ -12,10 +12,6 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>asio_cmake_module</buildtool_depend>
 
-  <build_depend>libpcl-all-dev</build_depend>
-
-  <build_export_depend>libpcl-all-dev</build_export_depend>
-
   <depend>asio</depend>
   <depend>io_context</depend>
   <depend>rclcpp</depend>
@@ -23,9 +19,7 @@
 
   <!-- For default converter -->
   <depend>diagnostic_updater</depend>
-  <depend>libpcl-common</depend>
   <depend>off_highway_premium_radar_msgs</depend>
-  <depend>pcl_conversions</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
   <depend>tf2</depend>

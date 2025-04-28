@@ -14,11 +14,6 @@
 
 #include "off_highway_premium_radar/converters/default_converter.hpp"
 
-// Needs to be in front of pcl includes for precompilation settings
-#include "off_highway_premium_radar/converters/pcl_radar_point_type.hpp"
-
-#include "pcl_conversions/pcl_conversions.h"
-
 #include "ros_message_conversions.hpp"
 
 namespace off_highway_premium_radar
@@ -129,20 +124,7 @@ void DefaultConverter::on_location_data(const LocationData & data)
   auto stamp = decide_on_stamp(data.header.LocData_TimeSts_i, data.header.LocData_TimeStns_i);
 
   if (publisher_locations_->get_subscription_count()) {
-    pcl::PointCloud<PclPointLocation> locations_pcl;
-    locations_pcl.is_dense = true;
-    locations_pcl.header.frame_id = frame_id_;
-
-    pcl_conversions::toPCL(stamp, locations_pcl.header.stamp);
-
-    for (const auto & l : data.locations) {
-      locations_pcl.emplace_back(l);
-    }
-
-    sensor_msgs::msg::PointCloud2 pointcloud2_msg;
-    pcl::toROSMsg(locations_pcl, pointcloud2_msg);
-
-    publisher_locations_->publish(pointcloud2_msg);
+    publisher_locations_->publish(to_msg(data.locations, stamp, frame_id_));
   }
 
   publish_tick_diag(data.header, publisher_locations_header_, diag_locations_, stamp);
