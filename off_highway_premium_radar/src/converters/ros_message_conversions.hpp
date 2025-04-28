@@ -22,6 +22,8 @@
 #include "asio.hpp"
 #include "geometry_msgs/msg/twist_with_covariance.hpp"
 #include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/point_cloud2.hpp"
+#include "sensor_msgs/point_cloud2_iterator.hpp"
 #include "std_msgs/msg/header.hpp"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 #include "tf2/LinearMath/Quaternion.h"
@@ -316,6 +318,115 @@ auto to_msg(const SensorDTCInformation & d, const rclcpp::Time stamp, const std:
          .header(std_msgs::build<std_msgs::msg::Header>().stamp(stamp).frame_id(frame_id))
          .lgp_version(d.SensorDtc_LgpVer)
          .dtcs(d.dtc_information_data.SensorDtc_Dtc);
+}
+
+inline
+sensor_msgs::msg::PointCloud2 to_msg(
+  const Locations & locations, const rclcpp::Time & stamp,
+  const std::string & frame_id)
+{
+  using sensor_msgs::PointCloud2Iterator;
+  sensor_msgs::msg::PointCloud2 msg;
+  msg.header = std_msgs::build<std_msgs::msg::Header>().stamp(stamp).frame_id(frame_id);
+  msg.is_dense = true;
+
+  sensor_msgs::PointCloud2Modifier modifier(msg);
+  modifier.setPointCloud2Fields(
+    19,
+    "x", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "y", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "z", 1, sensor_msgs::msg::PointField::FLOAT32,
+    // "padding", 1, sensor_msgs::msg::PointField::FLOAT32,  // TODO(rcp1-beg) Needed?
+    "radial_distance", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "radial_velocity", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "azimuth_angle", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "elevation_angle", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "radar_cross_section", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "signal_noise_ratio", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "radial_distance_variance", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "radial_velocity_variance", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "azimuth_angle_variance", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "elevation_angle_variance", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "radial_distance_velocity_covariance", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "velocity_resolution_processing_probability", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "azimuth_angle_probability", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "elevation_angle_probability", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "measurement_status", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "idx_azimuth_ambiguity_peer", 1, sensor_msgs::msg::PointField::FLOAT32
+  );
+
+  modifier.resize(locations.size());
+
+  PointCloud2Iterator<float> x(msg, "x");
+  PointCloud2Iterator<float> y(msg, "y");
+  PointCloud2Iterator<float> z(msg, "z");
+  PointCloud2Iterator<float> radial_distance(msg, "radial_distance");
+  PointCloud2Iterator<float> radial_velocity(msg, "radial_velocity");
+  PointCloud2Iterator<float> azimuth_angle(msg, "azimuth_angle");
+  PointCloud2Iterator<float> elevation_angle(msg, "elevation_angle");
+  PointCloud2Iterator<float> radar_cross_section(msg, "radar_cross_section");
+  PointCloud2Iterator<float> signal_noise_ratio(msg, "signal_noise_ratio");
+  PointCloud2Iterator<float> radial_distance_variance(msg, "radial_distance_variance");
+  PointCloud2Iterator<float> radial_velocity_variance(msg, "radial_velocity_variance");
+  PointCloud2Iterator<float> azimuth_angle_variance(msg, "azimuth_angle_variance");
+  PointCloud2Iterator<float> elevation_angle_variance(msg, "elevation_angle_variance");
+  PointCloud2Iterator<float> radial_distance_velocity_covariance(msg,
+    "radial_distance_velocity_covariance");
+  PointCloud2Iterator<float> velocity_resolution_processing_probability(msg,
+    "velocity_resolution_processing_probability");
+  PointCloud2Iterator<float> azimuth_angle_probability(msg, "azimuth_angle_probability");
+  PointCloud2Iterator<float> elevation_angle_probability(msg, "elevation_angle_probability");
+  PointCloud2Iterator<float> measurement_status(msg, "measurement_status");
+  PointCloud2Iterator<float> idx_azimuth_ambiguity_peer(msg, "idx_azimuth_ambiguity_peer");
+
+  for (const auto & l : locations) {
+    const float & phi = l.LocData_EleAng_i_j;
+    const float & theta = l.LocData_AziAng_i_j;
+    float cos_phi = std::cos(phi);
+    float sin_theta = std::sin(theta);
+
+    *x = l.LocData_RadDist_i_j * std::sqrt(cos_phi * cos_phi - sin_theta * sin_theta);
+    *y = l.LocData_RadDist_i_j * sin_theta;
+    *z = l.LocData_RadDist_i_j * std::sin(phi);
+    *radial_distance = l.LocData_RadDist_i_j;
+    *radial_velocity = l.LocData_RadRelVel_i_j;
+    *azimuth_angle = theta;
+    *elevation_angle = phi;
+    *radar_cross_section = l.LocData_Rcs_i_j;
+    *signal_noise_ratio = l.LocData_Snr_i_j;
+    *radial_distance_variance = l.LocData_RadDistVar_i_j;
+    *radial_velocity_variance = l.LocData_RadRelVelVar_i_j;
+    *azimuth_angle_variance = l.LocData_VarAzi_i_j;
+    *elevation_angle_variance = l.LocData_VarEle_i_j;
+    *radial_distance_velocity_covariance = l.LocData_DistVelCov_i_j;
+    *velocity_resolution_processing_probability = l.LocData_ProVelRes_i_j;
+    *azimuth_angle_probability = l.LocData_ProAziAng_i_j;
+    *elevation_angle_probability = l.LocData_ProEleAng_i_j;
+    *measurement_status = static_cast<float>(l.LocData_MeasStat_i_j);
+    *idx_azimuth_ambiguity_peer = static_cast<float>(l.LocData_IdAngAmb_i_j);
+
+    ++x;
+    ++y;
+    ++z;
+    ++radial_distance;
+    ++radial_velocity;
+    ++azimuth_angle;
+    ++elevation_angle;
+    ++radar_cross_section;
+    ++signal_noise_ratio;
+    ++radial_distance_variance;
+    ++radial_velocity_variance;
+    ++azimuth_angle_variance;
+    ++elevation_angle_variance;
+    ++radial_distance_velocity_covariance;
+    ++velocity_resolution_processing_probability;
+    ++azimuth_angle_probability;
+    ++elevation_angle_probability;
+    ++measurement_status;
+    ++idx_azimuth_ambiguity_peer;
+  }
+
+  return msg;
 }
 
 // From ROS message

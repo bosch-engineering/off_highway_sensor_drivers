@@ -303,11 +303,13 @@ static_assert(
   sizeof(LocationDataPdu) == LocationDataPdu::kPduSize,
   "Wrong LocationDataPdu struct size!");
 
+using Locations = std::vector<LocData_Packet_i_j>;
+
 struct LocationData
 {
   E2E_Header e2e_header;
   LocData_Header_i header;
-  std::vector<LocData_Packet_i_j> locations;
+  Locations locations;
 };
 
 struct MeasurementCycleSyncData
