@@ -1,0 +1,43 @@
+# Comments provide naming from Technical Customer Information
+
+# LocAtr_ThetaMalAng
+float32 theta
+# LocAtr_ThetaMalAngVar
+float32 theta_variance
+# LocAtr_PhiMalAng
+float32 phi
+# LocAtr_PhiMalAngVar
+float32 phi_variance
+# LocAtr_PhiMalAngEme
+float32 phi_eme
+# LocAtr_PhiMalAngEmeVar
+float32 phi_eme_variance
+# LocAtr_MalStatus
+uint16 status
+# LocAtr_MalStatusEme
+uint16 status_eme
+# LocAtr_PercNegativeTheta
+float32 percent_negative_theta
+# LocAtr_MinThetaMalSOs
+float32 min_theta_sos
+# LocAtr_MaxThetaMalSOs
+float32 max_theta_sos
+# LocAtr_VarThetaMalSOs
+float32 theta_sos_variance
+# LocAtr_MeanThetaMalSOs
+float32 theta_sos_mean
+# LocAtr_MinPhiMalSOs
+float32 min_phi_sos
+# LocAtr_MaxPhiMalSOs
+float32 max_phi_sos
+# LocAtr_VarPhiMalSOs
+float32 phi_sos_variance
+# LocAtr_MeanPhiMalSOs
+float32 phi_sos_mean
+# LocAtr_SpreadPhiMalSOs
+float32 phi_sos_spread
+# LocAtr_NumSOs
+uint16 num_sos
+# LocAtr_NumEmeLocs
+uint16 num_eme
+

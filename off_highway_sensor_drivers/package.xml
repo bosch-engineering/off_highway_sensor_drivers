@@ -15,6 +15,8 @@
   <exec_depend>off_highway_can</exec_depend>
   <exec_depend>off_highway_general_purpose_radar</exec_depend>
   <exec_depend>off_highway_general_purpose_radar_msgs</exec_depend>
+  <exec_depend>off_highway_premium_radar</exec_depend>
+  <exec_depend>off_highway_premium_radar_msgs</exec_depend>
   <exec_depend>off_highway_premium_radar_sample</exec_depend>
   <exec_depend>off_highway_premium_radar_sample_msgs</exec_depend>
   <exec_depend>off_highway_radar</exec_depend>

@@ -78,7 +78,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /off_highway_premium_radar_sample_driver/locations
+        Value: /off_highway_premium_radar_driver/locations
       Use Fixed Frame: true
       Use rainbow: false
       Value: true
