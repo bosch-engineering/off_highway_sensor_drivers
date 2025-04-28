@@ -94,51 +94,6 @@ SensorStateInformation::SensorStateInformation(const std::array<uint8_t, kPduSiz
   // e2e_header is always FF
 }
 
-void SensorEthernetConfigurationInformation::betoh()
-{
-  BroadCast_SenIpAdd = be32toh(BroadCast_SenIpAdd);
-  BroadCast_DestIpAdd = be32toh(BroadCast_DestIpAdd);
-  BroadCast_SenNetmask = be32toh(BroadCast_SenNetmask);
-  BroadCast_SenVlan = be16toh(BroadCast_SenVlan);
-  BroadCast_SouPort = be16toh(BroadCast_SouPort);
-  // BroadCast_SouPortUnassigned
-  BroadCast_DestPort = be16toh(BroadCast_DestPort);
-  // BroadCast_DestPortUnassigned
-}
-
-void DignosticsEthernetConfigurationInformation::betoh()
-{
-  BroadCast_DiagSouIpAdd = be32toh(BroadCast_DiagSouIpAdd);
-  BroadCast_DiagNetmask = be32toh(BroadCast_DiagNetmask);
-  BroadCast_DiagVlan = be16toh(BroadCast_DiagVlan);
-  BroadCast_DiagPort = be16toh(BroadCast_DiagPort);
-}
-
-void DoIPInformation::betoh()
-{
-  BroadCast_SenDoIPPhyAdd = be16toh(BroadCast_SenDoIPPhyAdd);
-  BroadCast_SenDoIPFuncAdd = be16toh(BroadCast_SenDoIPFuncAdd);
-  BroadCast_DoIPTarAdd = be16toh(BroadCast_DoIPTarAdd);
-}
-
-void SensorBroadcastData::betoh()
-{
-  BroadCast_SwCust = be32toh(BroadCast_SwCust);
-  sensor_ethernet_configuration_information.betoh();
-  dignostics_ethernet_configuration_information.betoh();
-  BroadCast_SenMacAd = be64toh(BroadCast_SenMacAd);
-  doip_information.betoh();
-}
-
-SensorBroadcast::SensorBroadcast(const std::array<uint8_t, kPduSize> & buffer)
-: SensorBroadcast(std::bit_cast<SensorBroadcast>(buffer))
-{
-  pdu_id = be32toh(pdu_id);
-  pdu_payload_length = be32toh(pdu_payload_length);
-  BroadCast_LgpVer = be32toh(BroadCast_LgpVer);
-  sensor_broadcast_data.betoh();
-}
-
 void LocAtr_Header_i::betoh()
 {
   LocAtr_LgpVer = be32toh(LocAtr_LgpVer);

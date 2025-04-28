@@ -135,7 +135,6 @@ private:
     kLocationData,
     kSensorFeedback,
     kStateInformation,
-    kSensorBroadcast,
     kLocationAttributes,
     kSensorDtcInformation,
     kUnknown

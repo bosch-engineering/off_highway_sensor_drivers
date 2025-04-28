@@ -56,13 +56,6 @@ public:
   virtual void on_sensor_state_information(const SensorStateInformation &) {}
 
   /**
-   * \brief Called from receiving thread on receiving a sensor broadcast PDU
-   *
-   * \param data Sensor broadcast PDU (in host order)
-   */
-  virtual void on_sensor_broadcast(const SensorBroadcast &) {}
-
-  /**
    * \brief Called from receiving thread on receiving a location attributes PDU
    *
    * \param data Location attributes PDU (in host order)
