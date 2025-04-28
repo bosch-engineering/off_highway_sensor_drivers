@@ -1,0 +1,25 @@
+# Comments provide naming from Technical Customer Information
+
+# LocAtr_DmpID
+uint8 detection_of_measurement_program
+# LocAtr_ModID
+uint8 modulation_id
+float32 distance_range_scaling
+# LocAtr_SepRadDist
+float32 separability_distance
+# LocAtr_SepRadVelo
+float32 separability_relative_velocity
+# LocAtr_PrecRadDist
+float32 precision_distance
+# LocAtr_PrecRadVelo
+float32 precision_relative_velocity
+# LocAtr_RadDistVeloCovVar
+float32 covariance_of_distance_and_relative_velocity
+# LocAtr_MinRadDist
+float32 minimum_measurable_distance
+# LocAtr_MaxRadDist
+float32 maximum_measurable_distance
+# LocAtr_MinRadVelo
+float32 minimum_measurable_relative_velocity
+# LocAtr_MaxRadVelo
+float32 maximum_measurable_relative_velocity

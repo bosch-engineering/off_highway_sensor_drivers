@@ -16,7 +16,7 @@
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
 
-  <exec_depend>off_highway_premium_radar_sample</exec_depend>
+  <exec_depend>off_highway_premium_radar</exec_depend>
   <exec_depend>off_highway_radar</exec_depend>
   <exec_depend>pcl_ros</exec_depend>
 

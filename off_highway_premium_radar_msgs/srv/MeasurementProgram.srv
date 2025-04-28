@@ -1,0 +1,11 @@
+# Comments provide naming from Technical Customer Information
+
+# MeasPgm_ID
+uint16 DMP00 = 0
+uint16 DMP01 = 1
+uint16 DMP02 = 2
+uint16 DMP04 = 4
+uint16 id
+---
+bool success # Indicate successful run of triggered service
+string message # Informational, e.g. for error messages
