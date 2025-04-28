@@ -9,9 +9,7 @@
     sensor_port: 0x76C6
 
     # Set to true to connect socket to sensor IP.
-    # This enables running multiple drivers for different sensors in parallel for the same host
-    # port, but each driver socket will not be able to receive, process and publish sensor broadcast
-    # messages.
+    # This enables running multiple drivers for different sensors in parallel for the same host port
     connect_socket: false
 
     # Frame used for all data
@@ -26,4 +24,4 @@
     # Synchronize measurement cycle
     synchronize_measurement_cycle: false
     # Sensor time offset to send to sensor if measurement cycle synchronization is active
-    sensor_time_offset: 0  # [ns]
+    sensor_time_offset: 0 # [ns]

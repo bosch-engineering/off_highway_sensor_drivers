@@ -72,8 +72,7 @@ private:
   std::string sensor_ip_{"192.168.40.50"};
   //! Sensor port
   uint16_t sensor_port_{0x76C6};
-  //! Connect socket to sensor IP for running multiple drivers in parallel using the same port (but
-  //! broadcast messages are dropped)
+  //! Connect socket to sensor IP for running multiple drivers in parallel using the same port
   bool connect_socket_{false};
 };
 

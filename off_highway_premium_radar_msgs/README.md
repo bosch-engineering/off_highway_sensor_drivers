@@ -14,7 +14,6 @@ original name of the UDP signal from the **Technical Customer Information**.
 * [SensorFeedback](msg/SensorFeedback.msg): Mapped Sensor Feedback from UDP interface.
 * [SensorStateInformation](msg/SensorStateInformation.msg): Mapped Sensor State Information from UDP
   interface.
-* [SensorBroadcast](msg/SensorBroadcast.msg): Mapped Sensor Broadcast from UDP interface.
 * [LocationAttributes](msg/LocationAttributes.msg): Mapped Location Attributes from UDP interface.
 * [SensorDtcInformation](msg/SensorDtcInformation.msg): Mapped Sensor DTC Information from UDP
   interface.

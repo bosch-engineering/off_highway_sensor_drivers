@@ -30,9 +30,6 @@
 
 #include "off_highway_premium_radar/pdu_definitions.hpp"
 
-#include \
-  "off_highway_premium_radar_msgs/msg/diagnostics_ethernet_configuration_information.hpp"
-#include "off_highway_premium_radar_msgs/msg/do_ip_information.hpp"
 #include "off_highway_premium_radar_msgs/msg/ego_vehicle_data.hpp"
 #include "off_highway_premium_radar_msgs/msg/interference_indicator.hpp"
 #include "off_highway_premium_radar_msgs/msg/location_attributes_header.hpp"
@@ -42,11 +39,8 @@
 #include "off_highway_premium_radar_msgs/msg/measurement_cycle_sync_data.hpp"
 #include "off_highway_premium_radar_msgs/msg/misalignment_packet.hpp"
 #include "off_highway_premium_radar_msgs/msg/operation_mode.hpp"
-#include "off_highway_premium_radar_msgs/msg/sensor_broadcast_data.hpp"
-#include "off_highway_premium_radar_msgs/msg/sensor_broadcast.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_coating_packet.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_dtc_information.hpp"
-#include "off_highway_premium_radar_msgs/msg/sensor_ethernet_configuration_information.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_feedback.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_field_of_view.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_modulation_performance.hpp"
@@ -133,60 +127,6 @@ auto to_msg(
   return build<msg::SensorStateInformation>()
          .header(std_msgs::build<std_msgs::msg::Header>().stamp(stamp).frame_id(frame_id))
          .sensor_state(d.sensor_state_data.SenStInfo_SenSt);
-}
-
-inline
-auto to_msg(const SensorEthernetConfigurationInformation & d)
-{
-  return build<msg::SensorEthernetConfigurationInformation>()
-         .sensor_ip_address(asio::ip::address_v4(d.BroadCast_SenIpAdd).to_string())
-         .destination_ip_address(asio::ip::address_v4(d.BroadCast_DestIpAdd).to_string())
-         .netmask(asio::ip::address_v4(d.BroadCast_SenNetmask).to_string())
-         .vlan(d.BroadCast_SenVlan)
-         .source_port(d.BroadCast_SouPort)
-         .destination_port(d.BroadCast_DestPort);
-}
-
-inline
-msg::DiagnosticsEthernetConfigurationInformation to_msg(
-  const DignosticsEthernetConfigurationInformation & d)
-{
-  return build<msg::DiagnosticsEthernetConfigurationInformation>()
-         .ip_address(asio::ip::address_v4(d.BroadCast_DiagSouIpAdd).to_string())
-         .netmask(asio::ip::address_v4(d.BroadCast_DiagNetmask).to_string())
-         .vlan(d.BroadCast_DiagVlan)
-         .port(d.BroadCast_DiagPort);
-}
-
-inline
-auto to_msg(const DoIPInformation & d)
-{
-  return build<msg::DoIpInformation>()
-         .physical_address(d.BroadCast_SenDoIPPhyAdd)
-         .functional_address(d.BroadCast_SenDoIPFuncAdd)
-         .target_address(d.BroadCast_DoIPTarAdd);
-}
-
-inline
-auto to_msg(const SensorBroadcastData & d)
-{
-  return build<msg::SensorBroadcastData>()
-         .customer_version(d.BroadCast_SwCust)
-         .sensor_ethernet_configuration_information(
-    to_msg(d.sensor_ethernet_configuration_information))
-         .diagnostics_ethernet_configuration_information(
-    to_msg(d.dignostics_ethernet_configuration_information))
-         .sensor_mac_address(d.BroadCast_SenMacAd)
-         .doip_information(to_msg(d.doip_information));
-}
-
-inline
-auto to_msg(const SensorBroadcast & d, const rclcpp::Time stamp, const std::string & frame_id)
-{
-  return build<msg::SensorBroadcast>()
-         .header(std_msgs::build<std_msgs::msg::Header>().stamp(stamp).frame_id(frame_id))
-         .lgp_version(d.BroadCast_LgpVer)
-         .sensor_broadcast_data(to_msg(d.sensor_broadcast_data));
 }
 
 inline

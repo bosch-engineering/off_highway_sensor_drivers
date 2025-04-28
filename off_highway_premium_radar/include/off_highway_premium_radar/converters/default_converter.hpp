@@ -24,7 +24,6 @@
 
 #include "off_highway_premium_radar_msgs/msg/location_attributes.hpp"
 #include "off_highway_premium_radar_msgs/msg/location_data_header.hpp"
-#include "off_highway_premium_radar_msgs/msg/sensor_broadcast.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_dtc_information.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_feedback.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_state_information.hpp"
@@ -76,13 +75,6 @@ private:
    * \param data Sensor information PDU (in host order)
    */
   void on_sensor_state_information(const SensorStateInformation & data) override;
-
-  /**
-   * \brief Called from receiving thread on receiving a sensor broadcast PDU
-   *
-   * \param data Sensor broadcast PDU (in host order)
-   */
-  void on_sensor_broadcast(const SensorBroadcast & data) override;
 
   /**
    * \brief Called from receiving thread on receiving a location attributes PDU
@@ -194,8 +186,6 @@ private:
     publisher_sensor_feedback_;
   rclcpp::Publisher<off_highway_premium_radar_msgs::msg::SensorStateInformation>::SharedPtr
     publisher_sensor_state_information_;
-  rclcpp::Publisher<off_highway_premium_radar_msgs::msg::SensorBroadcast>::SharedPtr
-    publisher_sensor_broadcast_;
   rclcpp::Publisher<off_highway_premium_radar_msgs::msg::LocationAttributes>::SharedPtr
     publisher_location_attributes_;
   rclcpp::Publisher<off_highway_premium_radar_msgs::msg::SensorDtcInformation>::SharedPtr
@@ -218,7 +208,6 @@ private:
   TopicDiagnosticSharedPtr diag_locations_;
   TopicDiagnosticSharedPtr diag_sensor_feedback_;
   TopicDiagnosticSharedPtr diag_sensor_state_information_;
-  TopicDiagnosticSharedPtr diag_sensor_broadcast_;
   TopicDiagnosticSharedPtr diag_location_attributes_;
 
   struct Limit
@@ -232,7 +221,6 @@ private:
   Limit diag_frequencies_locations_;
   Limit diag_frequencies_sensor_feedback_;
   Limit diag_frequencies_sensor_state_information_;
-  Limit diag_frequencies_sensor_broadcast_;
 };
 
 }  // namespace off_highway_premium_radar

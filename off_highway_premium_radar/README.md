@@ -59,8 +59,7 @@ configured in the sensor. The defaults are stated in the UDP interface documenta
 One can connect the used socket via the `connect_sensor` parameter to already filter for UDP packets
 from the sensor before the driver process receives them. This has the main benefit of being able to
 run multiple driver processes for different sensors in parallel for the same host port
-([established-over-unconnected technique]). The disadvantage is that each driver socket will not be
-able to receive, process and publish sensor broadcast messages.
+([established-over-unconnected technique]).
 
 The driver node is written as library in a modular fashion so that one can extend its functionality
 with custom converter classes. See [design](doc/design.md) for an overview.
@@ -122,12 +121,7 @@ with custom converter classes. See [design](doc/design.md) for an overview.
 * **~/sensor_state_information
   ([`off_highway_premium_radar_msgs/msg/SensorStateInformation`](../off_highway_premium_radar_msgs/msg/SensorStateInformation.msg))**
   * Cycle time: 10 ms
-  * Contains sensor state information.
-* **~/sensor_broadcast
-  ([`off_highway_premium_radar_msgs/msg/SensorBroadcast`](../off_highway_premium_radar_msgs/msg/SensorBroadcast.msg))**
-  * Cycle time: 1000 ms
-  * Contains sensor ethernet configuration like IP, ports and DoIP information.
-  * Only received / published if `connect_sensor` parameter is not set
+  * Contains sensor state.
 * **~/location_attributes
   ([`off_highway_premium_radar_msgs/msg/LocationAttributes`](../off_highway_premium_radar_msgs/msg/LocationAttributes.msg))**
   * Cycle time: 66 ms (aligned to locations)

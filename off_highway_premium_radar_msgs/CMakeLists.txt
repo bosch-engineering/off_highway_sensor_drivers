@@ -18,8 +18,6 @@ find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/DiagnosticsEthernetConfigurationInformation.msg"
-  "msg/DoIpInformation.msg"
   "msg/EgoVehicleData.msg"
   "msg/EgoVehicleInput.msg"
   "msg/InterferenceIndicator.msg"
@@ -30,11 +28,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/MeasurementCycleSyncData.msg"
   "msg/MisalignmentPacket.msg"
   "msg/OperationMode.msg"
-  "msg/SensorBroadcast.msg"
-  "msg/SensorBroadcastData.msg"
   "msg/SensorCoatingPacket.msg"
   "msg/SensorDtcInformation.msg"
-  "msg/SensorEthernetConfigurationInformation.msg"
   "msg/SensorFeedback.msg"
   "msg/SensorFieldOfView.msg"
   "msg/SensorModulationPerformance.msg"
