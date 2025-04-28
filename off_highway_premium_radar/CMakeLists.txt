@@ -26,8 +26,6 @@ find_package(diagnostic_updater REQUIRED)
 find_package(off_highway_premium_radar_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
-find_package(tf2 REQUIRED)
-find_package(tf2_geometry_msgs REQUIRED)
 
 set(dependencies
   ASIO
@@ -38,8 +36,6 @@ set(dependencies
   rclcpp_components
   sensor_msgs
   std_msgs
-  tf2
-  tf2_geometry_msgs
 )
 
 # Library

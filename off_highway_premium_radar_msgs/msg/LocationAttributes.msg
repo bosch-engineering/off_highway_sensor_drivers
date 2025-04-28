@@ -4,4 +4,4 @@ std_msgs/Header header
 LocationAttributesHeader location_attributes_header
 LocationAttributesPacket location_attributes_packet
 # LocAtr_MountingPosition
-geometry_msgs/Pose mounting_pose
+SensorMounting mounting_position

@@ -25,8 +25,6 @@
 #include "sensor_msgs/msg/point_cloud2.hpp"
 #include "sensor_msgs/point_cloud2_iterator.hpp"
 #include "std_msgs/msg/header.hpp"
-#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
-#include "tf2/LinearMath/Quaternion.h"
 
 #include "off_highway_premium_radar/pdu_definitions.hpp"
 
@@ -44,6 +42,7 @@
 #include "off_highway_premium_radar_msgs/msg/sensor_feedback.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_field_of_view.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_modulation_performance.hpp"
+#include "off_highway_premium_radar_msgs/msg/sensor_mounting.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_state_information.hpp"
 #include "off_highway_premium_radar_msgs/msg/time.hpp"
 
@@ -229,26 +228,25 @@ auto to_msg(const LocAttributes_Packet & d)
 }
 
 inline
+auto to_msg(const LocAtr_MountingPosition & d)
+{
+  return build<msg::SensorMounting>()
+         .x(d.LocAtr_SenPosX)
+         .y(d.LocAtr_SenPosY)
+         .z(d.LocAtr_SenPosZ)
+         .azimuth(d.LocAtr_SenPosAzi)
+         .elevation(d.LocAtr_SenPosEle)
+         .orientation(d.LocAtr_SenOrient);
+}
+
+inline
 auto to_msg(const LocationAttributes & d, const rclcpp::Time stamp, const std::string & frame_id)
 {
-  geometry_msgs::msg::Pose mounting_pose;
-  mounting_pose.position.x = d.loc_atr_mounting_position.LocAtr_SenPosX;
-  mounting_pose.position.y = d.loc_atr_mounting_position.LocAtr_SenPosY;
-  mounting_pose.position.z = d.loc_atr_mounting_position.LocAtr_SenPosZ;
-
-  tf2::Quaternion q_tf2;
-  double roll = d.loc_atr_mounting_position.LocAtr_SenOrient == -1 ? std::numbers::pi : 0.;
-  q_tf2.setRPY(
-    roll, d.loc_atr_mounting_position.LocAtr_SenPosEle,
-    d.loc_atr_mounting_position.LocAtr_SenPosAzi);
-  mounting_pose.orientation = tf2::toMsg(q_tf2);
-
-
   return build<msg::LocationAttributes>()
          .header(std_msgs::build<std_msgs::msg::Header>().stamp(stamp).frame_id(frame_id))
          .location_attributes_header(to_msg(d.loc_atr_header))
          .location_attributes_packet(to_msg(d.loc_atr_packet))
-         .mounting_pose(mounting_pose);
+         .mounting_position(to_msg(d.loc_atr_mounting_position));
 }
 
 inline

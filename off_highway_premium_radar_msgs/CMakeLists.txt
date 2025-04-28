@@ -33,6 +33,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/SensorFeedback.msg"
   "msg/SensorFieldOfView.msg"
   "msg/SensorModulationPerformance.msg"
+  "msg/SensorMounting.msg"
   "msg/SensorStateInformation.msg"
   "msg/Time.msg"
   "srv/MeasurementProgram.srv"
