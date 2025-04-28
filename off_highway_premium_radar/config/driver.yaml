@@ -3,9 +3,9 @@
     # Specify as 0.0.0.0 or do not specify to use all local interfaces.
     # (Then, one network interface needs to be configured to the destination IP configured on the
     # sensor)
-    host_ip: "192.168.40.2"
+    host_ip: "192.168.41.2"
     host_port: 0x76C0
-    sensor_ip: "192.168.40.51"
+    sensor_ip: "192.168.41.51"
     sensor_port: 0x76C6
 
     # Set to true to connect socket to sensor IP.
