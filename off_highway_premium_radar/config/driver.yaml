@@ -24,4 +24,4 @@
     # Synchronize measurement cycle
     synchronize_measurement_cycle: false
     # Sensor time offset to send to sensor if measurement cycle synchronization is active
-    sensor_time_offset: 0 # [ns]
+    sensor_time_offset: 0 #  [ns]
