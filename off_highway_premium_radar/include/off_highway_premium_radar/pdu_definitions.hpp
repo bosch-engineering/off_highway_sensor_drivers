@@ -763,8 +763,7 @@ struct Misalignment
 } __attribute__((packed));
 
 /**
- * \brief Location Attributes Header
- * \note i indicates the PDU number
+ * \brief Interference Indicator Packet
  */
 struct InterferenceIndicator
 {
@@ -789,8 +788,7 @@ struct InterferenceIndicator
 } __attribute__((packed));
 
 /**
- * \brief Location Attributes Header
- * \note i indicates the PDU number
+ * \brief Field Of View Packet
  */
 struct SensorFieldOfView
 {
@@ -822,10 +820,9 @@ struct SensorFieldOfView
   std::array<float, 11> LocAtr_EleAngArr;
 } __attribute__((packed));
 
-
 /**
- * \brief Location Attributes Header
- * \note i indicates the PDU number
+ * \brief Sensor Coating Packet
+ * \note Contains blindness indicators
  */
 struct SensorCoating
 {

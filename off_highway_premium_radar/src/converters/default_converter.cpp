@@ -60,13 +60,12 @@ void DefaultConverter::on_configure()
     publisher_locations_->get_topic_name(), *diag_updater_,
     FrequencyStatusParam(&diag_frequencies_locations_.min, &diag_frequencies_locations_.max),
     TimeStampStatusParam(diag_timestamps_.min, diag_timestamps_.max));
-  //TODO(shu-beg) Add sensor feedback diagnostics again when PDU is available
-  // diag_sensor_feedback_ = std::make_shared<diagnostic_updater::TopicDiagnostic>(
-  //   publisher_sensor_feedback_->get_topic_name(), *diag_updater_,
-  //   FrequencyStatusParam(
-  //     &diag_frequencies_sensor_feedback_.min,
-  //     &diag_frequencies_sensor_feedback_.max),
-  //   TimeStampStatusParam(diag_timestamps_.min, diag_timestamps_.max));
+  diag_sensor_feedback_ = std::make_shared<diagnostic_updater::TopicDiagnostic>(
+    publisher_sensor_feedback_->get_topic_name(), *diag_updater_,
+    FrequencyStatusParam(
+      &diag_frequencies_sensor_feedback_.min,
+      &diag_frequencies_sensor_feedback_.max),
+    TimeStampStatusParam(diag_timestamps_.min, diag_timestamps_.max));
   diag_sensor_state_information_ = std::make_shared<diagnostic_updater::TopicDiagnostic>(
     publisher_sensor_state_information_->get_topic_name(), *diag_updater_,
     FrequencyStatusParam(
@@ -125,8 +124,7 @@ void DefaultConverter::on_sensor_feedback(const SensorFeedback & data)
 {
   auto stamp = decide_on_stamp(data.FeedBack_TimeS, data.FeedBack_TimeNs);
 
-  //TODO(shu-beg) Add sensor feedback diagnostics again when PDU is available
-  //publish_tick_diag(data, publisher_sensor_feedback_, diag_sensor_feedback_, stamp);
+  publish_tick_diag(data, publisher_sensor_feedback_, diag_sensor_feedback_, stamp);
 }
 
 void DefaultConverter::on_sensor_state_information(const SensorStateInformation & data)
