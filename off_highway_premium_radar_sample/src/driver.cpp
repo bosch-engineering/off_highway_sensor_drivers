@@ -51,7 +51,7 @@ void Driver::start_receiving()
 
 void Driver::callback_udp(
   const std::vector<uint8_t> & buffer,
-  const std::string & source_ip, const uint32_t /*source_port*/)
+  const std::string & source_ip, const uint32_t)
 {
   size_t received_bytes = buffer.size();
 

@@ -50,7 +50,7 @@ namespace off_highway_premium_radar_sample
 class UdpSocket
 {
 public:
-  using ReceiveCallback = std::function<void (const std::vector<uint8_t> &,
+  using ReceiveCallback = std::function<void(const std::vector<uint8_t> &,
       const std::string & remote_ip, const uint32_t remote_port)>;
 
   /**
