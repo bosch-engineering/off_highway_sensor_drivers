@@ -2,8 +2,6 @@
 
 This project provides ROS drivers for Bosch Off-Highway sensor systems.
 
-The off_highway_sensor_drivers package is developed for ROS 2 Humble on Ubuntu 22.04.
-
 The [**off_highway_sensor_drivers**](off_highway_sensor_drivers/package.xml) package acts as
 metapackage for all of the following packages.
 
@@ -88,13 +86,6 @@ See [intended use](doc/intended_use.md).
 Please see [LICENSE](LICENSE).
 
 ## Build
-
-### Prerequisites
-
-Install:
-
-- Ubuntu jammy 22.04
-- ROS humble
 
 ### Install Dependencies
 
