@@ -5,19 +5,15 @@ Ultrasonic Sensor System (USS) Off-Highway into ROS messages - it implements an
 `off_highway_can::Receiver`. Furthermore, the package provides a sender node to encode and send
 needed USS input data as CAN frames - an implementation of an `off_highway_can::Sender`.
 
-Further information on the Bosch USS Off-Highway, it's inputs, outputs and how they can be
-interpreted can be found in the corresponding [Technical Customer Documentation (TCD) of the sensor
-system](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/ultrasonic-sensor-systems-ohw/).
+Further information on the [variants of the Bosch Ultrasonic Sensor System Off-Highway](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/ultrasonic-sensor-systems-ohw/) can be found in the related datasheets or the Technical Documentation of the sensor system.
 
 ## Supported devices
 
-| **Device name** | **Part Number** | **Description** |
-| - | - | - |
-| Ultrasonic Sensor System OHW Premium | - F037.000.125  (series) <br> - F037.B00.672-01 (sample) <br> both of it from software version SW2.0.0 | - Ultrasonic sensor system with up to 12 sensors <br> - Up to 20 objects and up to 36 distances <br> - Object and distance output on automotive CAN is supported |
-| Ultrasonic Sensor System OHW Entry | - F037.000.145 (series) <br> - F037.000.105 (series - 12V version) <br> both of it from software version SW2.0.0 | - Ultrasonic sensor system with up to 12 sensors <br> - Up to 36 distances <br> - Distance output on automotive CAN is supported |
-
-Further information: [Ultrasonic system variants and
-  sensors](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/ultrasonic-sensor-systems-ohw/)
+| **Device name** | **Part Number** | **Description** | **Datasheet** |
+| - | - | - | - |
+| Ultrasonic Sensor System OHW Entry | - F037.000.145 (series) <br> from software version SW2.0.0 | - Ultrasonic sensor system with up to 12 sensors <br> - Up to 36 distances <br> - Distance output on automotive CAN is supported | [Link](https://www.bosch-mobility.com/media/global/solutions/off-highway-and-large-engines/driver-assistance-systems/ultrasonic-sensor-systems/beg_onepager_uss_en_rgb_20211209.pdf) |
+| Ultrasonic Sensor System OHW Premium | - F037.000.125  (series) <br> - F037.B00.672-xx (sample) <br> both from software version SW2.0.0 | - Ultrasonic sensor system with up to 12 sensors <br> - Up to 20 objects and up to 36 distances <br> - Object and distance output on automotive CAN is supported | [Link](https://www.bosch-mobility.com/media/global/solutions/off-highway-and-large-engines/driver-assistance-systems/ultrasonic-sensor-systems/beg_onepager_uss_premium_en_rgb_20211209.pdf) |
+| Ultrasonic Sensor System OHW Premium Safe |- F037.B01.117-xx (sample)<br> - F037.000.210 (series) |- Ultrasonic sensor system developed in accordance with ISO 13849 and ISO 25119 up to PL d, AgPL d respectively for the Direct Echo functionality <br> - This driver package is not developed according to safety standards and not suitable for safety applications.| [Link](https://www.bosch-mobility.com/media/global/solutions/off-highway-and-large-engines/driver-assistance-systems/ultrasonic-sensor-systems/onepager_uss_premiumsafe_en.pdf) |
 
 Contact: [**off-highway.beg@bosch.com**](mailto:off-highway.beg@bosch.com?subject=off_highway_sensor_drivers%20Ultrasonic%20OHW%20Sensors)
 
