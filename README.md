@@ -75,7 +75,7 @@ For further information, have a look at the linked package readme.
 
 ## Further Information about the Hardware
 
-- [Radar OHW Premium](https://www.bosch-engineering.com/stories/stories-detailpages/hd-radar.html)
+- [Radar OHW Premium](https://www.bosch-engineering.com/stories/imaging-radar-system/)
 - [Radar systems for off-highway
   applications](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/radar-systems-ohw/)
 - [Ultrasonic system variants and

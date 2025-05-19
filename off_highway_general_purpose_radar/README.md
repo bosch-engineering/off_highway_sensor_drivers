@@ -4,19 +4,14 @@ The off_highway_general_purpose_radar package provides a receiver node to receiv
 frames of the Bosch General Purpose Radar Off-Highway (GPR) into ROS messages - it implements an
 `off_highway_can::Receiver`.
 
-Further information on the Bosch General Purpose Radar Off-Highway (GPR), it's inputs, outputs and
-how they can be interpreted can be found in the corresponding [Technical Customer Documentation
-(TCD) of the sensor
-system](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/radar-systems-ohw/).
+Further information on the [Bosch General Purpose Radar Off-Highway (GPR)](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/radar-systems-ohw/), it's inputs, outputs and
+how they can be interpreted can be found in the corresponding datasheet or the Technical Customer Documentation (TCD) of the sensor system.
 
 ## Supported devices
 
-| **Device name** | **Part Number** | **Description** | **Supported by subpackage** | **Quality declaration** |
-| -| - | - | - | - |
-| General Purpose Radar Off-Highway (GPR) | - F037.000.100 (series) <br> - F037.B00.255-11 (sample) | - Radar sensor with up to 48 target reflections<br> - Target output on automotive CAN is supported | off_highway_general_purpose_radar | 3 |
-
-Further information: [Radar systems for off-highway
-  applications](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/radar-systems-ohw/)
+| **Device name** | **Part Number** | **Description** | **Datasheet** |
+| -| - | - | - |
+| General Purpose Radar Off-Highway (GPR) | - F037.000.100 (series) <br> - F037.B00.255-11 (sample) | - Radar sensor with up to 48 target reflections<br> - Target output on automotive CAN is supported | [Link](https://www.bosch-mobility.com/media/global/solutions/off-highway-and-large-engines/driver-assistance-systems/radar-systems/beg_summary_gerneral_purpose_radaroffhighway_en_rgb_150dpi_20210121.pdf) |
 
 Contact: [**off-highway.beg@bosch.com**](mailto:off-highway.beg@bosch.com?subject=off_highway_sensor_drivers%20Radar%20Sensors)
 

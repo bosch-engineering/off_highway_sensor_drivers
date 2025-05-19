@@ -1,23 +1,22 @@
 # off_highway_premium_radar
 
+> :warning: The Radar Off-Highway Premium is not available yet. The content
+> in the off_highway_premium_radar packages is preliminary and subject to change.
+
+> :information_source: The off_highway_premium_radar packages are for the **Series** version of the
+> Radar Off-Highway Premium sensor. For the Sample version go to
+> [off_highway_premium_radar_sample](../off_highway_premium_radar_sample).
+
 The off_highway_premium_radar package provides a driver node to receive and send UDP
 datagrams from / to the Bosch Radar Off-Highway Premium via a ROS interface.
 
-Further information on the Bosch Radar Off-Highway Premium, it's inputs, outputs and how they
-can be interpreted can be found in the corresponding Technical Customer Information (TCI), which is
-provided with the sensor hardware.
-
-The driver is only tested for sensor unicast configuration for varying sensor IPs and destination
-ports on the host.
+Further information on the Bosch Radar Off-Highway Premium can be found [here](https://www.bosch-engineering.com/stories/imaging-radar-system/).
 
 ## Supported devices
 
 | **Device name**           | **Part Number**    | **Description**                                  |
 | ------------------------- | ------------------ | ------------------------------------------------ |
-| Radar Off-Highway Premium | - F 037 B01 061-01 | - Radar sensor with up to 1024 locations         |
-
-Further information: [Story page for the Radar OHW
-Premium](https://www.bosch-engineering.com/stories/stories-detailpages/hd-radar.html)
+| Radar Off-Highway Premium | - F037.000.158 | - Radar sensor with up to 1024 locations         |
 
 Contact: [**off-highway.beg@bosch.com**](mailto:off-highway.beg@bosch.com?subject=off_highway_sensor_drivers%20Radar%20OHW%20Premium)
 
@@ -30,9 +29,6 @@ publishes its data as ROS messages. Moreover, it can send all required input for
 PDUs. See the following figure for an overview:
 
 ![Sensor Driver Architecture](doc/media/driver_setup.drawio.svg "Sensor Driver Architecture")
-
-The signal values in a received PDU are checked for their value range and replaced by their
-corresponding signal-not-available (SNA) value if out of range (if applicable).
 
 The split location data PDUs per measurement are assembled by the driver as single location data
 measurement and published as single ROS point cloud message. There is **no** built-in recovery in
@@ -82,7 +78,7 @@ with custom converter classes. See [design](doc/design.md) for an overview.
 
 * **~/locations
   ([`sensor_msgs/msg/PointCloud2`](http://docs.ros.org/en/noetic/api/sensor_msgs/html/msg/PointCloud2.html))**
-  * Cycle time: ~66 ms
+  * Cycle time: 70 ms +/- 20 ms
   * Contains location measurement of radar as point cloud. Fields (all float for PCL filter
     compatibility, mapped Technical Customer Information signal name is specified in brackets):
     * **x, y, z**: Position of location
@@ -111,25 +107,16 @@ with custom converter classes. See [design](doc/design.md) for an overview.
     > **Note:** See the Technical Customer Information for further information about all fields!
 * **~/locations_header
   ([`off_highway_premium_radar_msgs/msg/LocationHeader`](../off_highway_premium_radar_msgs/msg/LocationDataHeader.msg))**
-  * Cycle time: ~66 ms (aligned to locations)
+  * Cycle time: 70 ms +/- 20 ms (aligned to locations)
   * Contains header of location measurement including start time of measurement, operation mode and
     block counter.
-* **~/sensor_feedback
-  ([`off_highway_premium_radar_msgs/msg/SensorFeedback`](../off_highway_premium_radar_msgs/msg/SensorFeedback.msg))**
-  * Cycle time: 50 ms
-  * Loopbacks input data as feedback like ego vehicle data, time or measurement synchronization.
 * **~/sensor_state_information
   ([`off_highway_premium_radar_msgs/msg/SensorStateInformation`](../off_highway_premium_radar_msgs/msg/SensorStateInformation.msg))**
   * Cycle time: 10 ms
   * Contains sensor state.
 * **~/location_attributes
   ([`off_highway_premium_radar_msgs/msg/LocationAttributes`](../off_highway_premium_radar_msgs/msg/LocationAttributes.msg))**
-  * Cycle time: 66 ms (aligned to locations)
-  * Contains location measurement attributes like separabilities and precisions or interference
-    indicators.
-* **~/sensor_dtc_information
-  ([`off_highway_premium_radar_msgs/msg/SensorDtcInformation`](../off_highway_premium_radar_msgs/msg/SensorDtcInformation.msg))**
-  * Cycle time: 66 ms (aligned to locations)
+  * Cycle time: 70 ms +/- 20 ms (aligned to locations)
   * Contains location measurement attributes like separabilities and precisions or interference
     indicators.
 * **/diagnostics
@@ -142,11 +129,6 @@ with custom converter classes. See [design](doc/design.md) for an overview.
 * **~/set_measurement_program
   ([`off_highway_premium_radar_msgs/srv/MeasurementProgram`](../off_highway_premium_radar_msgs/srv/MeasurementProgram.srv))**
   * Set the measurement program (via ID) of the radar by sending a SetMeasurementProgram UDP PDU.
-    Returns success if full UDP PDU was sent, false otherwise.
-  * **Not supported by sensor firmware yet**
-* **~/sensor_mode_request
-  ([`off_highway_premium_radar_msgs/srv/SensorModeRequest`](../off_highway_premium_radar_msgs/srv/SensorModeRequest.srv))**
-  * Request a sensor mode by sending a SensorModeRequest UDP PDU, e.g., start and stop modulation.
     Returns success if full UDP PDU was sent, false otherwise.
 
 #### Parameters

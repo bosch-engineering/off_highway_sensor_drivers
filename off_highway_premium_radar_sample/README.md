@@ -6,7 +6,7 @@
 The off_highway_premium_radar_sample package provides a driver node to receive and send UDP
 datagrams from / to the Bosch Radar Off-Highway Premium Sample via a ROS interface.
 
-Further information on the Bosch Radar Off-Highway Premium Sample, it's inputs, outputs and how they
+Further information on the [Bosch Radar Off-Highway Premium Sample](https://www.bosch-engineering.com/stories/imaging-radar-system/), it's inputs, outputs and how they
 can be interpreted can be found in the corresponding Technical Customer Information (TCI), which is
 provided with the sensor hardware.
 
@@ -15,12 +15,9 @@ ports on the host.
 
 ## Supported devices
 
-| **Device name**                  | **Part Number**    | **Description**                                  |
-| -------------------------------- | ------------------ | ------------------------------------------------ |
-| Radar Off-Highway Premium Sample | - F 037 B01 061-01 | - Radar sensor with up to 1024 locations         |
-
-Further information: [Story page for the Radar OHW
-Premium](https://www.bosch-engineering.com/stories/stories-detailpages/hd-radar.html)
+| **Device name** | **Part Number** | **Description** |**Datasheet** |
+| - | - | - | - |
+| Radar Off-Highway Premium Sample | - F 037 B01 061-01 | - Radar sensor with up to 1024 locations | [Link](https://www.bosch-engineering.com/media/stories/hd_radar/beg_a4_flyer_premiumradar_print.pdf) |
 
 Contact: [**off-highway.beg@bosch.com**](mailto:off-highway.beg@bosch.com?subject=off_highway_sensor_drivers%20Radar%20OHW%20Premium)
 

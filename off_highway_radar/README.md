@@ -5,18 +5,15 @@ Radar Off-Highway into ROS messages - it implements an `off_highway_can::Receive
 package provides a sender node to encode and send needed radar input data as CAN frames - an
 implementation of an `off_highway_can::Sender`.
 
-Further information on the Bosch Radar Off-Highway, it's inputs, outputs and how they can be
-interpreted can be found in the corresponding [Technical Customer Documentation (TCD) of the sensor
-system](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/radar-systems-ohw/).
+Further information on the [Bosch Radar Off-Highway](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/radar-systems-ohw), it's inputs, outputs and how they can be
+interpreted can be found in the corresponding datasheet or the Technical Customer Documentation (TCD) of the sensor
+system.
 
 ## Supported devices
 
-| **Device name** | **Part Number** | **Description** |
-| -| - | - |
-| Radar Off-Highway | - F037.000.127 (series - from software version F037SW0157V06.0001 ) <br> - F037.B00.575-04 (sample - from software version F037SW0116V05.0004) | - Radar sensor with up to 40 objects (filtered & unfiltered)<br> - Object output on automotive CAN is supported |
-
-Further information: [Radar systems for off-highway
-  applications](https://www.bosch-mobility-solutions.com/en/solutions/assistance-systems/radar-systems-ohw/)
+| **Device name** | **Part Number** | **Description** | **Datasheet** |
+| -| - | - | - |
+| Radar Off-Highway | - F037.000.127 (series - from software version F037SW0157V06.0001 ) <br> - F037.B00.575-04 (sample - from software version F037SW0116V05.0004) | - Radar sensor with up to 40 objects (filtered & unfiltered)<br> - Object output on automotive CAN is supported | [Link](https://www.bosch-mobility.com/media/global/solutions/off-highway-and-large-engines/driver-assistance-systems/radar-systems/beg_summary_radaroffhighway_en_rgb_150dpi_20210121.pdf)|
 
 Contact: [**off-highway.beg@bosch.com**](mailto:off-highway.beg@bosch.com?subject=off_highway_sensor_drivers%20Radar%20OHW%20Sensors)
 
