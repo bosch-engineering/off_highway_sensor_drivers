@@ -22,7 +22,6 @@ find_package(can_msgs REQUIRED)
 find_package(off_highway_can REQUIRED)
 find_package(off_highway_general_purpose_radar_msgs REQUIRED)
 find_package(pcl_conversions REQUIRED)
-find_package(pcl_ros REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common)
 
 set(dependencies
@@ -33,7 +32,6 @@ set(dependencies
   off_highway_can
   off_highway_general_purpose_radar_msgs
   pcl_conversions
-  pcl_ros
   PCL
 )
 
@@ -83,6 +81,8 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 
   find_package(ament_cmake_ros REQUIRED)
+  find_package(pcl_ros REQUIRED)
+
   ament_add_ros_isolated_gtest(test_radar_receiver_information test/test_receiver_information.cpp)
   target_include_directories(test_radar_receiver_information PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -102,6 +102,7 @@ if(BUILD_TESTING)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
   )
+  ament_target_dependencies(test_pcl_point_target pcl_ros)
   target_link_libraries(test_pcl_point_target ${PROJECT_NAME})
 endif()
 
