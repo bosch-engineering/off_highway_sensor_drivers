@@ -18,7 +18,6 @@
 
   <exec_depend>off_highway_premium_radar</exec_depend>
   <exec_depend>off_highway_radar</exec_depend>
-  <exec_depend>pcl_ros</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
