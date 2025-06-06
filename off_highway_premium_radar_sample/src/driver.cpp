@@ -140,19 +140,19 @@ Driver::PduType Driver::get_pdu_type(std::vector<uint8_t> buffer)
   {
     return PduType::kLocationData;
   }
-  if (id >= SensorFeedback::kPduId && length == SensorFeedback::kPduPayloadLength) {
+  if (id == SensorFeedback::kPduId && length == SensorFeedback::kPduPayloadLength) {
     return PduType::kSensorFeedback;
   }
-  if (id >= SensorStateInformation::kPduId && length == SensorStateInformation::kPduPayloadLength) {
+  if (id == SensorStateInformation::kPduId && length == SensorStateInformation::kPduPayloadLength) {
     return PduType::kStateInformation;
   }
-  if (id >= SensorBroadcast::kPduId && length == SensorBroadcast::kPduPayloadLength) {
+  if (id == SensorBroadcast::kPduId && length == SensorBroadcast::kPduPayloadLength) {
     return PduType::kSensorBroadcast;
   }
-  if (id >= LocationAttributes::kPduId && length == LocationAttributes::kPduPayloadLength) {
+  if (id == LocationAttributes::kPduId && length == LocationAttributes::kPduPayloadLength) {
     return PduType::kLocationAttributes;
   }
-  if (id >= SensorDTCInformation::kPduId && length == SensorDTCInformation::kPduPayloadLength) {
+  if (id == SensorDTCInformation::kPduId && length == SensorDTCInformation::kPduPayloadLength) {
     return PduType::kSensorDtcInformation;
   }
 
