@@ -155,7 +155,7 @@ private:
    *
    * \param stat Status wrapper of diagnostics.
    */
-  void diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat);
+  void diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat) const;
 
   /**
    * \brief Declare and get node parameters.
