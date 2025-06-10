@@ -228,7 +228,7 @@ void Receiver::manage_targets()
 
 void Receiver::publish_targets()
 {
-  if (pub_targets_->get_subscription_count() == 0) {
+  if (pub_targets_->get_subscription_count() == 0 || is_timeout_) {
     return;
   }
 
@@ -247,7 +247,7 @@ void Receiver::publish_targets()
 
 void Receiver::publish_pcl()
 {
-  if (pub_targets_pcl_->get_subscription_count() == 0) {
+  if (pub_targets_pcl_->get_subscription_count() == 0 || is_timeout_) {
     return;
   }
 
