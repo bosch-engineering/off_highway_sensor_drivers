@@ -79,7 +79,8 @@ void Receiver::stop()
 
 void Receiver::callback_watchdog()
 {
-  if ((now() - last_message_received_).seconds() > timeout_) {
+  is_timeout_ = (now() - last_message_received_).seconds() > timeout_;
+  if (is_timeout_) {
     RCLCPP_WARN(get_logger(), "Timeout of watchdog for receiving node %s", get_name());
     force_diag_update();
     last_message_received_ = now();
@@ -106,11 +107,9 @@ void Receiver::force_diag_update()
   diag_updater_->force_update();
 }
 
-void Receiver::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat)
+void Receiver::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat) const
 {
   using diagnostic_msgs::msg::DiagnosticStatus;
-
-  is_timeout_ = (now() - last_message_received_).seconds() > timeout_;
 
   stat.add("Timeout", is_timeout_);
 
