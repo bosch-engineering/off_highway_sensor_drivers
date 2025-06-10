@@ -222,7 +222,7 @@ void Receiver::manage_objects()
 
 void Receiver::publish_objects()
 {
-  if (pub_objects_->get_subscription_count() == 0) {
+  if (pub_objects_->get_subscription_count() == 0 || is_timeout_) {
     return;
   }
 
@@ -241,7 +241,7 @@ void Receiver::publish_objects()
 
 void Receiver::publish_pcl()
 {
-  if (pub_objects_pcl_->get_subscription_count() == 0) {
+  if (pub_objects_pcl_->get_subscription_count() == 0 || is_timeout_) {
     return;
   }
 
