@@ -106,15 +106,15 @@ void Receiver::force_diag_update()
   diag_updater_->force_update();
 }
 
-void Receiver::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat) const
+void Receiver::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat)
 {
   using diagnostic_msgs::msg::DiagnosticStatus;
 
-  bool timeout = (now() - last_message_received_).seconds() > timeout_;
+  is_timeout_ = (now() - last_message_received_).seconds() > timeout_;
 
-  stat.add("Timeout", timeout);
+  stat.add("Timeout", is_timeout_);
 
-  if (timeout) {
+  if (is_timeout_) {
     stat.summary(DiagnosticStatus::ERROR, "Error");
   } else {
     stat.summary(DiagnosticStatus::OK, "Ok");
