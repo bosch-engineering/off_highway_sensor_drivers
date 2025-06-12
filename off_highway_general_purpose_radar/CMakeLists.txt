@@ -102,8 +102,7 @@ if(BUILD_TESTING)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
   )
-  ament_target_dependencies(test_pcl_point_target pcl_ros)
-  target_link_libraries(test_pcl_point_target ${PROJECT_NAME})
+  target_link_libraries(test_pcl_point_target ${PROJECT_NAME} pcl_ros::pcl_ros_tf)
 endif()
 
 ament_export_include_directories(

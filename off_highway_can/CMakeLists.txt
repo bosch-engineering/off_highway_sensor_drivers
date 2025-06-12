@@ -33,7 +33,12 @@ add_library(${PROJECT_NAME} SHARED
   src/sender.cpp
 )
 
-ament_target_dependencies(${PROJECT_NAME} rclcpp can_msgs diagnostic_updater ros2_socketcan_msgs)
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  ${can_msgs_TARGETS}
+  ${ros2_socketcan_msgs_TARGETS}
+  diagnostic_updater::diagnostic_updater
+  rclcpp::rclcpp
+)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
