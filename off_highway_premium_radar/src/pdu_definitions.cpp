@@ -192,18 +192,6 @@ std::vector<uint8_t> EgoVehicleInput::serialize()
   return buffer;
 }
 
-std::vector<uint8_t> MeasurementCycleSynchronisation::serialize()
-{
-  pdu_id = htobe32(kPduId);
-  pdu_payload_length = htobe32(kPduPayloadLength);
-  mcs_data.MCS_SenTimeOff = htobe32(mcs_data.MCS_SenTimeOff);
-
-  std::vector<uint8_t> buffer;
-  buffer.resize(sizeof(*this));
-  std::memcpy(buffer.data(), this, sizeof(*this));
-  return buffer;
-}
-
 std::vector<uint8_t> MeasurementProgram::serialize()
 {
   pdu_id = htobe32(kPduId);

@@ -905,54 +905,6 @@ static_assert(
   "Wrong EgoVehicleInput struct size!");
 
 
-struct MCSData
-{
-  /**
-   * \brief Synchronisation Type
-   * \note Set to 1 when we want to sync 2 or 3 sensors else will be set to 0 when no
-   *       synchronization is required.
-   *          0 No synchronization
-   *          1 Timeslot sync
-   */
-  uint8_t MCS_SyncType;
-  /**
-   * \brief Sensor Time Offset
-   * \note Used when we want to sync 2 or 3 sensors
-   * \note If MCS_SyncType is set to 1 then MCS_SenTimeOff cannot be set to 0xFFFFFFFF
-   * \note If 2 sensor needs to be synchronized then MCS_SyncType is set to 1 and
-   *          MCS_SenTimeOff can be 0ms for 1st sensor, 33ms for 2nd sensor.
-   * \note If 3 sensor needs to be synchronized then MCS_SyncType is set to 1 and
-   *          MCS_SenTimeOff can be 0ms for 1st sensor, 22ms for 2nd sensor, 44ms for 3rd sensor.
-   */
-  uint32_t MCS_SenTimeOff;
-} __attribute__((packed));
-
-struct MeasurementCycleSynchronisation
-{
-  /**
-   * \brief Serialize members into byte vector with correct byte order
-   */
-  std::vector<uint8_t> serialize();
-
-  static constexpr uint32_t kPduId{0x13370051};
-  static constexpr uint32_t kPduPayloadLength{5u};
-  static constexpr uint32_t kPduSize{kPduPayloadLength + kPduHeaderLength};
-
-  /**
-   * \brief PDU ID
-   */
-  uint32_t pdu_id;
-  /**
-   * \brief PDU Payload length
-   */
-  uint32_t pdu_payload_length;
-  struct MCSData mcs_data;
-} __attribute__((packed));
-
-static_assert(
-  sizeof(MeasurementCycleSynchronisation) == MeasurementCycleSynchronisation::kPduSize,
-  "Wrong MeasurementCycleSynchronisation(MCS) struct size!");
-
 // +-------------------------+------------+--------------------+-------------------+-------------+
 // | LocAtr_DmpID            | 01 (DMP01) |     02 (DMP02)     | 04 (DMP04)        | 00 (DMP00)  |
 // | (Measurement Program)   |            |                    |                   |             |

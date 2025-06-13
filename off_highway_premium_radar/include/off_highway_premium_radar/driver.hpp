@@ -78,16 +78,6 @@ public:
   bool send_ego_vehicle_data(EgoVehicleInput & data) override {return send(data);}
 
   /**
-   * \brief Send measurement cycle synchronization
-   *
-   * \param data Measurement cycle synchronization
-   */
-  bool send_measurement_cycle_sync(MeasurementCycleSynchronisation & data) override
-  {
-    return send(data);
-  }
-
-  /**
    * \brief Send measurement program
    *
    * \param data Measurement program

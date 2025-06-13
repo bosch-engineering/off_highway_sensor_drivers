@@ -42,13 +42,6 @@ public:
   virtual bool send_ego_vehicle_data(EgoVehicleInput & data) = 0;
 
   /**
-   * \brief Send measurement cycle synchronization
-   *
-   * \param data Measurement cycle synchronization
-   */
-  virtual bool send_measurement_cycle_sync(MeasurementCycleSynchronisation & data) = 0;
-
-  /**
    * \brief Send measurement program
    *
    * \param data Measurement program

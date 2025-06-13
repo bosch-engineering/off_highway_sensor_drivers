@@ -70,13 +70,6 @@ void DefaultConverter::on_configure()
       std::bind(&DefaultConverter::on_ego_vehicle_data, this, std::placeholders::_1));
   }
 
-  if (synchronize_measurement_cycle_) {
-    sensor_sync_timer_ =
-      create_timer(
-      node, clock_, kSendSyncPeriod,
-      std::bind(&DefaultConverter::send_measurement_cycle_sync, this));
-  }
-
   measurement_program_service_ =
     node->create_service<off_highway_premium_radar_msgs::srv::MeasurementProgram>(
     "~/set_measurement_program",
@@ -133,15 +126,6 @@ void DefaultConverter::on_ego_vehicle_data(
   }
 }
 
-void DefaultConverter::send_measurement_cycle_sync()
-{
-  MeasurementCycleSynchronisation sync;
-  sync.mcs_data.MCS_SenTimeOff = sensor_time_offset_;
-  sync.mcs_data.MCS_SyncType = true;
-
-  sender_->send_measurement_cycle_sync(sync);
-}
-
 void DefaultConverter::on_measurement_program(
   const off_highway_premium_radar_msgs::srv::MeasurementProgram::Request::SharedPtr request,
   off_highway_premium_radar_msgs::srv::MeasurementProgram::Response::SharedPtr response)
@@ -157,23 +141,6 @@ void DefaultConverter::on_measurement_program(
 void DefaultConverter::declare_and_get_parameters()
 {
   auto node = parent_.lock();
-
-  if (!node->has_parameter("synchronize_measurement_cycle")) {
-    node->declare_parameter("synchronize_measurement_cycle", synchronize_measurement_cycle_);
-  }
-  node->get_parameter("synchronize_measurement_cycle", synchronize_measurement_cycle_);
-
-  if (!node->has_parameter("sensor_time_offset")) {
-    node->declare_parameter<int64_t>("sensor_time_offset", sensor_time_offset_);
-  }
-  int64_t sensor_time_offset{0};
-  node->get_parameter("sensor_time_offset", sensor_time_offset);
-  if (sensor_time_offset < 0) {
-    throw std::out_of_range(
-            "Parameter 'sensor_time_offset' negative: " +
-            std::to_string(sensor_time_offset));
-  }
-  sensor_time_offset_ = sensor_time_offset;
 
   if (!node->has_parameter("send_ego_vehicle_data")) {
     node->declare_parameter("send_ego_vehicle_data", send_ego_vehicle_data_);

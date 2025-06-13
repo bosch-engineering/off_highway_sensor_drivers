@@ -119,11 +119,6 @@ private:
   void on_ego_vehicle_data(
     const off_highway_premium_radar_msgs::msg::EgoVehicleInput::ConstSharedPtr & msg);
 
-  /**
-   * \brief Send measurement cycle sync (triggered by timer)
-   */
-  void send_measurement_cycle_sync();
-
   using MeasurementProgram = off_highway_premium_radar_msgs::srv::MeasurementProgram;
   /**
    * \brief Service callback on measurement program
@@ -141,10 +136,6 @@ private:
   std::string name_{"default_converter"};
 
   // Parameters
-  //! Send sensor sync
-  bool synchronize_measurement_cycle_{false};
-  //! Sensor time offset for sync
-  uint32_t sensor_time_offset_{0};
   //! Subscribe to and send ego vehicle data
   bool send_ego_vehicle_data_{false};
 
