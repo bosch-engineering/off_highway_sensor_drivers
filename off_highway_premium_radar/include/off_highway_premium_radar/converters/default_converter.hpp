@@ -24,7 +24,6 @@
 
 #include "off_highway_premium_radar_msgs/msg/location_attributes.hpp"
 #include "off_highway_premium_radar_msgs/msg/location_data_header.hpp"
-#include "off_highway_premium_radar_msgs/msg/sensor_dtc_information.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_state_information.hpp"
 
 #include "off_highway_premium_radar_msgs/msg/ego_vehicle_input.hpp"
@@ -73,13 +72,6 @@ private:
    * \param data Location attributes PDU (in host order)
    */
   void on_location_attributes(const LocationAttributes & data) override;
-
-  /**
-   * \brief Called from receiving thread on receiving a sensor DTC information PDU
-   *
-   * \param data Sensor information PDU (in host order)
-   */
-  void on_sensor_dtc_information(const SensorDTCInformation & data) override;
 
   /**
    * \brief Same as publish tick diag but using ROS time as timestamp.
@@ -169,8 +161,6 @@ private:
     publisher_sensor_state_information_;
   rclcpp::Publisher<off_highway_premium_radar_msgs::msg::LocationAttributes>::SharedPtr
     publisher_location_attributes_;
-  rclcpp::Publisher<off_highway_premium_radar_msgs::msg::SensorDtcInformation>::SharedPtr
-    publisher_sensor_dtc_information_;
 
   // Subscriptions
   rclcpp::Subscription<off_highway_premium_radar_msgs::msg::EgoVehicleInput>::SharedPtr

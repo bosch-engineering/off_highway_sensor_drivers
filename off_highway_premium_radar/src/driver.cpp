@@ -94,14 +94,6 @@ void Driver::callback_udp(
         }
         break;
       }
-    case PduType::kSensorDtcInformation:
-      {
-        auto msg = to_pdu<SensorDTCInformation>(buffer);
-        for (auto & r : receivers_) {
-          r->on_sensor_dtc_information(msg);
-        }
-        break;
-      }
     case PduType::kUnknown:
       break;
   }
@@ -129,9 +121,6 @@ Driver::PduType Driver::get_pdu_type(std::vector<uint8_t> buffer)
   }
   if (id == LocationAttributes::kPduId && length == LocationAttributes::kPduPayloadLength) {
     return PduType::kLocationAttributes;
-  }
-  if (id == SensorDTCInformation::kPduId && length == SensorDTCInformation::kPduPayloadLength) {
-    return PduType::kSensorDtcInformation;
   }
 
   return PduType::kUnknown;

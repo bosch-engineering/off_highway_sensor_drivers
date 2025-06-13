@@ -14,8 +14,6 @@ original name of the UDP signal from the **Technical Customer Information**.
 * [SensorStateInformation](msg/SensorStateInformation.msg): Mapped Sensor State Information from UDP
   interface.
 * [LocationAttributes](msg/LocationAttributes.msg): Mapped Location Attributes from UDP interface.
-* [SensorDtcInformation](msg/SensorDtcInformation.msg): Mapped Sensor DTC Information from UDP
-  interface.
 * [EgoVehicleInput](msg/EgoVehicleInput.msg): Mapped Ego Vehicle Input from UDP interface.
 
 Rest of the defined messages are sub messages in the above top-level nested messages to replicate
