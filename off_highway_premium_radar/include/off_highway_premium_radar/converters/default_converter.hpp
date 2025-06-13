@@ -25,7 +25,6 @@
 #include "off_highway_premium_radar_msgs/msg/location_attributes.hpp"
 #include "off_highway_premium_radar_msgs/msg/location_data_header.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_dtc_information.hpp"
-#include "off_highway_premium_radar_msgs/msg/sensor_feedback.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_state_information.hpp"
 
 #include "off_highway_premium_radar_msgs/msg/ego_vehicle_input.hpp"
@@ -60,13 +59,6 @@ private:
    * \param data Location data measurement (in host order)
    */
   void on_location_data(const LocationData & data) override;
-
-  /**
-   * \brief Called from receiving thread on receiving a sensor feedback PDU
-   *
-   * \param data Sensor feedback PDU (in host order)
-   */
-  void on_sensor_feedback(const SensorFeedback & data) override;
 
   /**
    * \brief Called from receiving thread on receiving a sensor information PDU
@@ -173,8 +165,6 @@ private:
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr publisher_locations_;
   rclcpp::Publisher<off_highway_premium_radar_msgs::msg::LocationDataHeader>::SharedPtr
     publisher_locations_header_;
-  rclcpp::Publisher<off_highway_premium_radar_msgs::msg::SensorFeedback>::SharedPtr
-    publisher_sensor_feedback_;
   rclcpp::Publisher<off_highway_premium_radar_msgs::msg::SensorStateInformation>::SharedPtr
     publisher_sensor_state_information_;
   rclcpp::Publisher<off_highway_premium_radar_msgs::msg::LocationAttributes>::SharedPtr
@@ -195,7 +185,6 @@ private:
   using TopicDiagnosticSharedPtr = std::shared_ptr<diagnostic_updater::TopicDiagnostic>;
   // Output
   TopicDiagnosticSharedPtr diag_locations_;
-  TopicDiagnosticSharedPtr diag_sensor_feedback_;
   TopicDiagnosticSharedPtr diag_sensor_state_information_;
   TopicDiagnosticSharedPtr diag_location_attributes_;
 
@@ -208,7 +197,6 @@ private:
   // Diagnosis timestamp and frequency limits (set in ctor)
   static constexpr Limit diag_timestamps_{0.0, 0.1};
   Limit diag_frequencies_locations_;
-  Limit diag_frequencies_sensor_feedback_;
   Limit diag_frequencies_sensor_state_information_;
 };
 

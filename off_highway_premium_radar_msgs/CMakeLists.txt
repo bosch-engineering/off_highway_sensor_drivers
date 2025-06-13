@@ -30,7 +30,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/OperationMode.msg"
   "msg/SensorCoatingPacket.msg"
   "msg/SensorDtcInformation.msg"
-  "msg/SensorFeedback.msg"
   "msg/SensorFieldOfView.msg"
   "msg/SensorModulationPerformance.msg"
   "msg/SensorMounting.msg"

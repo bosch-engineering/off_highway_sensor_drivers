@@ -127,7 +127,6 @@ private:
   enum class PduType
   {
     kLocationData,
-    kSensorFeedback,
     kStateInformation,
     kLocationAttributes,
     kSensorDtcInformation,

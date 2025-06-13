@@ -42,13 +42,6 @@ public:
   virtual void on_location_data(const LocationData &) {}
 
   /**
-   * \brief Called from receiving thread on receiving a sensor feedback PDU
-   *
-   * \param data Sensor feedback PDU (in host order)
-   */
-  virtual void on_sensor_feedback(const SensorFeedback &) {}
-
-  /**
    * \brief Called from receiving thread on receiving a sensor information PDU
    *
    * \param data Sensor information PDU (in host order)
