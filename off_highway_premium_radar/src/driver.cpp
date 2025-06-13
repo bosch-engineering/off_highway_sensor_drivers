@@ -78,14 +78,6 @@ void Driver::callback_udp(
         }
         break;
       }
-    case PduType::kSensorFeedback:
-      {
-        auto msg = to_pdu<SensorFeedback>(buffer);
-        for (auto & r : receivers_) {
-          r->on_sensor_feedback(msg);
-        }
-        break;
-      }
     case PduType::kStateInformation:
       {
         auto msg = to_pdu<SensorStateInformation>(buffer);
@@ -131,9 +123,6 @@ Driver::PduType Driver::get_pdu_type(std::vector<uint8_t> buffer)
     length == LocationDataPdu::kPduPayloadLength)
   {
     return PduType::kLocationData;
-  }
-  if (id == SensorFeedback::kPduId && length == SensorFeedback::kPduPayloadLength) {
-    return PduType::kSensorFeedback;
   }
   if (id == SensorStateInformation::kPduId && length == SensorStateInformation::kPduPayloadLength) {
     return PduType::kStateInformation;

@@ -11,7 +11,6 @@ original name of the UDP signal from the **Technical Customer Information**.
 
 * [LocationDataHeader](msg/LocationDataHeader.msg): Mapped Location Data/LocData_Header_i from UDP
   interface.
-* [SensorFeedback](msg/SensorFeedback.msg): Mapped Sensor Feedback from UDP interface.
 * [SensorStateInformation](msg/SensorStateInformation.msg): Mapped Sensor State Information from UDP
   interface.
 * [LocationAttributes](msg/LocationAttributes.msg): Mapped Location Attributes from UDP interface.

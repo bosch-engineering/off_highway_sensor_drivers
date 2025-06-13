@@ -21,7 +21,6 @@ namespace off_highway_premium_radar
 
 DefaultConverter::DefaultConverter()
 : diag_frequencies_locations_{13., 17.},
-  diag_frequencies_sensor_feedback_{18., 22.},
   diag_frequencies_sensor_state_information_{13., 17.}
 {
 }
@@ -42,19 +41,12 @@ void DefaultConverter::on_configure()
   publisher_locations_header_ =
     node->create_publisher<off_highway_premium_radar_msgs::msg::LocationDataHeader>(
     "~/locations_header", 10);
-  publisher_sensor_feedback_ =
-    node->create_publisher<off_highway_premium_radar_msgs::msg::SensorFeedback>(
-    "~/sensor_feedback", 10);
   publisher_sensor_state_information_ =
     node->create_publisher<off_highway_premium_radar_msgs::msg::SensorStateInformation>(
     "~/sensor_state_information", 10);
   publisher_location_attributes_ =
     node->create_publisher<off_highway_premium_radar_msgs::msg::LocationAttributes>(
     "~/location_attributes", 10);
-  // Event based publishers, frequency-based diagnosis not applicable
-  publisher_sensor_dtc_information_ =
-    node->create_publisher<off_highway_premium_radar_msgs::msg::SensorDtcInformation>(
-    "~/sensor_dtc_information", 10);
 
   diag_locations_ = std::make_shared<diagnostic_updater::TopicDiagnostic>(
     publisher_locations_->get_topic_name(), *diag_updater_,
@@ -108,11 +100,6 @@ void DefaultConverter::on_location_data(const LocationData & data)
   publish_tick_diag(data.header, publisher_locations_header_, diag_locations_, stamp);
 }
 
-void DefaultConverter::on_sensor_feedback(const SensorFeedback & data)
-{
-  auto stamp = decide_on_stamp(data.FeedBack_TimeS, data.FeedBack_TimeNs);
-}
-
 void DefaultConverter::on_sensor_state_information(const SensorStateInformation & data)
 {
   publish_tick_diag(data, publisher_sensor_state_information_, diag_sensor_state_information_);
@@ -126,20 +113,6 @@ void DefaultConverter::on_location_attributes(const LocationAttributes & data)
 
   publish_tick_diag(data, publisher_location_attributes_, diag_location_attributes_, stamp);
 }
-
-void DefaultConverter::on_sensor_dtc_information(const SensorDTCInformation & data)
-{
-  // Event-based, so no diagnosis
-  if (!publisher_sensor_dtc_information_->get_subscription_count()) {
-    // Do not publish if no one is subscribed
-    return;
-  }
-
-  auto msg = to_msg(data, clock_->now(), frame_id_);
-
-  publisher_sensor_dtc_information_->publish(msg);
-}
-
 
 void DefaultConverter::on_ego_vehicle_data(
   const off_highway_premium_radar_msgs::msg::EgoVehicleInput::ConstSharedPtr & msg)

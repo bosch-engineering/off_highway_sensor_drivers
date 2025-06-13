@@ -38,8 +38,6 @@
 #include "off_highway_premium_radar_msgs/msg/misalignment_packet.hpp"
 #include "off_highway_premium_radar_msgs/msg/operation_mode.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_coating_packet.hpp"
-#include "off_highway_premium_radar_msgs/msg/sensor_dtc_information.hpp"
-#include "off_highway_premium_radar_msgs/msg/sensor_feedback.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_field_of_view.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_modulation_performance.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_mounting.hpp"
@@ -78,43 +76,6 @@ auto to_msg(const LocData_Header_i & d, const rclcpp::Time stamp, const std::str
          .data_measured(d.LocData_DataMeas)
          .num_locations(d.LocData_NumLoc);
   // LocData_MaxLocPerPdu is fixed value and thus irrelevant
-}
-
-inline
-auto to_msg(const MeasurementCycleSyncData & d)
-{
-  return build<msg::MeasurementCycleSyncData>()
-         .sync(d.FeedBack_SyncType)
-         .sensor_time_offset(rclcpp::Time(d.FeedBack_SenTimeOff));
-}
-
-inline
-auto to_msg(const EgoVehicleData & d)
-{
-  geometry_msgs::msg::TwistWithCovariance velocity;
-  velocity.twist.linear.x = d.FeedBack_VehSpd;
-  // Sensor uses deg/s
-  velocity.twist.angular.z = d.FeedBack_RelYawRate * kDegToRad;
-  velocity.covariance[0] = d.FeedBack_VehSpdStdDev * d.FeedBack_VehSpdStdDev;
-
-  geometry_msgs::msg::Accel acceleration;
-  acceleration.linear.x = d.FeedBack_LogAcc;
-
-  return build<msg::EgoVehicleData>()
-         .velocity(velocity)
-         .acceleration(acceleration);
-}
-
-inline
-auto to_msg(const SensorFeedback & d, const rclcpp::Time stamp, const std::string & frame_id)
-{
-  return build<msg::SensorFeedback>()
-         .header(std_msgs::build<std_msgs::msg::Header>().stamp(stamp).frame_id(frame_id))
-         .lgp_version(d.FeedBack_LgpVer)
-         .vehicle_time(to_msg(d.FeedBack_TimeS, d.FeedBack_TimeNs))
-         .measurement_cycle_sync_data(to_msg(d.measurement_cycle_sync_data))
-         .time_sync_status(d.FeedBack_TimeSynSta)
-         .ego_vehicle_data(to_msg(d.ego_vehicle_data));
 }
 
 inline
@@ -246,15 +207,6 @@ auto to_msg(const LocationAttributes & d, const rclcpp::Time stamp, const std::s
          .location_attributes_header(to_msg(d.loc_atr_header))
          .location_attributes_packet(to_msg(d.loc_atr_packet))
          .mounting_position(to_msg(d.loc_atr_mounting_position));
-}
-
-inline
-auto to_msg(const SensorDTCInformation & d, const rclcpp::Time stamp, const std::string & frame_id)
-{
-  return build<msg::SensorDtcInformation>()
-         .header(std_msgs::build<std_msgs::msg::Header>().stamp(stamp).frame_id(frame_id))
-         .lgp_version(d.SensorDtc_LgpVer)
-         .dtcs(d.dtc_information_data.SensorDtc_Dtc);
 }
 
 inline

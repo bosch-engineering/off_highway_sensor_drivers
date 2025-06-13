@@ -64,28 +64,6 @@ LocationDataPdu::LocationDataPdu(const std::array<uint8_t, kPduSize> & buffer)
   }
 }
 
-void EgoVehicleData::betoh()
-{
-  FeedBack_RelYawRate = be32tohf(FeedBack_RelYawRate);
-  FeedBack_VehSpd = be32tohf(FeedBack_VehSpd);
-  FeedBack_VehSpdStdDev = be32tohf(FeedBack_VehSpdStdDev);
-  FeedBack_LogAcc = be32tohf(FeedBack_LogAcc);
-}
-
-SensorFeedback::SensorFeedback(const std::array<uint8_t, kPduSize> & buffer)
-: SensorFeedback(std::bit_cast<SensorFeedback>(buffer))
-{
-  pdu_id = be32toh(pdu_id);
-  pdu_payload_length = be32toh(pdu_payload_length);
-  // e2e_header is always FF
-  FeedBack_LgpVer = be32toh(FeedBack_LgpVer);
-  FeedBack_TimeS = be32toh(FeedBack_TimeS);
-  FeedBack_TimeNs = be32toh(FeedBack_TimeNs);
-  measurement_cycle_sync_data.FeedBack_SenTimeOff = be32toh(
-    measurement_cycle_sync_data.FeedBack_SenTimeOff);
-  ego_vehicle_data.betoh();
-}
-
 SensorStateInformation::SensorStateInformation(const std::array<uint8_t, kPduSize> & buffer)
 : SensorStateInformation(std::bit_cast<SensorStateInformation>(buffer))
 {
