@@ -20,8 +20,8 @@ namespace off_highway_premium_radar
 {
 
 DefaultConverter::DefaultConverter()
-: diag_frequencies_locations_{13., 17.},
-  diag_frequencies_sensor_state_information_{13., 17.}
+: diag_frequencies_locations_{11., 20.},  // 70ms +/- 20ms
+  diag_frequencies_sensor_state_information_{90., 110.}  // 10ms +/- 10%
 {
 }
 
