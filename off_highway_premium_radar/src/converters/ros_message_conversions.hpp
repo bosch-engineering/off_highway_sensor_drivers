@@ -34,7 +34,6 @@
 #include "off_highway_premium_radar_msgs/msg/location_attributes_packet.hpp"
 #include "off_highway_premium_radar_msgs/msg/location_attributes.hpp"
 #include "off_highway_premium_radar_msgs/msg/location_data_header.hpp"
-#include "off_highway_premium_radar_msgs/msg/measurement_cycle_sync_data.hpp"
 #include "off_highway_premium_radar_msgs/msg/misalignment_packet.hpp"
 #include "off_highway_premium_radar_msgs/msg/operation_mode.hpp"
 #include "off_highway_premium_radar_msgs/msg/sensor_coating_packet.hpp"

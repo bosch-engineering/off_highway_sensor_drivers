@@ -25,7 +25,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/LocationAttributesHeader.msg"
   "msg/LocationAttributesPacket.msg"
   "msg/LocationDataHeader.msg"
-  "msg/MeasurementCycleSyncData.msg"
   "msg/MisalignmentPacket.msg"
   "msg/OperationMode.msg"
   "msg/SensorCoatingPacket.msg"
