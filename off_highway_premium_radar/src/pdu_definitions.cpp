@@ -239,18 +239,6 @@ std::vector<uint8_t> MeasurementCycleSynchronisation::serialize()
   return buffer;
 }
 
-std::vector<uint8_t> SensorModeRequest::serialize()
-{
-  pdu_id = htobe32(kPduId);
-  pdu_payload_length = htobe32(kPduPayloadLength);
-  sensor_mode_data.SenModReq_Unassigned.fill(0);
-
-  std::vector<uint8_t> buffer;
-  buffer.resize(sizeof(*this));
-  std::memcpy(buffer.data(), this, sizeof(*this));
-  return buffer;
-}
-
 std::vector<uint8_t> MeasurementProgram::serialize()
 {
   pdu_id = htobe32(kPduId);

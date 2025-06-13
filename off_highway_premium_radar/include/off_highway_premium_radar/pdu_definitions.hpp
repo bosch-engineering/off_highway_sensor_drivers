@@ -1134,45 +1134,6 @@ static_assert(
   sizeof(MeasurementCycleSynchronisation) == MeasurementCycleSynchronisation::kPduSize,
   "Wrong MeasurementCycleSynchronisation(MCS) struct size!");
 
-
-struct SensorModeData
-{
-  /**
-   * \brief Radar Mode
-   * \note Used start/stop modulation of the sensors
-   *          0 Start Modulation
-   *          1 Stop Modulation
-   */
-  uint8_t SenModReq_RadMod;
-  std::array<uint8_t, 63> SenModReq_Unassigned;
-} __attribute__((packed));
-
-struct SensorModeRequest
-{
-  /**
-   * \brief Serialize members into byte vector with correct byte order
-   */
-  std::vector<uint8_t> serialize();
-
-  static constexpr uint32_t kPduId{0x13370052};
-  static constexpr uint32_t kPduPayloadLength{64u};
-  static constexpr uint32_t kPduSize{kPduPayloadLength + kPduHeaderLength};
-
-  /**
-   * \brief PDU ID
-   */
-  uint32_t pdu_id;
-  /**
-   * \brief PDU Payload length
-   */
-  uint32_t pdu_payload_length;
-  struct SensorModeData sensor_mode_data;
-} __attribute__((packed));
-
-static_assert(
-  sizeof(SensorModeRequest) == SensorModeRequest::kPduSize,
-  "Wrong SensorModeRequest struct size!");
-
 // +-------------------------+------------+--------------------+-------------------+-------------+
 // | LocAtr_DmpID            | 01 (DMP01) |     02 (DMP02)     | 04 (DMP04)        | 00 (DMP00)  |
 // | (Measurement Program)   |            |                    |                   |             |

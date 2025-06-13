@@ -29,5 +29,3 @@ the nested description of the UDP packages in the UDP interface.
 
 * [MeasurementProgram](srv/MeasurementProgram.srv): Mapped Measurement Program Input from UDP
   interface.
-* [SensorModeRequest](srv/SensorModeRequest.srv): Mapped Sensor Mode Request Input from UDP
-  interface.

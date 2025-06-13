@@ -86,12 +86,6 @@ public:
   {
     return send(data);
   }
-  /**
-   * \brief Send sensor mode request
-   *
-   * \param data Sensor mode request
-   */
-  bool send_sensor_mode_request(SensorModeRequest & data) override {return send(data);}
 
   /**
    * \brief Send measurement program

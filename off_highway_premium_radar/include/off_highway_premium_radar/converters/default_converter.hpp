@@ -30,7 +30,6 @@
 
 #include "off_highway_premium_radar_msgs/msg/ego_vehicle_input.hpp"
 #include "off_highway_premium_radar_msgs/srv/measurement_program.hpp"
-#include "off_highway_premium_radar_msgs/srv/sensor_mode_request.hpp"
 
 #include "off_highway_premium_radar/interface/converter.hpp"
 
@@ -141,14 +140,6 @@ private:
    */
   void send_measurement_cycle_sync();
 
-  using SensorModeRequest = off_highway_premium_radar_msgs::srv::SensorModeRequest;
-  /**
-   * \brief Service callback on sensor mode request
-   */
-  void on_sensor_mode_request(
-    const SensorModeRequest::Request::SharedPtr request,
-    SensorModeRequest::Response::SharedPtr response);
-
   using MeasurementProgram = off_highway_premium_radar_msgs::srv::MeasurementProgram;
   /**
    * \brief Service callback on measurement program
@@ -198,8 +189,6 @@ private:
   // Services
   rclcpp::Service<off_highway_premium_radar_msgs::srv::MeasurementProgram>::SharedPtr
     measurement_program_service_;
-  rclcpp::Service<off_highway_premium_radar_msgs::srv::SensorModeRequest>::SharedPtr
-    sensor_mode_request_service_;
 
   std::shared_ptr<diagnostic_updater::Updater> diag_updater_;
 
