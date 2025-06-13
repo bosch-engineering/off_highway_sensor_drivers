@@ -129,7 +129,6 @@ private:
     kLocationData,
     kStateInformation,
     kLocationAttributes,
-    kSensorDtcInformation,
     kUnknown
   };
 

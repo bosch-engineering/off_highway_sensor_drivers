@@ -54,13 +54,6 @@ public:
    * \param data Location attributes PDU (in host order)
    */
   virtual void on_location_attributes(const LocationAttributes &) {}
-
-  /**
-   * \brief Called from receiving thread on receiving a sensor DTC information PDU
-   *
-   * \param data Sensor information PDU (in host order)
-   */
-  virtual void on_sensor_dtc_information(const SensorDTCInformation &) {}
 };
 
 }  // namespace off_highway_premium_radar

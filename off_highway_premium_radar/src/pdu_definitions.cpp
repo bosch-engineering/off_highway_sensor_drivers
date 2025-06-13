@@ -177,19 +177,6 @@ LocationAttributes::LocationAttributes(const std::array<uint8_t, kPduSize> & buf
   loc_atr_mounting_position.betoh();
 }
 
-
-SensorDTCInformation::SensorDTCInformation(const std::array<uint8_t, kPduSize> & buffer)
-: SensorDTCInformation(std::bit_cast<SensorDTCInformation>(buffer))
-{
-  pdu_id = be32toh(pdu_id);
-  pdu_payload_length = be32toh(pdu_payload_length);
-  // e2e_header is always FF
-  SensorDtc_LgpVer = be32toh(SensorDtc_LgpVer);
-  for (size_t i = 0; i < dtc_information_data.SensorDtc_Dtc.size(); ++i) {
-    dtc_information_data.SensorDtc_Dtc[i] = be32toh(dtc_information_data.SensorDtc_Dtc[i]);
-  }
-}
-
 std::vector<uint8_t> EgoVehicleInput::serialize()
 {
   pdu_id = htobe32(kPduId);

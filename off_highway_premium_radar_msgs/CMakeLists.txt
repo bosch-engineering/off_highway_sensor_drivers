@@ -29,7 +29,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/MisalignmentPacket.msg"
   "msg/OperationMode.msg"
   "msg/SensorCoatingPacket.msg"
-  "msg/SensorDtcInformation.msg"
   "msg/SensorFieldOfView.msg"
   "msg/SensorModulationPerformance.msg"
   "msg/SensorMounting.msg"
