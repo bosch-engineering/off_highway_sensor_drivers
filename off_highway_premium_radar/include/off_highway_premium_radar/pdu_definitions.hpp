@@ -308,50 +308,15 @@ struct SensorStateData
 {
   /**
    * \brief Sensor State
-   * \note Refer Diagnostic_Specification_Document.pdf for detailed use cases
-   * \note  1   In Specification
-   *        2 - 50  Reserved
-   *        51  Temporary Software Application Failure
-   *        52  Temporary Software Application Mismatch
-   *        53  Temporary Software Application Execution Continued
-   *        54  Temporary Radar MMIC Mismatch
-   *        55  Temporary Radar Exec Mismatch
-   *        56  Temporary Radar Communication Mismatch
-   *        57  Temporary ASIC Hardware Mismatch
-   *        58  Temporary ASIC Voltage Execution Continued
-   *        59  Temporary ECU Voltage Execution Continued
-   *        60  Temporary ECU Temperature Mismatch
-   *        61  Temporary Uc Clock Execution Continued
-   *        62   Temporary Uc Inter Com Mismatch
-   *        63  Temporary Radar Mismatch
-   *        64  Temporary Radar Execution Continued
-   *        65  Temporary ASIC Mismatch
-   *        66  Temporary ECU Mismatch
-   *        67  Temporary Uc Mismatch
-   *        68  Temporary Failure
-   *        69  Temporary Mismatch
-   *        70  Temporary Execution Continued
-   *        71 - 99 Reserved
-   *        100 Persistent Software Application Failure
-   *        101 Persistent Radar MMIC Failure
-   *        102 Persistent Radar RIF Failure
-   *        103 Persistent Radar SPU Failure
-   *        104 Persistent Radar Exec Failure
-   *        105 Persistent Radar Com Failure
-   *        106 Persistent ASIC Voltage Execution Continued
-   *        107 Persistent UcClock Execution Continued
-   *        108 Persistent Radar Failure
-   *        109 Persistent Radar Execution Continued
-   *        110 Persistent ASIC Failure
-   *        111 Persistent ECU Failure
-   *        112 Persistent Uc Failure
-   *        113 Persistent Failure
-   *        114 Persistent Mismatch
-   *        115 Persistent Execution Continued
-   *        116 - 239 Reserved
-   *        240 Shutdown
-   *        241 - 254 Reserved
-   *        255 Invalid
+   * \note  Bit field indicating the following information:
+   *          Bit0: init phase
+   *          Bit1: operational
+   *          Bit2: time synchronization status
+   *          Bit3: misalignment estimation status
+   *          Bit4: measurement program input
+   *          Bit5: unavailability
+   *          Bit6: failure
+   *          Bit7: unused
    */
   uint8_t SenStInfo_SenSt;
 } __attribute__((packed));
