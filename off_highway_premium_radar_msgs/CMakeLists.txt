@@ -37,7 +37,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/SensorStateInformation.msg"
   "msg/Time.msg"
   "srv/MeasurementProgram.srv"
-  "srv/SensorModeRequest.srv"
   DEPENDENCIES builtin_interfaces std_msgs geometry_msgs
 )
 

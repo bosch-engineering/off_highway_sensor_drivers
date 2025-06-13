@@ -91,12 +91,6 @@ void DefaultConverter::on_configure()
     std::bind(
       &DefaultConverter::on_measurement_program, this, std::placeholders::_1,
       std::placeholders::_2));
-  sensor_mode_request_service_ =
-    node->create_service<off_highway_premium_radar_msgs::srv::SensorModeRequest>(
-    "~/request_sensor_mode",
-    std::bind(
-      &DefaultConverter::on_sensor_mode_request, this, std::placeholders::_1,
-      std::placeholders::_2));
 }
 
 
@@ -173,18 +167,6 @@ void DefaultConverter::send_measurement_cycle_sync()
   sync.mcs_data.MCS_SyncType = true;
 
   sender_->send_measurement_cycle_sync(sync);
-}
-
-void DefaultConverter::on_sensor_mode_request(
-  const off_highway_premium_radar_msgs::srv::SensorModeRequest::Request::SharedPtr request,
-  off_highway_premium_radar_msgs::srv::SensorModeRequest::Response::SharedPtr response)
-{
-  response->success = false;
-
-  auto d = from_srv(request);
-  if (sender_->send_sensor_mode_request(d)) {
-    response->success = true;
-  }
 }
 
 void DefaultConverter::on_measurement_program(

@@ -49,13 +49,6 @@ public:
   virtual bool send_measurement_cycle_sync(MeasurementCycleSynchronisation & data) = 0;
 
   /**
-   * \brief Send sensor mode request
-   *
-   * \param data Sensor mode request
-   */
-  virtual bool send_sensor_mode_request(SensorModeRequest & data) = 0;
-
-  /**
    * \brief Send measurement program
    *
    * \param data Measurement program

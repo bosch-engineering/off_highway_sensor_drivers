@@ -48,7 +48,6 @@
 
 #include "off_highway_premium_radar_msgs/msg/ego_vehicle_input.hpp"
 #include "off_highway_premium_radar_msgs/srv/measurement_program.hpp"
-#include "off_highway_premium_radar_msgs/srv/sensor_mode_request.hpp"
 
 namespace off_highway_premium_radar
 {
@@ -382,14 +381,6 @@ auto from_msg(const msg::EgoVehicleInput::ConstSharedPtr & msg)
   d.vehicle_data.EgoData_RelYawRate = msg->vehicle_data.velocity.twist.angular.z * kRadToDeg;
   d.vehicle_data.EgoData_VehSpdStdDev = std::sqrt(x_velocity_variance);
   d.vehicle_data.EgoData_LogAcc = msg->vehicle_data.acceleration.linear.x;
-  return d;
-}
-
-inline
-auto from_srv(const srv::SensorModeRequest::Request::SharedPtr msg)
-{
-  SensorModeRequest d;
-  d.sensor_mode_data.SenModReq_RadMod = msg->radar_mode;
   return d;
 }
 
