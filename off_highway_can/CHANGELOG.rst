@@ -2,6 +2,12 @@
 Changelog for package off_highway_can
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Use lround and explicit cast
+* Fix integer inputs for round test
+* Contributors: Robin Petereit
+
 0.8.0 (2025-03-24)
 ------------------
 * Move test to emphasize external FOSS

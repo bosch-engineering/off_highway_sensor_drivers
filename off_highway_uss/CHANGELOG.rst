@@ -2,6 +2,12 @@
 Changelog for package off_highway_uss
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Move PCL dependencies
+* Update README
+* Contributors: Calin-Vasile Sopterean, Gabriela Adriana Lapuste
+
 0.8.0 (2025-03-24)
 ------------------
 

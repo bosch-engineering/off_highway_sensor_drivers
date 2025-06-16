@@ -2,6 +2,11 @@
 Changelog for package off_highway_sensor_drivers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add premium radar driver for series sensor
+* Contributors: Sarah Huber
+
 0.8.0 (2025-03-24)
 ------------------
 
