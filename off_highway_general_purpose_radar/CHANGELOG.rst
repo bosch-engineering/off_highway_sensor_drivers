@@ -2,8 +2,8 @@
 Changelog for package off_highway_general_purpose_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.0 (2025-06-16)
+------------------
 * Move PCL dependencies
 * Update README
 * Contributors: Calin-Vasile Sopterean, Gabriela Adriana Lapuste

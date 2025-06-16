@@ -2,8 +2,8 @@
 Changelog for package off_highway_premium_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.0 (2025-06-16)
+------------------
 * Adapt expected frequencies of diagnostic messages
 * Adapt documentation of sensor state information
 * Adapt documentation of measurement program

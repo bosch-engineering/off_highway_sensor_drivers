@@ -2,8 +2,8 @@
 Changelog for package off_highway_premium_radar_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.0 (2025-06-16)
+------------------
 * Remove measurement cycle synchronization PDU
   Measurement cycle synchronization will be handled via diagnosis in series sensor.
 * Remove sensor DTC  information PDU

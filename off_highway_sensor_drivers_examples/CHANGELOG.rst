@@ -2,8 +2,8 @@
 Changelog for package off_highway_sensor_drivers_examples
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.0 (2025-06-16)
+------------------
 * Move PCL dependencies
 * Add premium radar driver for series sensor
 * Contributors: Calin-Vasile Sopterean, Sarah Huber
