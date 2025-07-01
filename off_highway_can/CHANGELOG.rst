@@ -2,8 +2,8 @@
 Changelog for package off_highway_can
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2025-07-01)
+------------------
 * Use lround and explicit cast
 * Fix integer inputs for round test
 * Contributors: Robin Petereit

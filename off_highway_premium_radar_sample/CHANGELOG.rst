@@ -2,8 +2,8 @@
 Changelog for package off_highway_premium_radar_sample
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2025-07-01)
+------------------
 * Fix PduId check for get_pdu_type
 * fix: tf2 uses hpp headers in rolling (and is backported)
 * Move PCL dependencies
