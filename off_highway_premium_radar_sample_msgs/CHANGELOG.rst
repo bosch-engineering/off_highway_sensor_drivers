@@ -2,6 +2,11 @@
 Changelog for package off_highway_premium_radar_sample_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add premium radar driver for series sensor
+* Contributors: Sarah Huber
+
 0.8.0 (2025-03-24)
 ------------------
 * `rosidl_default_generators` is technically a `<buildtool_depend>` (#13)

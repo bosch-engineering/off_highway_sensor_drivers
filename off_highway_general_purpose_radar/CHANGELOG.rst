@@ -2,6 +2,12 @@
 Changelog for package off_highway_general_purpose_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Move PCL dependencies
+* Update README
+* Contributors: Calin-Vasile Sopterean, Gabriela Adriana Lapuste
+
 0.8.0 (2025-03-24)
 ------------------
 * Replace truncation of physical value with round outside of FOSS
