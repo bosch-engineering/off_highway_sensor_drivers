@@ -854,6 +854,9 @@ struct EgoVehicleInput
   static constexpr uint32_t kPduPayloadLength{16u};
   static constexpr uint32_t kPduSize{kPduPayloadLength + kPduHeaderLength};
 
+  EgoVehicleInput() = default;
+  explicit EgoVehicleInput(const std::array<uint8_t, kPduSize> & buffer);
+
   /**
    * \brief Serialize members into byte vector with correct byte order
    */

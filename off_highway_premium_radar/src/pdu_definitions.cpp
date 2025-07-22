@@ -177,6 +177,18 @@ LocationAttributes::LocationAttributes(const std::array<uint8_t, kPduSize> & buf
   loc_atr_mounting_position.betoh();
 }
 
+EgoVehicleInput::EgoVehicleInput(const std::array<uint8_t, kPduSize> & buffer)
+: EgoVehicleInput(std::bit_cast<EgoVehicleInput>(buffer))
+{
+  pdu_id = be32toh(pdu_id);
+  pdu_payload_length = be32toh(pdu_payload_length);
+  // e2e_header is always FF
+  vehicle_data.EgoData_RelYawRate = be32tohf(vehicle_data.EgoData_RelYawRate);
+  vehicle_data.EgoData_VehSpd = be32tohf(vehicle_data.EgoData_VehSpd);
+  vehicle_data.EgoData_VehSpdStdDev = be32tohf(vehicle_data.EgoData_VehSpdStdDev);
+  vehicle_data.EgoData_LogAcc = be32tohf(vehicle_data.EgoData_LogAcc);
+}
+
 std::vector<uint8_t> EgoVehicleInput::serialize()
 {
   pdu_id = htobe32(kPduId);
