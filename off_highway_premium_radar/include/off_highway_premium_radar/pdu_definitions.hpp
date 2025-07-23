@@ -929,6 +929,9 @@ struct MeasurementProgram
   static constexpr uint32_t kPduPayloadLength{12u};
   static constexpr uint32_t kPduSize{kPduPayloadLength + kPduHeaderLength};
 
+  MeasurementProgram() = default;
+  explicit MeasurementProgram(const std::array<uint8_t, kPduSize> & buffer);
+
   /**
    * \brief PDU ID
    */
