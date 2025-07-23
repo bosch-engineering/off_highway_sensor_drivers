@@ -204,6 +204,14 @@ std::vector<uint8_t> EgoVehicleInput::serialize()
   return buffer;
 }
 
+MeasurementProgram::MeasurementProgram(const std::array<uint8_t, kPduSize> & buffer)
+: MeasurementProgram(std::bit_cast<MeasurementProgram>(buffer))
+{
+  pdu_id = be32toh(pdu_id);
+  pdu_payload_length = be32toh(pdu_payload_length);
+  measurement_program_data.MeasPgm_ID = be16toh(measurement_program_data.MeasPgm_ID);
+}
+
 std::vector<uint8_t> MeasurementProgram::serialize()
 {
   pdu_id = htobe32(kPduId);
