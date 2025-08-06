@@ -509,6 +509,11 @@ struct SensorStateData
 
 struct SensorStateInformation
 {
+  /**
+   * \brief Serialize members into byte vector with correct byte order
+   */
+  std::vector<uint8_t> serialize();
+
   static constexpr uint32_t kPduId{0x1338DDCF};
   static constexpr uint32_t kPduPayloadLength{64u};
   static constexpr uint32_t kPduSize{kPduPayloadLength + kPduHeaderLength};
