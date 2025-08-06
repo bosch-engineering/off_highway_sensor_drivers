@@ -220,6 +220,97 @@ std::vector<uint8_t> LocationAttributes::serialize()
 {
   pdu_id = htobe32(kPduId);
   pdu_payload_length = htobe32(kPduPayloadLength);
+
+  loc_atr_header.LocAtr_LgpVer = htobe32(loc_atr_header.LocAtr_LgpVer);
+  loc_atr_header.LocAtr_TimeSts = htobe32(loc_atr_header.LocAtr_TimeSts);
+  loc_atr_header.LocAtr_TimeStns = htobe32(loc_atr_header.LocAtr_TimeStns);
+
+  loc_atr_packet.sensor_modulation_performance.LocAtr_ModID =
+    htobe16(loc_atr_packet.sensor_modulation_performance.LocAtr_ModID);
+  loc_atr_packet.sensor_modulation_performance.LocAtr_DistRangScalFact =
+    htobe32f(loc_atr_packet.sensor_modulation_performance.LocAtr_DistRangScalFact);
+  loc_atr_packet.sensor_modulation_performance.LocAtr_SepRadDist =
+    htobe32f(loc_atr_packet.sensor_modulation_performance.LocAtr_SepRadDist);
+  loc_atr_packet.sensor_modulation_performance.LocAtr_SepRadVelo =
+    htobe32f(loc_atr_packet.sensor_modulation_performance.LocAtr_SepRadVelo);
+  loc_atr_packet.sensor_modulation_performance.LocAtr_PrecRadDist =
+    htobe32f(loc_atr_packet.sensor_modulation_performance.LocAtr_PrecRadDist);
+  loc_atr_packet.sensor_modulation_performance.LocAtr_PrecRadVelo =
+    htobe32f(loc_atr_packet.sensor_modulation_performance.LocAtr_PrecRadVelo);
+  loc_atr_packet.sensor_modulation_performance.LocAtr_RadDistVeloCovVar =
+    htobe32f(loc_atr_packet.sensor_modulation_performance.LocAtr_RadDistVeloCovVar);
+  loc_atr_packet.sensor_modulation_performance.LocAtr_MinRadDist =
+    htobe32f(loc_atr_packet.sensor_modulation_performance.LocAtr_MinRadDist);
+  loc_atr_packet.sensor_modulation_performance.LocAtr_MaxRadDist =
+    htobe32f(loc_atr_packet.sensor_modulation_performance.LocAtr_MaxRadDist);
+  loc_atr_packet.sensor_modulation_performance.LocAtr_MinRadVelo =
+    htobe32f(loc_atr_packet.sensor_modulation_performance.LocAtr_MinRadVelo);
+  loc_atr_packet.sensor_modulation_performance.LocAtr_MaxRadVelo =
+    htobe32f(loc_atr_packet.sensor_modulation_performance.LocAtr_MaxRadVelo);
+
+  loc_atr_packet.misalignment.LocAtr_ThetaMalAng =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_ThetaMalAng);
+  loc_atr_packet.misalignment.LocAtr_ThetaMalAngVar =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_ThetaMalAngVar);
+  loc_atr_packet.misalignment.LocAtr_PhiMalAng =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_PhiMalAng);
+  loc_atr_packet.misalignment.LocAtr_PhiMalAngVar =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_PhiMalAngVar);
+  loc_atr_packet.misalignment.LocAtr_PhiMalAngEme =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_PhiMalAngEme);
+  loc_atr_packet.misalignment.LocAtr_PhiMalAngEmeVar =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_PhiMalAngEmeVar);
+  loc_atr_packet.misalignment.LocAtr_MalStatus =
+    htobe16(loc_atr_packet.misalignment.LocAtr_MalStatus);
+  loc_atr_packet.misalignment.LocAtr_MalStatusEme =
+    htobe16(loc_atr_packet.misalignment.LocAtr_MalStatusEme);
+  loc_atr_packet.misalignment.LocAtr_PercNegativeTheta =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_PercNegativeTheta);
+  loc_atr_packet.misalignment.LocAtr_MinThetaMalSOs =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_MinThetaMalSOs);
+  loc_atr_packet.misalignment.LocAtr_MaxThetaMalSOs =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_MaxThetaMalSOs);
+  loc_atr_packet.misalignment.LocAtr_VarThetaMalSOs =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_VarThetaMalSOs);
+  loc_atr_packet.misalignment.LocAtr_MeanThetaMalSOs =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_MeanThetaMalSOs);
+  loc_atr_packet.misalignment.LocAtr_MinPhiMalSOs =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_MinPhiMalSOs);
+  loc_atr_packet.misalignment.LocAtr_MaxPhiMalSOs =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_MaxPhiMalSOs);
+  loc_atr_packet.misalignment.LocAtr_VarPhiMalSOs =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_VarPhiMalSOs);
+  loc_atr_packet.misalignment.LocAtr_MeanPhiMalSOs =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_MeanPhiMalSOs);
+  loc_atr_packet.misalignment.LocAtr_SpreadPhiMalSOs =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_SpreadPhiMalSOs);
+  loc_atr_packet.misalignment.LocAtr_NumSOs =
+    htobe16(loc_atr_packet.misalignment.LocAtr_NumSOs);
+  loc_atr_packet.misalignment.LocAtr_NumEmeLocs =
+    htobe16(loc_atr_packet.misalignment.LocAtr_NumEmeLocs);
+  loc_atr_packet.misalignment.LocAtr_MalEstQuality =
+    htobe32f(loc_atr_packet.misalignment.LocAtr_MalEstQuality);
+
+  loc_atr_packet.interference_indicator.LocAtr_FovRedInt =
+    htobe32f(loc_atr_packet.interference_indicator.LocAtr_FovRedInt);
+
+  for (size_t i = 0; i < loc_atr_packet.sensor_field_of_view.LocAtr_FoVRange.size(); ++i) {
+    loc_atr_packet.sensor_field_of_view.LocAtr_FoVRange[i] =
+      htobe32f(loc_atr_packet.sensor_field_of_view.LocAtr_FoVRange[i]);
+  }
+  for (size_t i = 0; i < loc_atr_packet.sensor_field_of_view.LocAtr_AziAngArr.size(); ++i) {
+    loc_atr_packet.sensor_field_of_view.LocAtr_AziAngArr[i] =
+      htobe32f(loc_atr_packet.sensor_field_of_view.LocAtr_AziAngArr[i]);
+  }
+  for (size_t i = 0; i < loc_atr_packet.sensor_field_of_view.LocAtr_RangScaEle.size(); ++i) {
+    loc_atr_packet.sensor_field_of_view.LocAtr_RangScaEle[i] =
+      htobe32f(loc_atr_packet.sensor_field_of_view.LocAtr_RangScaEle[i]);
+  }
+  for (size_t i = 0; i < loc_atr_packet.sensor_field_of_view.LocAtr_EleAngArr.size(); ++i) {
+    loc_atr_packet.sensor_field_of_view.LocAtr_EleAngArr[i] =
+      htobe32f(loc_atr_packet.sensor_field_of_view.LocAtr_EleAngArr[i]);
+  }
+
   loc_atr_packet.sensor_coating.mdThetaIndcrMIMO = htobe32f(
     loc_atr_packet.sensor_coating.mdThetaIndcrMIMO);
   loc_atr_packet.sensor_coating.mdPhiIndcr = htobe32f(
@@ -228,6 +319,17 @@ std::vector<uint8_t> LocationAttributes::serialize()
     loc_atr_packet.sensor_coating.nRefIndcr);
   loc_atr_packet.sensor_coating.thetaMIMORate = htobe32f(
     loc_atr_packet.sensor_coating.thetaMIMORate);
+
+  loc_atr_mounting_position.LocAtr_SenPosX =
+    htobe32f(loc_atr_mounting_position.LocAtr_SenPosX);
+  loc_atr_mounting_position.LocAtr_SenPosY =
+    htobe32f(loc_atr_mounting_position.LocAtr_SenPosY);
+  loc_atr_mounting_position.LocAtr_SenPosZ =
+    htobe32f(loc_atr_mounting_position.LocAtr_SenPosZ);
+  loc_atr_mounting_position.LocAtr_SenPosAzi =
+    htobe32f(loc_atr_mounting_position.LocAtr_SenPosAzi);
+  loc_atr_mounting_position.LocAtr_SenPosEle =
+    htobe32f(loc_atr_mounting_position.LocAtr_SenPosEle);
 
   std::vector<uint8_t> buffer;
   buffer.resize(sizeof(*this));

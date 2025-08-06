@@ -3,7 +3,7 @@
 # LocAtr_DmpID
 uint8 detection_of_measurement_program
 # LocAtr_ModID
-uint8 modulation_id
+uint16 modulation_id
 float32 distance_range_scaling
 # LocAtr_SepRadDist
 float32 separability_distance

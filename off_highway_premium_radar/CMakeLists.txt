@@ -100,6 +100,8 @@ if(BUILD_TESTING)
   ament_add_ros_isolated_gtest(test_driver_location_data test/test_driver_location_data.cpp)
   target_link_libraries(test_driver_location_data ${PROJECT_NAME})
 
+  ament_add_ros_isolated_gtest(test_driver_location_attributes test/test_driver_location_attributes.cpp)
+  target_link_libraries(test_driver_location_attributes ${PROJECT_NAME})
 endif()
 
 ament_package(CONFIG_EXTRAS
