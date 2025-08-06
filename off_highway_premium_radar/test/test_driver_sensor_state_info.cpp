@@ -12,104 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <future>
+#include "helpers/output_test_class.hpp"
+#include "helpers/random_generator.hpp"
 
-#include "gtest/gtest.h"
-#include "off_highway_premium_radar/node.hpp"
-#include "off_highway_premium_radar/converters/default_converter.hpp"
-#include "rclcpp/executor.hpp"
-#include "../src/helper.hpp"
-
-using namespace std::chrono_literals;
-using NodeWithDefaultConverter =
-  off_highway_premium_radar::Node<off_highway_premium_radar::DefaultConverter>;
-
-using off_highway_premium_radar::to_pdu;
-
-class TestRadarDriver : public ::testing::Test
+class TestRadarDriver
+  : public OutputTestClass<
+    off_highway_premium_radar_msgs::msg::SensorStateInformation,
+    off_highway_premium_radar::SensorStateInformation>
 {
 public:
   TestRadarDriver()
-  : ::testing::Test(),
-    ctx_(1),
-    udp_socket_(ctx_, loopback_ip_, host_port_, loopback_ip_, sensor_port_)
-  {
-    udp_socket_.open();
-    udp_socket_.bind();
-  }
+  : OutputTestClass(
+      /*sensor_port=*/ 0x76C6,
+      /*host_port=*/ 0x76C0,
+      /*loopback_ip=*/ "127.0.0.1",
+      /*spin_timeout=*/ std::chrono::seconds(1))
+  {}
 
 protected:
   void SetUp() override
   {
-    using off_highway_premium_radar_msgs::msg::SensorStateInformation;
-
-    std::vector<rclcpp::Parameter> params = {
-      rclcpp::Parameter("host_ip", loopback_ip_),
-      rclcpp::Parameter("sensor_ip", loopback_ip_),
-      rclcpp::Parameter("host_port", host_port_),
-      rclcpp::Parameter("sensor_port", sensor_port_)
-    };
-    auto node_options = rclcpp::NodeOptions();
-    node_options.parameter_overrides(params);
-
-    node_ = std::make_shared<NodeWithDefaultConverter>(node_options);
-
-    future_ = promise_.get_future();
-    sensor_state_info_node_ = std::make_shared<rclcpp::Node>("sensor_state_info_subscriber");
-    sensor_state_info_subscription_ =
-      sensor_state_info_node_->create_subscription<SensorStateInformation>(
-      "/driver/sensor_state_information", 10,
-      [&](const SensorStateInformation msg) {
-        received_sensor_state_info_ = msg;
-        promise_.set_value(true);
-      });
-
-    executor_.add_node(node_);
-    executor_.add_node(sensor_state_info_node_);
-    // Spin node to configure driver
-    executor_.spin_some();
+    OutputTestClass::SetUp("sensor_state_info_subscriber", "/driver/sensor_state_information");
   }
-  void send_sensor_state_info(off_highway_premium_radar::SensorStateInformation info);
-  off_highway_premium_radar_msgs::msg::SensorStateInformation get_sensor_state_info();
+
+  void TearDown() override
+  {
+    OutputTestClass::TearDown();
+  }
+
   void verify_sensor_state_info(
     off_highway_premium_radar::SensorStateInformation ref_sensor_state_info,
     off_highway_premium_radar_msgs::msg::SensorStateInformation sub_sensor_state_info);
-
-private:
-  const int sensor_port_ = 0x76C6;
-  const int host_port_ = 0x76C0;
-  const std::string loopback_ip_ = "127.0.0.1";
-  const std::chrono::seconds spin_timeout_ = 1s;
-
-  IoContext ctx_;
-  off_highway_premium_radar::UdpSocket udp_socket_;
-
-  std::shared_ptr<NodeWithDefaultConverter> node_;
-
-  rclcpp::Node::SharedPtr sensor_state_info_node_;
-  rclcpp::Subscription<off_highway_premium_radar_msgs::msg::SensorStateInformation>::
-  SharedPtr
-    sensor_state_info_subscription_;
-  off_highway_premium_radar_msgs::msg::SensorStateInformation received_sensor_state_info_;
-
-  std::promise<bool> promise_;
-  std::shared_future<bool> future_;
-  rclcpp::executors::SingleThreadedExecutor executor_;
 };
-
-void TestRadarDriver::send_sensor_state_info(
-  off_highway_premium_radar::SensorStateInformation info)
-{
-  auto data = info.serialize();
-  udp_socket_.send(data);
-}
-
-off_highway_premium_radar_msgs::msg::SensorStateInformation TestRadarDriver::get_sensor_state_info()
-{
-  auto ret = executor_.spin_until_future_complete(future_, spin_timeout_);
-  EXPECT_EQ(ret, rclcpp::FutureReturnCode::SUCCESS);
-  return received_sensor_state_info_;
-}
 
 void TestRadarDriver::verify_sensor_state_info(
   off_highway_premium_radar::SensorStateInformation ref_sensor_state_info,
@@ -120,34 +54,77 @@ void TestRadarDriver::verify_sensor_state_info(
     ref_sensor_state_info.sensor_state_data.SenStInfo_SenSt);
 }
 
-TEST_F(TestRadarDriver, testSensorStateInformationZeroValues)
-{
-  std::vector<uint8_t> buffer;
-  buffer.resize(off_highway_premium_radar::SensorStateInformation::kPduSize);
-  off_highway_premium_radar::SensorStateInformation test_sensor_state_information_ =
-    to_pdu<off_highway_premium_radar::SensorStateInformation>(buffer);
-  test_sensor_state_information_.e2e_header.E2E_Counter = 0xFF;
-  test_sensor_state_information_.e2e_header.E2E_Crc = 0xFF;
-  test_sensor_state_information_.e2e_header.E2E_DataId = 0xFF;
-  test_sensor_state_information_.e2e_header.E2E_length = 0xFF;
-  test_sensor_state_information_.sensor_state_data.SenStInfo_SenSt = 0;
-  send_sensor_state_info(test_sensor_state_information_);
-  verify_sensor_state_info(test_sensor_state_information_, get_sensor_state_info());
-}
-
 TEST_F(TestRadarDriver, testSensorStateInformationAnyValues)
 {
   std::vector<uint8_t> buffer;
   buffer.resize(off_highway_premium_radar::SensorStateInformation::kPduSize);
   off_highway_premium_radar::SensorStateInformation test_sensor_state_information_ =
     to_pdu<off_highway_premium_radar::SensorStateInformation>(buffer);
+
   test_sensor_state_information_.e2e_header.E2E_Counter = 0xFF;
   test_sensor_state_information_.e2e_header.E2E_Crc = 0xFF;
   test_sensor_state_information_.e2e_header.E2E_DataId = 0xFF;
   test_sensor_state_information_.e2e_header.E2E_length = 0xFF;
-  test_sensor_state_information_.sensor_state_data.SenStInfo_SenSt = 115;
-  send_sensor_state_info(test_sensor_state_information_);
-  verify_sensor_state_info(test_sensor_state_information_, get_sensor_state_info());
+
+  test_sensor_state_information_.sensor_state_data.SenStInfo_SenSt = 101;
+
+  send_pdu_data(test_sensor_state_information_);
+  verify_sensor_state_info(test_sensor_state_information_, get_pdu_data());
+}
+
+TEST_F(TestRadarDriver, testSensorStateInformationMinValues)
+{
+  std::vector<uint8_t> buffer;
+  buffer.resize(off_highway_premium_radar::SensorStateInformation::kPduSize);
+  off_highway_premium_radar::SensorStateInformation test_sensor_state_information_ =
+    to_pdu<off_highway_premium_radar::SensorStateInformation>(buffer);
+
+  test_sensor_state_information_.e2e_header.E2E_Counter = 0xFF;
+  test_sensor_state_information_.e2e_header.E2E_Crc = 0xFF;
+  test_sensor_state_information_.e2e_header.E2E_DataId = 0xFF;
+  test_sensor_state_information_.e2e_header.E2E_length = 0xFF;
+
+  test_sensor_state_information_.sensor_state_data.SenStInfo_SenSt = 1;
+
+  send_pdu_data(test_sensor_state_information_);
+  verify_sensor_state_info(test_sensor_state_information_, get_pdu_data());
+}
+
+TEST_F(TestRadarDriver, testSensorStateInformationMaxValues)
+{
+  std::vector<uint8_t> buffer;
+  buffer.resize(off_highway_premium_radar::SensorStateInformation::kPduSize);
+  off_highway_premium_radar::SensorStateInformation test_sensor_state_information_ =
+    to_pdu<off_highway_premium_radar::SensorStateInformation>(buffer);
+
+  test_sensor_state_information_.e2e_header.E2E_Counter = 0xFF;
+  test_sensor_state_information_.e2e_header.E2E_Crc = 0xFF;
+  test_sensor_state_information_.e2e_header.E2E_DataId = 0xFF;
+  test_sensor_state_information_.e2e_header.E2E_length = 0xFF;
+
+  test_sensor_state_information_.sensor_state_data.SenStInfo_SenSt = 255;
+
+  send_pdu_data(test_sensor_state_information_);
+  verify_sensor_state_info(test_sensor_state_information_, get_pdu_data());
+}
+
+TEST_F(TestRadarDriver, testSensorStateInformationRandomValues)
+{
+  std::vector<uint8_t> buffer;
+  buffer.resize(off_highway_premium_radar::SensorStateInformation::kPduSize);
+  off_highway_premium_radar::SensorStateInformation test_sensor_state_information_ =
+    to_pdu<off_highway_premium_radar::SensorStateInformation>(buffer);
+
+  test_sensor_state_information_.e2e_header.E2E_Counter = 0xFF;
+  test_sensor_state_information_.e2e_header.E2E_Crc = 0xFF;
+  test_sensor_state_information_.e2e_header.E2E_DataId = 0xFF;
+  test_sensor_state_information_.e2e_header.E2E_length = 0xFF;
+
+  test_sensor_state_information_.sensor_state_data.SenStInfo_SenSt =
+    RandomQuantizedGenerator{1, 1, 255}();
+
+  send_pdu_data(test_sensor_state_information_);
+  verify_sensor_state_info(test_sensor_state_information_, get_pdu_data());
 }
 
 int main(int argc, char ** argv)

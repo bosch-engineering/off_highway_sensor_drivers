@@ -97,9 +97,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 
   find_package(ament_cmake_ros REQUIRED)
-
-  ament_add_ros_isolated_gtest(test_driver_sensor_state_info test/test_driver_sensor_state_info.cpp)
-  target_link_libraries(test_driver_sensor_state_info ${PROJECT_NAME})
 endif()
 
 ament_package(CONFIG_EXTRAS

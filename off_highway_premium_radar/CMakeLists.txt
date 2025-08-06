@@ -24,6 +24,8 @@ find_package(rclcpp_components REQUIRED)
 # For default converter
 find_package(diagnostic_updater REQUIRED)
 find_package(off_highway_premium_radar_msgs REQUIRED)
+find_package(pcl_conversions REQUIRED)
+find_package(PCL REQUIRED COMPONENTS common)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 
@@ -32,6 +34,8 @@ set(dependencies
   diagnostic_updater
   io_context
   off_highway_premium_radar_msgs
+  pcl_conversions
+  PCL
   rclcpp
   rclcpp_components
   sensor_msgs
@@ -93,8 +97,8 @@ if(BUILD_TESTING)
   ament_add_ros_isolated_gtest(test_driver_sensor_state_info test/test_driver_sensor_state_info.cpp)
   target_link_libraries(test_driver_sensor_state_info ${PROJECT_NAME})
 
-  ament_add_ros_isolated_gtest(test_driver_location_attributes test/test_driver_location_attributes.cpp)
-  target_link_libraries(test_driver_location_attributes ${PROJECT_NAME})
+  ament_add_ros_isolated_gtest(test_driver_location_data test/test_driver_location_data.cpp)
+  target_link_libraries(test_driver_location_data ${PROJECT_NAME})
 
 endif()
 

@@ -1,0 +1,37 @@
+# Comments provide naming from Technical Customer Information
+
+std_msgs/Header header
+# LocData_RadDist_i_j
+float32 radial_distance
+# LocData_RadRelVel_i_j
+float32 radial_relative_velocity
+# LocData_AziAng_i_j
+float32 azimuth_angle
+# LocData_EleAng_i_j
+float32 elevation_angle
+# LocData_Rcs_i_j
+float32 radar_cross_section
+# LocData_Snr_i_j
+float32 snr
+# LocData_RadDistVar_i_j
+float32 radial_distance_variance
+# LocData_RadRelVelVar_i_j
+float32 radial_relative_velocity_variance
+# LocData_VarAzi_i_j
+float32 variance_azimuth
+# LocData_VarEle_i_j
+float32 variance_elevation
+# LocData_DistVelCov_i_j
+float32 distance_velocity_covariance
+# LocData_ProVelRes_i_j
+float32 probability_velocity_resolution
+# LocData_ProAziAng_i_j
+float32 probability_azimuth_angle
+# LocData_ProEleAng_i_j
+float32 probability_elevation_angle
+# LocData_MeasStat_i_j
+uint16 measurement_status
+# LocData_IdAngAmb_i_j
+uint16 index_angle_ambiguity
+# LocData_Reserved_i_j
+uint8[12] reserved
