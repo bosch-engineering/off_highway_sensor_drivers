@@ -235,4 +235,55 @@ std::vector<uint8_t> LocationAttributes::serialize()
   return buffer;
 }
 
+std::vector<uint8_t> LocationDataPdu::serialize()
+{
+  pdu_id = htobe32(pdu_id);
+  pdu_payload_length = htobe32(kPduPayloadLength);
+
+  loc_data_header.LocData_LgpVer_i = htobe32(loc_data_header.LocData_LgpVer_i);
+  loc_data_header.LocData_TimeSts_i = htobe32(loc_data_header.LocData_TimeSts_i);
+  loc_data_header.LocData_TimeStns_i = htobe32(loc_data_header.LocData_TimeStns_i);
+  loc_data_header.LocData_NumLoc = htobe16(loc_data_header.LocData_NumLoc);
+
+  for (size_t i = 0; i < loc_data_packets.size(); ++i) {
+    loc_data_packets[i].LocData_RadDist_i_j =
+      htobe32f(loc_data_packets[i].LocData_RadDist_i_j);
+    loc_data_packets[i].LocData_RadRelVel_i_j =
+      htobe32f(loc_data_packets[i].LocData_RadRelVel_i_j);
+    loc_data_packets[i].LocData_AziAng_i_j =
+      htobe32f(loc_data_packets[i].LocData_AziAng_i_j);
+    loc_data_packets[i].LocData_EleAng_i_j =
+      htobe32f(loc_data_packets[i].LocData_EleAng_i_j);
+    loc_data_packets[i].LocData_Rcs_i_j =
+      htobe32f(loc_data_packets[i].LocData_Rcs_i_j);
+    loc_data_packets[i].LocData_Snr_i_j =
+      htobe32f(loc_data_packets[i].LocData_Snr_i_j);
+    loc_data_packets[i].LocData_RadDistVar_i_j =
+      htobe32f(loc_data_packets[i].LocData_RadDistVar_i_j);
+    loc_data_packets[i].LocData_RadRelVelVar_i_j =
+      htobe32f(loc_data_packets[i].LocData_RadRelVelVar_i_j);
+    loc_data_packets[i].LocData_VarAzi_i_j =
+      htobe32f(loc_data_packets[i].LocData_VarAzi_i_j);
+    loc_data_packets[i].LocData_VarEle_i_j =
+      htobe32f(loc_data_packets[i].LocData_VarEle_i_j);
+    loc_data_packets[i].LocData_DistVelCov_i_j =
+      htobe32f(loc_data_packets[i].LocData_DistVelCov_i_j);
+    loc_data_packets[i].LocData_ProVelRes_i_j =
+      htobe32f(loc_data_packets[i].LocData_ProVelRes_i_j);
+    loc_data_packets[i].LocData_ProAziAng_i_j =
+      htobe32f(loc_data_packets[i].LocData_ProAziAng_i_j);
+    loc_data_packets[i].LocData_ProEleAng_i_j =
+      htobe32f(loc_data_packets[i].LocData_ProEleAng_i_j);
+    loc_data_packets[i].LocData_MeasStat_i_j =
+      htobe16(loc_data_packets[i].LocData_MeasStat_i_j);
+    loc_data_packets[i].LocData_IdAngAmb_i_j =
+      htobe16(loc_data_packets[i].LocData_IdAngAmb_i_j);
+  }
+
+  std::vector<uint8_t> buffer;
+  buffer.resize(sizeof(*this));
+  std::memcpy(buffer.data(), this, sizeof(*this));
+  return buffer;
+}
+
 }  // namespace off_highway_premium_radar

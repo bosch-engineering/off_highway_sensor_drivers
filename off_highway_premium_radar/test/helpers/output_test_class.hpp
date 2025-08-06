@@ -20,22 +20,22 @@
 #include <vector>
 
 #include "gtest/gtest.h"
-#include "off_highway_premium_radar_sample/node.hpp"
-#include "off_highway_premium_radar_sample/converters/default_converter.hpp"
+#include "off_highway_premium_radar/node.hpp"
+#include "off_highway_premium_radar/converters/default_converter.hpp"
 #include "rclcpp/executor.hpp"
 #include "../src/helper.hpp"
 
 using std::chrono::seconds;
 using NodeWithDefaultConverter =
-  off_highway_premium_radar_sample::Node<off_highway_premium_radar_sample::DefaultConverter>;
+  off_highway_premium_radar::Node<off_highway_premium_radar::DefaultConverter>;
 
-using off_highway_premium_radar_sample::to_pdu;
+using off_highway_premium_radar::to_pdu;
 
 template<typename MsgType, typename PduType>
 class OutputTestClass : public ::testing::Test
 {
 public:
-  OutputTestClass(
+  explicit OutputTestClass(
     int sensor_port,
     int host_port,
     const std::string & loopback_ip,
@@ -51,7 +51,7 @@ public:
     udp_socket_.bind();
   }
 
-  ~OutputTestClass()
+  ~OutputTestClass() override
   {
     udp_socket_.close();
   }
@@ -61,9 +61,7 @@ protected:
     const std::string & node_name,
     const std::string & topic_name)
   {
-    // Create unique names to supress warnings about multiple nodes with the same name
-    std::string unique_sub_name = node_name + "_" +
-      std::to_string(reinterpret_cast<uintptr_t>(this));
+    std::string sub_name = node_name + "_subscriber";
 
     std::vector<rclcpp::Parameter> params = {
       rclcpp::Parameter("host_ip", loopback_ip_),
@@ -77,8 +75,7 @@ protected:
     node_ = std::make_shared<NodeWithDefaultConverter>(node_options);
 
     future_ = promise_.get_future();
-    sensor_sub_node_ =
-      std::make_shared<rclcpp::Node>(unique_sub_name);
+    sensor_sub_node_ = std::make_shared<rclcpp::Node>(sub_name);
     sensor_subscription_ =
       sensor_sub_node_->create_subscription<MsgType>(
       topic_name, 10,
@@ -96,14 +93,13 @@ protected:
   void send_pdu_data(PduType pdu_data);
   MsgType get_pdu_data();
 
-private:
   const int sensor_port_;
   const int host_port_;
   const std::string loopback_ip_;
   const std::chrono::seconds spin_timeout_;
 
   IoContext ctx_;
-  off_highway_premium_radar_sample::UdpSocket udp_socket_;
+  off_highway_premium_radar::UdpSocket udp_socket_;
 
   std::shared_ptr<NodeWithDefaultConverter> node_;
   rclcpp::Node::SharedPtr sensor_sub_node_;
@@ -127,5 +123,10 @@ MsgType OutputTestClass<MsgType, PduType>::get_pdu_data()
 {
   auto ret = executor_.spin_until_future_complete(future_, spin_timeout_);
   EXPECT_EQ(ret, rclcpp::FutureReturnCode::SUCCESS);
+
+  // Reset promise/future for next test
+  promise_ = std::promise<bool>();
+  future_ = promise_.get_future();
+
   return received_msg_;
 }
