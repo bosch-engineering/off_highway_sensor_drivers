@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/* *INDENT-OFF* */
+#pragma message "Deprecation issue #16: " \
+                "https://github.com/bosch-engineering/off_highway_sensor_drivers/issues/16 \n" \
+                "Warning: This header is deprecated and will be removed in a future release."
+/* *INDENT-ON* */
+
 #pragma once
 
 #include "pcl/pcl_macros.h"
