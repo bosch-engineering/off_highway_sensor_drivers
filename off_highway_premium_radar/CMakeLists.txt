@@ -24,8 +24,6 @@ find_package(rclcpp_components REQUIRED)
 # For default converter
 find_package(diagnostic_updater REQUIRED)
 find_package(off_highway_premium_radar_msgs REQUIRED)
-find_package(pcl_conversions REQUIRED)
-find_package(PCL REQUIRED COMPONENTS common)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 
@@ -45,7 +43,6 @@ target_link_libraries(off_highway_premium_radar PUBLIC
       ${std_msgs_TARGETS}
       diagnostic_updater::diagnostic_updater
       ${io_context_LIBRARIES}
-      pcl_conversions::pcl_conversions
       rclcpp::rclcpp
       rclcpp_components::component
       rclcpp_components::component_manager
@@ -78,8 +75,6 @@ ament_export_dependencies(
   diagnostic_updater
   io_context
   off_highway_premium_radar_msgs
-  pcl_conversions
-  PCL
   rclcpp
   rclcpp_components
   sensor_msgs

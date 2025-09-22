@@ -15,8 +15,7 @@
 #include "helpers/output_test_class.hpp"
 #include "helpers/random_generator.hpp"
 
-#include "pcl_conversions/pcl_conversions.h"
-#include "off_highway_premium_radar/converters/pcl_radar_point_type.hpp"
+#include "sensor_msgs/point_cloud2_iterator.hpp"
 
 class TestRadarDriver
   : public OutputTestClass<
@@ -44,7 +43,7 @@ protected:
       sensor_sub_node_->create_subscription<sensor_msgs::msg::PointCloud2>(
       "/driver/locations", 10,
       [&](const sensor_msgs::msg::PointCloud2 msg) {
-        pcl::fromROSMsg(msg, received_location_data_);
+        received_location_data_ = from_msg(msg);
         location_promise_.set_value(true);
       });
   }
@@ -61,8 +60,11 @@ protected:
     std::vector<off_highway_premium_radar::LocationDataPdu> ref_locations,
     bool check_sna = false);
 
+  off_highway_premium_radar::Locations from_msg(
+    const sensor_msgs::msg::PointCloud2 & msg);
+
   rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr sensor_locations_subscription_;
-  pcl::PointCloud<off_highway_premium_radar::PclPointLocation> received_location_data_{};
+  off_highway_premium_radar::Locations received_location_data_{};
 
 private:
   // Separate promise/future for location data
@@ -96,48 +98,117 @@ void TestRadarDriver::send_pdu_data(
   }
 }
 
+inline
+off_highway_premium_radar::Locations TestRadarDriver::from_msg(
+  const sensor_msgs::msg::PointCloud2 & msg)
+{
+  sensor_msgs::msg::PointCloud2 msg_copy = msg;
+  off_highway_premium_radar::Locations locations;
+  size_t num_points = msg.width * msg.height;
+
+  sensor_msgs::PointCloud2Iterator<float> x(msg_copy, "x");
+  sensor_msgs::PointCloud2Iterator<float> y(msg_copy, "y");
+  sensor_msgs::PointCloud2Iterator<float> z(msg_copy, "z");
+  sensor_msgs::PointCloud2Iterator<float> radial_distance(msg_copy, "radial_distance");
+  sensor_msgs::PointCloud2Iterator<float> radial_velocity(msg_copy, "radial_velocity");
+  sensor_msgs::PointCloud2Iterator<float> azimuth_angle(msg_copy, "azimuth_angle");
+  sensor_msgs::PointCloud2Iterator<float> elevation_angle(msg_copy, "elevation_angle");
+  sensor_msgs::PointCloud2Iterator<float> radar_cross_section(msg_copy, "radar_cross_section");
+  sensor_msgs::PointCloud2Iterator<float> signal_noise_ratio(msg_copy, "signal_noise_ratio");
+  sensor_msgs::PointCloud2Iterator<float> radial_distance_variance(msg_copy,
+    "radial_distance_variance");
+  sensor_msgs::PointCloud2Iterator<float> radial_velocity_variance(msg_copy,
+    "radial_velocity_variance");
+  sensor_msgs::PointCloud2Iterator<float> azimuth_angle_variance(msg_copy,
+    "azimuth_angle_variance");
+  sensor_msgs::PointCloud2Iterator<float> elevation_angle_variance(msg_copy,
+    "elevation_angle_variance");
+  sensor_msgs::PointCloud2Iterator<float> radial_distance_velocity_covariance(
+    msg_copy, "radial_distance_velocity_covariance");
+  sensor_msgs::PointCloud2Iterator<float> velocity_resolution_processing_probability(
+    msg_copy, "velocity_resolution_processing_probability");
+  sensor_msgs::PointCloud2Iterator<float> azimuth_angle_probability(
+    msg_copy, "azimuth_angle_probability");
+  sensor_msgs::PointCloud2Iterator<float> elevation_angle_probability(
+    msg_copy, "elevation_angle_probability");
+  sensor_msgs::PointCloud2Iterator<float> measurement_status(msg_copy, "measurement_status");
+  sensor_msgs::PointCloud2Iterator<float> idx_azimuth_ambiguity_peer(
+    msg_copy, "idx_azimuth_ambiguity_peer");
+
+  for (size_t i = 0; i < num_points; ++i) {
+    off_highway_premium_radar::LocData_Packet_i_j l;
+    l.LocData_RadDist_i_j = *radial_distance;
+    l.LocData_RadRelVel_i_j = *radial_velocity;
+    l.LocData_AziAng_i_j = *azimuth_angle;
+    l.LocData_EleAng_i_j = *elevation_angle;
+    l.LocData_Rcs_i_j = *radar_cross_section;
+    l.LocData_Snr_i_j = *signal_noise_ratio;
+    l.LocData_RadDistVar_i_j = *radial_distance_variance;
+    l.LocData_RadRelVelVar_i_j = *radial_velocity_variance;
+    l.LocData_VarAzi_i_j = *azimuth_angle_variance;
+    l.LocData_VarEle_i_j = *elevation_angle_variance;
+    l.LocData_DistVelCov_i_j = *radial_distance_velocity_covariance;
+    l.LocData_ProVelRes_i_j = *velocity_resolution_processing_probability;
+    l.LocData_ProAziAng_i_j = *azimuth_angle_probability;
+    l.LocData_ProEleAng_i_j = *elevation_angle_probability;
+    l.LocData_MeasStat_i_j = static_cast<uint32_t>(*measurement_status);
+    l.LocData_IdAngAmb_i_j = static_cast<uint32_t>(*idx_azimuth_ambiguity_peer);
+
+    locations.push_back(l);
+
+    ++x; ++y; ++z; ++radial_distance; ++radial_velocity; ++azimuth_angle;
+    ++elevation_angle; ++radar_cross_section; ++signal_noise_ratio; ++radial_distance_variance;
+    ++radial_velocity_variance; ++azimuth_angle_variance; ++elevation_angle_variance;
+    ++radial_distance_velocity_covariance; ++velocity_resolution_processing_probability;
+    ++azimuth_angle_probability; ++elevation_angle_probability; ++measurement_status;
+    ++idx_azimuth_ambiguity_peer;
+  }
+
+  return locations;
+}
+
 void compareFields(
-  const off_highway_premium_radar::PclPointLocation & received,
+  const off_highway_premium_radar::LocData_Packet_i_j & received,
   const off_highway_premium_radar::LocData_Packet_i_j & ref)
 {
-  EXPECT_EQ(received.radial_distance, ref.LocData_RadDist_i_j);
-  EXPECT_EQ(received.radial_velocity, ref.LocData_RadRelVel_i_j);
-  EXPECT_EQ(received.azimuth_angle, ref.LocData_AziAng_i_j);
-  EXPECT_EQ(received.elevation_angle, ref.LocData_EleAng_i_j);
-  EXPECT_EQ(received.radar_cross_section, ref.LocData_Rcs_i_j);
-  EXPECT_EQ(received.signal_noise_ratio, ref.LocData_Snr_i_j);
-  EXPECT_EQ(received.radial_distance_variance, ref.LocData_RadDistVar_i_j);
-  EXPECT_EQ(received.radial_velocity_variance, ref.LocData_RadRelVelVar_i_j);
-  EXPECT_EQ(received.azimuth_angle_variance, ref.LocData_VarAzi_i_j);
-  EXPECT_EQ(received.elevation_angle_variance, ref.LocData_VarEle_i_j);
-  EXPECT_EQ(received.radial_distance_velocity_covariance, ref.LocData_DistVelCov_i_j);
-  EXPECT_EQ(received.velocity_resolution_processing_probability, ref.LocData_ProVelRes_i_j);
-  EXPECT_EQ(received.azimuth_angle_probability, ref.LocData_ProAziAng_i_j);
-  EXPECT_EQ(received.elevation_angle_probability, ref.LocData_ProEleAng_i_j);
-  EXPECT_EQ(received.idx_azimuth_ambiguity_peer, ref.LocData_IdAngAmb_i_j);
-  EXPECT_EQ(received.measurement_status, ref.LocData_MeasStat_i_j);
+  EXPECT_EQ(received.LocData_RadDist_i_j, ref.LocData_RadDist_i_j);
+  EXPECT_EQ(received.LocData_RadRelVel_i_j, ref.LocData_RadRelVel_i_j);
+  EXPECT_EQ(received.LocData_AziAng_i_j, ref.LocData_AziAng_i_j);
+  EXPECT_EQ(received.LocData_EleAng_i_j, ref.LocData_EleAng_i_j);
+  EXPECT_EQ(received.LocData_Rcs_i_j, ref.LocData_Rcs_i_j);
+  EXPECT_EQ(received.LocData_Snr_i_j, ref.LocData_Snr_i_j);
+  EXPECT_EQ(received.LocData_RadDistVar_i_j, ref.LocData_RadDistVar_i_j);
+  EXPECT_EQ(received.LocData_RadRelVelVar_i_j, ref.LocData_RadRelVelVar_i_j);
+  EXPECT_EQ(received.LocData_VarAzi_i_j, ref.LocData_VarAzi_i_j);
+  EXPECT_EQ(received.LocData_VarEle_i_j, ref.LocData_VarEle_i_j);
+  EXPECT_EQ(received.LocData_DistVelCov_i_j, ref.LocData_DistVelCov_i_j);
+  EXPECT_EQ(received.LocData_ProVelRes_i_j, ref.LocData_ProVelRes_i_j);
+  EXPECT_EQ(received.LocData_ProAziAng_i_j, ref.LocData_ProAziAng_i_j);
+  EXPECT_EQ(received.LocData_ProEleAng_i_j, ref.LocData_ProEleAng_i_j);
+  EXPECT_EQ(received.LocData_IdAngAmb_i_j, ref.LocData_IdAngAmb_i_j);
+  EXPECT_EQ(received.LocData_MeasStat_i_j, ref.LocData_MeasStat_i_j);
 }
 
 void checkNaNFields(
-  const off_highway_premium_radar::PclPointLocation & received,
+  const off_highway_premium_radar::LocData_Packet_i_j & received,
   const off_highway_premium_radar::LocData_Packet_i_j & ref)
 {
-  EXPECT_TRUE(std::isnan(received.radial_distance));
-  EXPECT_TRUE(std::isnan(received.radial_velocity));
-  EXPECT_TRUE(std::isnan(received.azimuth_angle));
-  EXPECT_TRUE(std::isnan(received.elevation_angle));
-  EXPECT_TRUE(std::isnan(received.radar_cross_section));
-  EXPECT_TRUE(std::isnan(received.signal_noise_ratio));
-  EXPECT_TRUE(std::isnan(received.radial_distance_variance));
-  EXPECT_TRUE(std::isnan(received.radial_velocity_variance));
-  EXPECT_TRUE(std::isnan(received.azimuth_angle_variance));
-  EXPECT_TRUE(std::isnan(received.elevation_angle_variance));
-  EXPECT_TRUE(std::isnan(received.radial_distance_velocity_covariance));
-  EXPECT_TRUE(std::isnan(received.velocity_resolution_processing_probability));
-  EXPECT_TRUE(std::isnan(received.azimuth_angle_probability));
-  EXPECT_TRUE(std::isnan(received.elevation_angle_probability));
-  EXPECT_EQ(received.idx_azimuth_ambiguity_peer, 0xFFFF);
-  EXPECT_EQ(received.measurement_status, ref.LocData_MeasStat_i_j);
+  EXPECT_TRUE(std::isnan(received.LocData_RadDist_i_j));
+  EXPECT_TRUE(std::isnan(received.LocData_RadRelVel_i_j));
+  EXPECT_TRUE(std::isnan(received.LocData_AziAng_i_j));
+  EXPECT_TRUE(std::isnan(received.LocData_EleAng_i_j));
+  EXPECT_TRUE(std::isnan(received.LocData_Rcs_i_j));
+  EXPECT_TRUE(std::isnan(received.LocData_Snr_i_j));
+  EXPECT_TRUE(std::isnan(received.LocData_RadDistVar_i_j));
+  EXPECT_TRUE(std::isnan(received.LocData_RadRelVelVar_i_j));
+  EXPECT_TRUE(std::isnan(received.LocData_VarAzi_i_j));
+  EXPECT_TRUE(std::isnan(received.LocData_VarEle_i_j));
+  EXPECT_TRUE(std::isnan(received.LocData_DistVelCov_i_j));
+  EXPECT_TRUE(std::isnan(received.LocData_ProVelRes_i_j));
+  EXPECT_TRUE(std::isnan(received.LocData_ProAziAng_i_j));
+  EXPECT_TRUE(std::isnan(received.LocData_ProEleAng_i_j));
+  EXPECT_EQ(received.LocData_IdAngAmb_i_j, 0xFFFF);
+  EXPECT_EQ(received.LocData_MeasStat_i_j, ref.LocData_MeasStat_i_j);
 }
 
 void TestRadarDriver::verify_locations(
@@ -168,7 +239,7 @@ void TestRadarDriver::verify_locations(
 
   // Check if measurement data is completely invalid
   if (ref_locations[0].loc_data_header.LocData_DataMeas == 0) {
-    EXPECT_EQ(received_location_data_.points.size(), 0);
+    EXPECT_EQ(received_location_data_.size(), 0);
     return;
   }
 
@@ -181,7 +252,7 @@ void TestRadarDriver::verify_locations(
       }
     }
   }
-  EXPECT_EQ(received_location_data_.points.size(), expected_valid_locations);
+  EXPECT_EQ(received_location_data_.size(), expected_valid_locations);
 
   uint32_t rec_loc_index = 0;
   if (!check_sna) {
