@@ -29,19 +29,6 @@ find_package(PCL REQUIRED COMPONENTS common)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 
-set(dependencies
-  ASIO
-  diagnostic_updater
-  io_context
-  off_highway_premium_radar_msgs
-  pcl_conversions
-  PCL
-  rclcpp
-  rclcpp_components
-  sensor_msgs
-  std_msgs
-)
-
 # Library
 add_library(${PROJECT_NAME} SHARED
   src/driver.cpp
@@ -52,11 +39,23 @@ add_library(${PROJECT_NAME} SHARED
   src/converters/default_converter.cpp
 )
 
-ament_target_dependencies(${PROJECT_NAME} SYSTEM ${dependencies})
+target_link_libraries(off_highway_premium_radar PUBLIC
+      ${off_highway_premium_radar_msgs_TARGETS}
+      ${sensor_msgs_TARGETS}
+      ${std_msgs_TARGETS}
+      diagnostic_updater::diagnostic_updater
+      ${io_context_LIBRARIES}
+      pcl_conversions::pcl_conversions
+      rclcpp::rclcpp
+      rclcpp_components::component
+      rclcpp_components::component_manager
+      sensor_msgs::sensor_msgs_library
+)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
+  ${io_context_INCLUDE_DIRS}
 )
 
 install(
@@ -74,7 +73,18 @@ install(
 )
 
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_export_dependencies(${dependencies})
+ament_export_dependencies(
+  ASIO
+  diagnostic_updater
+  io_context
+  off_highway_premium_radar_msgs
+  pcl_conversions
+  PCL
+  rclcpp
+  rclcpp_components
+  sensor_msgs
+  std_msgs
+)
 
 # Executable
 rclcpp_components_register_node(${PROJECT_NAME}

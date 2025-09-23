@@ -24,17 +24,6 @@ find_package(off_highway_general_purpose_radar_msgs REQUIRED)
 find_package(pcl_conversions REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common)
 
-set(dependencies
-  rclcpp
-  rclcpp_components
-  sensor_msgs
-  can_msgs
-  off_highway_can
-  off_highway_general_purpose_radar_msgs
-  pcl_conversions
-  PCL
-)
-
 # Library to be used in unit tests
 add_library(${PROJECT_NAME} SHARED
   src/receiver.cpp
@@ -44,7 +33,17 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
-ament_target_dependencies(${PROJECT_NAME} SYSTEM ${dependencies})
+target_link_libraries(off_highway_general_purpose_radar PUBLIC
+      ${can_msgs_TARGETS}
+      ${off_highway_general_purpose_radar_msgs_TARGETS}
+      ${sensor_msgs_TARGETS}
+      off_highway_can::off_highway_can
+      pcl_conversions::pcl_conversions
+      rclcpp::rclcpp
+      rclcpp_components::component
+      rclcpp_components::component_manager
+      sensor_msgs::sensor_msgs_library
+)
 
 install(
   DIRECTORY include/
@@ -60,7 +59,16 @@ install(
 )
 
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_export_dependencies(${dependencies})
+ament_export_dependencies(
+  rclcpp
+  rclcpp_components
+  sensor_msgs
+  can_msgs
+  off_highway_can
+  off_highway_general_purpose_radar_msgs
+  pcl_conversions
+  PCL
+)
 
 # Receiver
 rclcpp_components_register_node(${PROJECT_NAME}

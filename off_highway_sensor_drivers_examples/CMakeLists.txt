@@ -8,18 +8,17 @@ find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 
-set(dependencies
-  geometry_msgs
-  nav_msgs
-  rclcpp
-  rclcpp_components
-)
-
 add_library(${PROJECT_NAME} SHARED
   src/off_highway_radar_examples/extract_velocity.cpp
 )
 
-ament_target_dependencies(${PROJECT_NAME} SYSTEM ${dependencies})
+target_link_libraries(off_highway_sensor_drivers_examples PUBLIC
+      ${geometry_msgs_TARGETS}
+      ${nav_msgs_TARGETS}
+      rclcpp::rclcpp
+      rclcpp_components::component
+      rclcpp_components::component_manager
+)
 
 rclcpp_components_register_node(${PROJECT_NAME}
   PLUGIN "off_highway_sensor_drivers_examples::ExtractVelocity"
@@ -41,7 +40,12 @@ install(
 )
 
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_export_dependencies(${dependencies})
+ament_export_dependencies(
+  geometry_msgs
+  nav_msgs
+  rclcpp
+  rclcpp_components
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
