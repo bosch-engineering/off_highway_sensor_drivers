@@ -45,7 +45,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   ${off_highway_premium_radar_sample_msgs_TARGETS}
   ${sensor_msgs_TARGETS}
   ${std_msgs_TARGETS}
+  ${ASIO_LIBRARIES}
   diagnostic_updater::diagnostic_updater
+  ${io_context_LIBRARIES}
   pcl_conversions::pcl_conversions
   rclcpp::rclcpp
   rclcpp_components::component
@@ -58,6 +60,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
+  ${ASIO_INCLUDE_DIRS}
   ${io_context_INCLUDE_DIRS}
 )
 
