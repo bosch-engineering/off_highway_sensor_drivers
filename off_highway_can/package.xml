@@ -5,7 +5,8 @@
   <version>0.9.0</version>
   <description>The off_highway_can package</description>
   <maintainer email="robin.petereit@de.bosch.com">Robin Petereit</maintainer>
-  <license>Apache-2.0, MIT</license>
+  <license>Apache-2.0</license>
+  <license>MIT</license>
 
   <author email="robin.petereit@de.bosch.com">Robin Petereit</author>
   <author email="marcus.huenerbein@digital-workbench.de">Marcus Huenerbein</author>
