@@ -87,6 +87,13 @@ if(BUILD_TESTING)
     $<INSTALL_INTERFACE:include>
   )
   target_link_libraries(test_encode_decode_by_round ${PROJECT_NAME})
+
+  ament_add_gtest(test_receiver test/test_receiver.cpp)
+  target_include_directories(test_receiver PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_link_libraries(test_receiver ${PROJECT_NAME})
 endif()
 
 ament_package()
