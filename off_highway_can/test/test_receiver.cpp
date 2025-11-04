@@ -84,7 +84,8 @@ protected:
   void SetUp() override
   {
     rclcpp::NodeOptions options;
-    options.parameter_overrides({
+    options.parameter_overrides(
+    {
       rclcpp::Parameter("timeout", kTestTimeout),
       rclcpp::Parameter("watchdog_frequency", kTestWatchdogFrequency),
     });
