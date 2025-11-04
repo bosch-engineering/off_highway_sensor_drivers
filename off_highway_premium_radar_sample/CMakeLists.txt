@@ -41,6 +41,14 @@ add_library(${PROJECT_NAME} SHARED
   src/converters/default_converter.cpp
 )
 
+# Get the ROS distribution name
+set(ROS_DISTRO $ENV{ROS_DISTRO})
+if(ROS_DISTRO STREQUAL "humble" OR ROS_DISTRO STREQUAL "jazzy")
+  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
+    ${pcl_conversions_INCLUDE_DIRS}
+  )
+endif()
+
 target_link_libraries(${PROJECT_NAME} PUBLIC
   ${off_highway_premium_radar_sample_msgs_TARGETS}
   ${sensor_msgs_TARGETS}
@@ -48,7 +56,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   ${ASIO_LIBRARIES}
   diagnostic_updater::diagnostic_updater
   ${io_context_LIBRARIES}
-  pcl_conversions::pcl_conversions
   rclcpp::rclcpp
   rclcpp_components::component
   rclcpp_components::component_manager
@@ -56,6 +63,11 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   tf2::tf2
   tf2_geometry_msgs::tf2_geometry_msgs
 )
+
+# Use pcl_conversions only if available (for ROS Rolling and LTS ROS distros later than Jazzy)
+if(TARGET pcl_conversions::pcl_conversions)
+  target_link_libraries(${PROJECT_NAME} PUBLIC pcl_conversions::pcl_conversions)
+endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

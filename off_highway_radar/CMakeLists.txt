@@ -35,17 +35,29 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
+# Get the ROS distribution name
+set(ROS_DISTRO $ENV{ROS_DISTRO})
+if(ROS_DISTRO STREQUAL "humble" OR ROS_DISTRO STREQUAL "jazzy")
+  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
+    ${pcl_conversions_INCLUDE_DIRS}
+  )
+endif()
+
 target_link_libraries(${PROJECT_NAME} PUBLIC
   ${can_msgs_TARGETS}
   ${off_highway_radar_msgs_TARGETS}
   ${sensor_msgs_TARGETS}
   off_highway_can::off_highway_can
-  pcl_conversions::pcl_conversions
   rclcpp::rclcpp
   rclcpp_components::component
   rclcpp_components::component_manager
   sensor_msgs::sensor_msgs_library
 )
+
+# Use pcl_conversions only if available (for ROS Rolling and LTS ROS distros later than Jazzy)
+if(TARGET pcl_conversions::pcl_conversions)
+  target_link_libraries(${PROJECT_NAME} PUBLIC pcl_conversions::pcl_conversions)
+endif()
 
 install(
   DIRECTORY include/
