@@ -344,6 +344,10 @@ void Receiver::manage_and_publish_direct_echos()
 
 void Receiver::publish_direct_echos()
 {
+  if (is_timeout_) {
+    return;
+  }
+
   DirectEchos msg;
   msg.header.stamp = now();
   msg.header.frame_id = node_frame_id_;
