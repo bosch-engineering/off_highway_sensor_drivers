@@ -2,6 +2,11 @@
 Changelog for package off_highway_sensor_drivers_examples
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove ament deprecation warning from remaining packages
+* Contributors: Calin-Vasile Sopterean
+
 0.9.0 (2025-06-16)
 ------------------
 * Move PCL dependencies

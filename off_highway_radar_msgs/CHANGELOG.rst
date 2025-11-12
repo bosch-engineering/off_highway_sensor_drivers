@@ -2,6 +2,9 @@
 Changelog for package off_highway_radar_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.9.0 (2025-06-16)
 ------------------
 

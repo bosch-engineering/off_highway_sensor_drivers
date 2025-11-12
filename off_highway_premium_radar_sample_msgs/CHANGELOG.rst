@@ -2,6 +2,11 @@
 Changelog for package off_highway_premium_radar_sample_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add unit test for Location Data PDU
+* Contributors: Calin-Vasile Sopterean
+
 0.9.0 (2025-06-16)
 ------------------
 * Add premium radar driver for series sensor

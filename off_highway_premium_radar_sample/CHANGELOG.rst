@@ -2,6 +2,16 @@
 Changelog for package off_highway_premium_radar_sample
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update dependency declarations for target_link_libraries
+* Remove ament deprecation warning from remaining packages
+* ament_target_dependencies is deprecated for Kilted and Rolling
+  This syntax should work as of ROS 2 Foxy already
+* Add unit test for Location Data PDU
+* Add unit test for Sensor State Information PDU
+* Contributors: Calin-Vasile Sopterean, Sarah Huber, Tim Clephas
+
 0.9.0 (2025-06-16)
 ------------------
 * Fix PduId check for get_pdu_type
