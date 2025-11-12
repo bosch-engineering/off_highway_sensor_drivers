@@ -2,8 +2,8 @@
 Changelog for package off_highway_premium_radar_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2025-11-12)
+------------------
 * Add unit tests for Location Atrributes PDU
 * Add unit test for Location Data PDU
 * Contributors: Calin-Vasile Sopterean

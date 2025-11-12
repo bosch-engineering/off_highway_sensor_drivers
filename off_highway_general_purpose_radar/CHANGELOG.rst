@@ -2,8 +2,8 @@
 Changelog for package off_highway_general_purpose_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2025-11-12)
+------------------
 * Update dependency declarations for target_link_libraries
 * Fix issue 20, don't publish sensor data when there is a sensor timeout
 * Remove ament deprecation warning from remaining packages

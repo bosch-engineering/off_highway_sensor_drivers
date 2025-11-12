@@ -2,8 +2,8 @@
 Changelog for package off_highway_premium_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2025-11-12)
+------------------
 * Remove PCL libraries from ohw_premium_radar
 * Add PCL deprecation warning for pcl_radar_point_type.hpp
 * Remove ament deprecation warning from remaining packages
