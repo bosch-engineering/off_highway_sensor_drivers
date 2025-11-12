@@ -2,6 +2,30 @@
 Changelog for package off_highway_can
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix formatting for linter
+* off_highway_can: split license element into two
+  Having two license strings into one element does give issues when generating
+  the Yocto/OpenEmbedde bitbake recipes for meta-ros.
+  see: https://github.com/ros/meta-ros/commit/72dfb21b8f297d23e8c029edc04baadb17b1d24f
+  see:
+  <license> (multiple, but at least one)
+  Name of license for this package, e.g. BSD, GPL, LGPL.
+  In order to assist machine readability, only include the license name in this tag.
+  For multiple licenses multiple separate tags must be used.
+  A package will have multiple licenses if different source files have different licenses.
+  Every license occurring in the source files should have a corresponding <license> tag.
+  For any explanatory text about licensing caveats, please use the <description> tag.
+  -- https://ros.org/reps/rep-0149.html#license-multiple-but-at-least-one
+* Add unit tests for timeout
+* Fix incorrect timeout toggling
+* Draw conclusion in the watchdog, not in the diagnostics callback
+* Fix issue 20, don't publish sensor data when there is a sensor timeout
+* ament_target_dependencies is deprecated for Kilted and Rolling
+  This syntax should work as of ROS 2 Foxy already
+* Contributors: Calin-Vasile Sopterean, Ferry Schoenmakers, Jan Vermaete, Tim Clephas
+
 1.0.0 (2025-07-01)
 ------------------
 * Use lround and explicit cast

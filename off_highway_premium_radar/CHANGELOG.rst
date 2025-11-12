@@ -2,6 +2,18 @@
 Changelog for package off_highway_premium_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove PCL libraries from ohw_premium_radar
+* Add PCL deprecation warning for pcl_radar_point_type.hpp
+* Remove ament deprecation warning from remaining packages
+* Update README
+* Add unit tests for Measurement Program PDU
+* Add unit tests for Ego Vehicle Input PDU
+* Add unit tests for Location Atrributes PDU
+* Add unit test for Location Data PDU
+* Contributors: Calin-Vasile Sopterean, Gabriela Adriana Lapuste
+
 1.0.0 (2025-07-01)
 ------------------
 * Adapt expected frequencies of diagnostic messages
