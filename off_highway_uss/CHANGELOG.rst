@@ -2,8 +2,8 @@
 Changelog for package off_highway_uss
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.10.0 (2025-11-12)
+-------------------
 * Add timeout functionality for uss direct_echos
 * Update dependency declarations for target_link_libraries
 * Fix issue 20, don't publish sensor data when there is a sensor timeout

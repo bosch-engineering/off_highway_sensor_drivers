@@ -2,8 +2,8 @@
 Changelog for package off_highway_premium_radar_sample
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.10.0 (2025-11-12)
+-------------------
 * Update dependency declarations for target_link_libraries
 * Remove ament deprecation warning from remaining packages
 * ament_target_dependencies is deprecated for Kilted and Rolling

@@ -2,8 +2,8 @@
 Changelog for package off_highway_can
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.10.0 (2025-11-12)
+-------------------
 * Fix formatting for linter
 * off_highway_can: split license element into two
   Having two license strings into one element does give issues when generating
