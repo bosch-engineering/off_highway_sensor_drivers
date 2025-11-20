@@ -1,0 +1,15 @@
+off_highway_mm7p10_receiver:
+  ros__parameters:
+    # Frequency of watchdog to check if a sensor message was received
+    watchdog_frequency: 100.0
+
+    # Allowed age corresponding to output cycle time of sensor plus safety margin
+    allowed_age: 0.1
+
+    # TF frame id for all published messages of the receiver
+    node_frame_id: base_link
+
+    # CAN IDs for MM7P10 messages
+    mm7_10_z_ay_id: 0x174
+    mm7_10_x_ax_id: 0x178
+    mm7_10_y_az_id: 0x17C
