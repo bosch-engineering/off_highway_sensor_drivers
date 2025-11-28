@@ -18,13 +18,13 @@
 #include <regex>
 #include <stdexcept>
 
-#include "pcl_conversions/pcl_conversions.h"
+// Removed PCL dependency
 
 #include "diagnostic_msgs/msg/diagnostic_status.hpp"
 
 #include "off_highway_can/helper.hpp"
 
-#include "off_highway_radar/pcl_point_object.hpp"
+#include "converter/ros_message_conversion.hpp"
 
 namespace off_highway_radar
 {
@@ -245,20 +245,21 @@ void Receiver::publish_pcl()
     return;
   }
 
-  pcl::PointCloud<PclPointObject> objects_pcl;
-  objects_pcl.is_dense = true;
-  objects_pcl.header.frame_id = node_frame_id_;
-  pcl_conversions::toPCL(now(), objects_pcl.header.stamp);
+  Objects objects_msg;
+  objects_msg.header.stamp = now();
+  objects_msg.header.frame_id = node_frame_id_;
 
   for (const auto & object : objects_) {
     if (object) {
-      objects_pcl.emplace_back(*object);
+      objects_msg.objects.push_back(*object);
     }
   }
 
-  sensor_msgs::msg::PointCloud2 pointcloud2;
-  pcl::toROSMsg(objects_pcl, pointcloud2);
-  pub_objects_pcl_->publish(pointcloud2);
+  pub_objects_pcl_->publish(
+    to_msg(
+      objects_msg,
+      now(),
+      node_frame_id_));
 }
 
 void Receiver::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat) const

@@ -17,14 +17,14 @@
 
 #include <regex>
 
-#include "pcl_conversions/pcl_conversions.h"
+// Removed PCL dependency
 
 #include "diagnostic_msgs/msg/diagnostic_status.hpp"
 
 #include "off_highway_can/helper.hpp"
 
 #include "off_highway_uss/interpolate_line.hpp"
-#include "off_highway_uss/pcl_point_object.hpp"
+#include "converter/ros_message_conversion.hpp"
 
 namespace off_highway_uss
 {
@@ -294,41 +294,42 @@ void Receiver::publish_pcl()
     return;
   }
 
-  pcl::PointCloud<PclPointObject> objects_pcl;
-  objects_pcl.is_dense = true;
-  objects_pcl.header.frame_id = node_frame_id_;
-  pcl_conversions::toPCL(now(), objects_pcl.header.stamp);
+  Objects objects_msg;
+  objects_msg.header.stamp = now();
+  objects_msg.header.frame_id = node_frame_id_;
 
-  uint8_t id = 0;
+  // Build interpolated points vector for all objects
+  std::vector<std::vector<geometry_msgs::msg::Point>> interpolated_points;
+
   for (const auto & object : objects_) {
     if (object) {
+      std::vector<geometry_msgs::msg::Point> points;
       switch (object->object_type) {
         case off_highway_uss_msgs::msg::Object::TYPE_POINT:
-          objects_pcl.emplace_back(*object, id);
+          points.push_back(object->position_first);
           break;
         case off_highway_uss_msgs::msg::Object::TYPE_LINE:
-          {
-            auto samples = interpolate_segment(
-              object->position_first, object->position_second,
-              line_sample_distance_
-            );
-            for (auto & sample : samples) {
-              objects_pcl.emplace_back(sample, object->exist_probability, object->object_type, id);
-            }
-          }
+          points = interpolate_segment(
+            object->position_first, object->position_second,
+            line_sample_distance_
+          );
           break;
         default:
           throw std::logic_error(
                   "USS type " + std::to_string(object->object_type) + " is not point or line!");
           break;
       }
+      objects_msg.objects.push_back(*object);
+      interpolated_points.push_back(points);
     }
-    ++id;
   }
 
-  sensor_msgs::msg::PointCloud2 pointcloud2;
-  pcl::toROSMsg(objects_pcl, pointcloud2);
-  pub_objects_pcl_->publish(pointcloud2);
+  pub_objects_pcl_->publish(
+    to_msg(
+      objects_msg,
+      now(),
+      node_frame_id_,
+      interpolated_points));
 }
 
 bool Receiver::filter(const DirectEcho &)

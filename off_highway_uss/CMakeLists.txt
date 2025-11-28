@@ -21,8 +21,6 @@ find_package(sensor_msgs REQUIRED)
 find_package(can_msgs REQUIRED)
 find_package(off_highway_can REQUIRED)
 find_package(off_highway_uss_msgs REQUIRED)
-find_package(pcl_conversions REQUIRED)
-find_package(PCL REQUIRED COMPONENTS common)
 
 # Library to be used in unit tests
 add_library(${PROJECT_NAME} SHARED
@@ -47,15 +45,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   sensor_msgs::sensor_msgs_library
 )
 
-# Link pcl_conversions - use modern target if available, otherwise fallback to variables
-if(TARGET pcl_conversions::pcl_conversions)
-  target_link_libraries(${PROJECT_NAME} PUBLIC pcl_conversions::pcl_conversions)
-else()
-  # Fallback for ROS distributions where target doesn't exist (e.g., Jazzy)
-  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${pcl_conversions_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME} PUBLIC ${pcl_conversions_LIBRARIES})
-endif()
-
 install(
   DIRECTORY include/
   DESTINATION include
@@ -77,8 +66,6 @@ ament_export_dependencies(
   can_msgs
   off_highway_can
   off_highway_uss_msgs
-  pcl_conversions
-  PCL
 )
 
 # Receiver
@@ -107,7 +94,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 
   find_package(ament_cmake_ros REQUIRED)
-  find_package(pcl_ros REQUIRED)
 
   ament_add_ros_isolated_gtest(test_uss_receiver_information test/test_receiver_information.cpp)
   target_include_directories(test_uss_receiver_information PUBLIC
@@ -144,12 +130,12 @@ if(BUILD_TESTING)
   )
   target_link_libraries(test_sender ${PROJECT_NAME})
 
-  ament_add_ros_isolated_gtest(test_pcl_point_object test/test_pcl_point_object.cpp)
-  target_include_directories(test_pcl_point_object PUBLIC
+  ament_add_ros_isolated_gtest(test_ros_message_conversion test/test_ros_message_conversion.cpp)
+  target_include_directories(test_ros_message_conversion PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
   )
-  target_link_libraries(test_pcl_point_object ${PROJECT_NAME} pcl_ros::pcl_ros_tf)
+  target_link_libraries(test_ros_message_conversion ${PROJECT_NAME})
 endif()
 
 ament_package()

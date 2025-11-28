@@ -17,13 +17,13 @@
 #include <regex>
 #include <stdexcept>
 
-#include "pcl_conversions/pcl_conversions.h"
-
 #include "diagnostic_msgs/msg/diagnostic_status.hpp"
 
 #include "off_highway_can/helper.hpp"
 
-#include "off_highway_general_purpose_radar/pcl_point_target.hpp"
+// #include "off_highway_general_purpose_radar/pcl_point_target.hpp"
+
+#include "converter/ros_message_conversion.hpp"
 
 namespace off_highway_general_purpose_radar
 {
@@ -251,20 +251,21 @@ void Receiver::publish_pcl()
     return;
   }
 
-  pcl::PointCloud<PclPointTarget> targets_pcl;
-  targets_pcl.is_dense = true;
-  targets_pcl.header.frame_id = node_frame_id_;
-  pcl_conversions::toPCL(now(), targets_pcl.header.stamp);
+  Targets targets_msg;
+  targets_msg.header.stamp = now();
+  targets_msg.header.frame_id = node_frame_id_;
 
   for (const auto & target : targets_) {
     if (target) {
-      targets_pcl.emplace_back(*target);
+      targets_msg.targets.push_back(*target);
     }
   }
 
-  sensor_msgs::msg::PointCloud2 pointcloud2;
-  pcl::toROSMsg(targets_pcl, pointcloud2);
-  pub_targets_pcl_->publish(pointcloud2);
+  pub_targets_pcl_->publish(
+    to_msg(
+      targets_msg,
+      now(),
+      node_frame_id_));
 }
 
 void Receiver::diagnostics(diagnostic_updater::DiagnosticStatusWrapper & stat) const
