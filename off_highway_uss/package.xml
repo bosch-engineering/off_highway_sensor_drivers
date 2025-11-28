@@ -12,11 +12,6 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <build_depend>libpcl-all-dev</build_depend>
-  <build_depend>pcl_conversions</build_depend>
-
-  <build_export_depend>libpcl-all-dev</build_export_depend>
-
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
   <depend>sensor_msgs</depend>
@@ -24,12 +19,9 @@
   <depend>off_highway_can</depend>
   <depend>off_highway_uss_msgs</depend>
 
-  <exec_depend>libpcl-common</exec_depend>
-
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
   <test_depend>ament_cmake_ros</test_depend>
-  <test_depend>pcl_ros</test_depend>
 
   <export>
    <build_type>ament_cmake</build_type>
