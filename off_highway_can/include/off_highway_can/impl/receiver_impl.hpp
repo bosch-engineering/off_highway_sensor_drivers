@@ -51,7 +51,6 @@ void Receiver::callback_can(const typename Msg::ConstSharedPtr & frame)
   }
 
   last_message_received_ = now();
-  diag_updater_->force_update();
 
   auto header = frame->header;
   header.frame_id = node_frame_id_;
