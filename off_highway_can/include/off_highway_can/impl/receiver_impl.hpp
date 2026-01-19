@@ -52,6 +52,11 @@ void Receiver::callback_can(const typename Msg::ConstSharedPtr & frame)
 
   last_message_received_ = now();
 
+  if (is_timeout_) {
+    is_timeout_ = false;
+    force_diag_update();
+  }
+
   auto header = frame->header;
   header.frame_id = node_frame_id_;
   process(header, id, msg);
