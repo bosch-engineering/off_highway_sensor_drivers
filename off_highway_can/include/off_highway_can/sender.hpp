@@ -117,6 +117,9 @@ private:
 
   static constexpr uint32_t kMaxBaseIdentifier{1 << 11};
 
+  /// Store the timeout status
+  bool is_timeout_{false};
+
   std::shared_ptr<DiagTask> diag_task_;
   std::shared_ptr<DiagCompositeTask> diag_composite_;
   std::shared_ptr<diagnostic_updater::Updater> diag_updater_;

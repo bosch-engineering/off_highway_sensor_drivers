@@ -79,12 +79,18 @@ void Receiver::stop()
 
 void Receiver::callback_watchdog()
 {
-  is_timeout_ = (now() - last_message_received_).seconds() > timeout_;
+  bool is_timeout = (now() - last_message_received_).seconds() > timeout_;
+
+  // Force diagnostic update on timeout state transitions
+  if (is_timeout != is_timeout_) {
+    is_timeout_ = is_timeout;
+    force_diag_update();
+  }
+
   if (is_timeout_) {
     RCLCPP_WARN_THROTTLE(
       get_logger(), *get_clock(), 500,
       "Timeout of watchdog for receiving node %s", get_name());
-    force_diag_update();
   }
 }
 

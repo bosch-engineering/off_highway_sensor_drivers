@@ -58,11 +58,18 @@ Sender::Sender(
 
 void Sender::callback_watchdog()
 {
-  if ((now() - last_message_sent_).seconds() > timeout_) {
-    RCLCPP_WARN(get_logger(), "Timeout of watchdog for sending node %s", get_name());
+  bool is_timeout = (now() - last_message_sent_).seconds() > timeout_;
+
+  // Force diagnostic update on timeout state transitions
+  if (is_timeout != is_timeout_) {
+    is_timeout_ = is_timeout;
     force_diag_update();
-    // Reset to not trigger in each run
-    last_message_sent_ = now();
+  }
+
+  if (is_timeout_) {
+    RCLCPP_WARN_THROTTLE(
+      get_logger(), *get_clock(), 500,
+      "Timeout of watchdog for sending node %s", get_name());
   }
 }
 

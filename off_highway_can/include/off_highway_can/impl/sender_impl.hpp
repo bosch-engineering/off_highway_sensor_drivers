@@ -42,6 +42,11 @@ void Sender::send_can(FrameId id, Message & message)
   }
 
   last_message_sent_ = now();
+
+  if (is_timeout_) {
+    is_timeout_ = false;
+    force_diag_update();
+  }
 }
 
 }  // namespace off_highway_can
