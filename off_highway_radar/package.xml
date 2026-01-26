@@ -14,7 +14,6 @@
 
   <build_depend>libpcl-all-dev</build_depend>
   <build_depend>pcl_conversions</build_depend>
-  <build_depend>ros_environment</build_depend>
 
   <build_export_depend>libpcl-all-dev</build_export_depend>
 
