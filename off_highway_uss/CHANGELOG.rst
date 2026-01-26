@@ -2,8 +2,8 @@
 Changelog for package off_highway_uss
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.11.0 (2026-01-26)
+-------------------
 * Revert "Depend on ros_environment where needed (Jazzy version)" (#31)
   Revert "Depend on ros_environment where needed (Jazzy version) (#28)"
   This reverts commit 843890591d6db93ea883a83c0cecac298c5dba7f.

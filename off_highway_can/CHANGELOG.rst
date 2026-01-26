@@ -2,8 +2,8 @@
 Changelog for package off_highway_can
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.11.0 (2026-01-26)
+-------------------
 * Adapt unit tests to reflect the CPU high load fix
 * Add force diagnostic update on timeout state transition
 * Fix very high CPU usage since it publishes diagnostics on EACH CAN me… (#29)
