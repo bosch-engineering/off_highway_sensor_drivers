@@ -35,14 +35,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-# Get the ROS distribution name
-set(ROS_DISTRO $ENV{ROS_DISTRO})
-if(ROS_DISTRO STREQUAL "humble" OR ROS_DISTRO STREQUAL "jazzy")
-  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
-    ${pcl_conversions_INCLUDE_DIRS}
-  )
-endif()
-
 target_link_libraries(${PROJECT_NAME} PUBLIC
   ${can_msgs_TARGETS}
   ${off_highway_radar_msgs_TARGETS}
@@ -54,9 +46,13 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   sensor_msgs::sensor_msgs_library
 )
 
-# Use pcl_conversions only if available (for ROS Rolling and LTS ROS distros later than Jazzy)
+# Link pcl_conversions - use modern target if available, otherwise fallback to variables
 if(TARGET pcl_conversions::pcl_conversions)
   target_link_libraries(${PROJECT_NAME} PUBLIC pcl_conversions::pcl_conversions)
+else()
+  # Fallback for ROS distributions where target doesn't exist (e.g., Jazzy)
+  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${pcl_conversions_INCLUDE_DIRS})
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${pcl_conversions_LIBRARIES})
 endif()
 
 install(
