@@ -2,6 +2,15 @@
 Changelog for package off_highway_uss
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Revert "Depend on ros_environment where needed (Jazzy version)" (#31)
+  Revert "Depend on ros_environment where needed (Jazzy version) (#28)"
+  This reverts commit 843890591d6db93ea883a83c0cecac298c5dba7f.
+* Fix pcl_conversions linking error in ROS buildfarm (#30)
+* Depend on ros_environment where needed (Humble version) (#27)
+* Contributors: Marco A. Gutierrez, Michal Sojka
+
 0.10.0 (2025-11-12)
 -------------------
 * Add timeout functionality for uss direct_echos

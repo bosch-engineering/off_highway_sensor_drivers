@@ -2,6 +2,9 @@
 Changelog for package off_highway_premium_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.10.0 (2025-11-12)
 -------------------
 * Remove PCL libraries from ohw_premium_radar
