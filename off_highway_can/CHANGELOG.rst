@@ -2,6 +2,13 @@
 Changelog for package off_highway_can
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Adapt unit tests to reflect the CPU high load fix
+* Add force diagnostic update on timeout state transition
+* Fix very high CPU usage since it publishes diagnostics on EACH CAN message (#26)
+* Contributors: Ferry Schoenmakers, Gabriela Adriana Lapuste
+
 1.1.0 (2025-11-12)
 ------------------
 * Fix formatting for linter

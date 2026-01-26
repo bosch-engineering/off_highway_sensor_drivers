@@ -2,6 +2,15 @@
 Changelog for package off_highway_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Revert "Depend on ros_environment where needed (Jazzy version)" (#31)
+  Revert "Depend on ros_environment where needed (Jazzy version) (#28)"
+  This reverts commit 843890591d6db93ea883a83c0cecac298c5dba7f.
+* Fix pcl_conversions linking error in ROS buildfarm (#30)
+* Depend on ros_environment where needed (#24)
+* Contributors: Marco A. Gutierrez, Michal Sojka
+
 1.1.0 (2025-11-12)
 ------------------
 * Update dependency declarations for target_link_libraries

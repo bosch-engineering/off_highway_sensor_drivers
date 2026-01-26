@@ -2,6 +2,9 @@
 Changelog for package off_highway_uss_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.1.0 (2025-11-12)
 ------------------
 

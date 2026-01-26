@@ -2,6 +2,9 @@
 Changelog for package off_highway_premium_radar_sample_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.1.0 (2025-11-12)
 ------------------
 * Add unit test for Location Data PDU
