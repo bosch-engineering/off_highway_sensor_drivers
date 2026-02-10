@@ -1,8 +1,5 @@
 # off_highway_premium_radar
 
-> :warning: The Radar Off-Highway Premium is not available yet. The content
-> in the off_highway_premium_radar packages is preliminary and subject to change.
-
 > :information_source: The off_highway_premium_radar packages are for the **Series** version of the
 > Radar Off-Highway Premium sensor. For the Sample version, go to
 > [off_highway_premium_radar_sample](../off_highway_premium_radar_sample).
@@ -38,7 +35,7 @@ if packets are out-of-order). Such cases will also result in a publishing freque
 message which is detected in the built-in ROS diagnosis. Reducing the load on the sensor network and
 receiving device will minimize the risk of such cases.
 
-A location data measurement may contain zero locations if the 'data measured' flag is not set, 
+A location data measurement may contain zero locations if the 'data measured' flag is not set,
 or if no locations are actually measured. Only locations are contained in the driver's
 output which have the first bit of their measurement status set (measured and range check passed).
 
@@ -89,8 +86,8 @@ with custom converter classes. See [design](doc/design.md) for an overview.
     * **radar_cross_section** (*LocData_Rcs_i_j*): Radar Cross Section
     * **signal_noise_ratio** (*LocData_Snr_i_j*): Strength of the received power
     * **radial_distance_variance** (*LocData_RadDistVar_i_j*): Variance of measured radial distance
-    * **radial_velocity_variance** (*LocData_RadRelVelVar_i_j*): Variance of measured radial 
-      relative velocity 
+    * **radial_velocity_variance** (*LocData_RadRelVelVar_i_j*): Variance of measured radial
+      relative velocity
     * **azimuth_angle_variance** (*LocData_VarAzi_i_j*): Variance of measured azimuth angle
     * **elevation_angle_variance** (*LocData_VarEle_i_j*): Variance of measured elevation angle
     * **radial_distance_velocity_covariance** (*LocData_DistVelCov_i_j*): Covariance of measured radial
