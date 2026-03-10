@@ -2,8 +2,8 @@
 Changelog for package off_highway_premium_radar_sample_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.12.0 (2026-03-10)
+-------------------
 * Update maintainers
 * Contributors: Robin Petereit
 

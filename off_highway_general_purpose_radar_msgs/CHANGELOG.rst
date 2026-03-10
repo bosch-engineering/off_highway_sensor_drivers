@@ -2,8 +2,8 @@
 Changelog for package off_highway_general_purpose_radar_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.12.0 (2026-03-10)
+-------------------
 * Update maintainers
 * Contributors: Robin Petereit
 
