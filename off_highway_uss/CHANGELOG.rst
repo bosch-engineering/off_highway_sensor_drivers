@@ -2,8 +2,8 @@
 Changelog for package off_highway_uss
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2026-03-10)
+------------------
 * Update maintainers
 * Remove PCL dependencies from off highway sensor drivers packages
 * Contributors: Calin-Vasile Sopterean, Robin Petereit
