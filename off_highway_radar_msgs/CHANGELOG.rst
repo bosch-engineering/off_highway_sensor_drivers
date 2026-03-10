@@ -2,6 +2,11 @@
 Changelog for package off_highway_radar_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers
+* Contributors: Robin Petereit
+
 1.2.0 (2026-01-26)
 ------------------
 

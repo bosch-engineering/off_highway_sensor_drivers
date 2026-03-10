@@ -2,6 +2,12 @@
 Changelog for package off_highway_uss
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers
+* Remove PCL dependencies from off highway sensor drivers packages
+* Contributors: Calin-Vasile Sopterean, Robin Petereit
+
 1.2.0 (2026-01-26)
 ------------------
 * Revert "Depend on ros_environment where needed (Jazzy version)" (#31)

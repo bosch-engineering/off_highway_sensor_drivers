@@ -2,6 +2,11 @@
 Changelog for package off_highway_can
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers
+* Contributors: Robin Petereit
+
 1.2.0 (2026-01-26)
 ------------------
 * Adapt unit tests to reflect the CPU high load fix
