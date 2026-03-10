@@ -2,6 +2,11 @@
 Changelog for package off_highway_sensor_drivers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers
+* Contributors: Robin Petereit
+
 0.11.0 (2026-01-26)
 -------------------
 

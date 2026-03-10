@@ -2,6 +2,12 @@
 Changelog for package off_highway_premium_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update maintainers
+* Adapt README file
+* Contributors: Gabriela Adriana Lapuste, Robin Petereit
+
 0.11.0 (2026-01-26)
 -------------------
 
