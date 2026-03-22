@@ -52,10 +52,10 @@ UdpSocket::UdpSocket(
 {
   remote_endpoint_ = remote_ip.empty() ?
     udp::endpoint{udp::v4(), remote_port} :
-  udp::endpoint{address::from_string(remote_ip), remote_port};
+  udp::endpoint{asio::ip::make_address(remote_ip), remote_port};
   host_endpoint_ = host_ip.empty() ?
     udp::endpoint{udp::v4(), host_port} :
-  udp::endpoint{address::from_string(host_ip), host_port};
+  udp::endpoint{asio::ip::make_address(host_ip), host_port};
   source_endpoint_ = udp::endpoint{udp::v4(), 0};
   receive_buffer_.resize(kReceiveBufferSize_);
 }
