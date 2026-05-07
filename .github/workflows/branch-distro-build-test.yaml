@@ -1,0 +1,91 @@
+---
+# Validates that a PR's changes can be built and tested on its target distro,
+# then propagates them (squash + cherry-pick) to the other two distro branches
+# and verifies they also build and test cleanly - all as a dry run (no push).
+#
+# Propagation order per target branch:
+#   rolling-devel  →  jazzy  →  humble
+#   jazzy-devel    →  humble  →  rolling
+#   humble-devel   →  rolling  →  jazzy
+
+name: Cross-Distro Propagation Check
+
+on:
+  pull_request:
+    branches:
+      - humble-devel
+      - jazzy-devel
+      - rolling-devel
+
+jobs:
+  # ── Step 0: determine which distro this PR targets and derive the two
+  #            downstream propagation targets.
+  determine-distro:
+    runs-on: ${{ github.repository_owner == 'bosch-engineering' && 'ubuntu-latest' || fromJSON('["self-hosted", "Linux", "X64", "direct-runner"]') }}
+    outputs:
+      name:         ${{ steps.distro.outputs.name }}
+      step1-distro: ${{ steps.distro.outputs.step1-distro }}
+      step1-branch: ${{ steps.distro.outputs.step1-branch }}
+      step2-distro: ${{ steps.distro.outputs.step2-distro }}
+      step2-branch: ${{ steps.distro.outputs.step2-branch }}
+    steps:
+      - name: Determine ROS2 distro and propagation path from branch
+        id: distro
+        run: |
+          BRANCH="${{ github.base_ref }}"
+          case "$BRANCH" in
+            rolling-devel)
+              DISTRO=rolling
+              STEP1_DISTRO=jazzy;   STEP1_BRANCH=jazzy-devel
+              STEP2_DISTRO=humble;  STEP2_BRANCH=humble-devel
+              ;;
+            jazzy-devel)
+              DISTRO=jazzy
+              STEP1_DISTRO=humble; STEP1_BRANCH=humble-devel
+              STEP2_DISTRO=rolling;  STEP2_BRANCH=rolling-devel
+              ;;
+            humble-devel)
+              DISTRO=humble
+              STEP1_DISTRO=rolling; STEP1_BRANCH=rolling-devel
+              STEP2_DISTRO=jazzy;   STEP2_BRANCH=jazzy-devel
+              ;;
+            *)
+              echo "Unknown branch: $BRANCH" && exit 1
+              ;;
+          esac
+          echo "name=$DISTRO"               >> "$GITHUB_OUTPUT"
+          echo "step1-distro=$STEP1_DISTRO" >> "$GITHUB_OUTPUT"
+          echo "step1-branch=$STEP1_BRANCH" >> "$GITHUB_OUTPUT"
+          echo "step2-distro=$STEP2_DISTRO" >> "$GITHUB_OUTPUT"
+          echo "step2-branch=$STEP2_BRANCH" >> "$GITHUB_OUTPUT"
+
+  # ── Step 1: squash + build + test on the PR's own distro.
+  build-test-source:
+    needs: determine-distro
+    uses: ./.github/workflows/build-test.yaml
+    with:
+      distro:       ${{ needs.determine-distro.outputs.name }}
+      ref:          ${{ github.event.pull_request.head.sha }}
+      base-branch:  ${{ github.base_ref }}
+
+  # ── Step 2: apply the squashed commit to the first downstream distro branch
+  #            and verify it builds and tests cleanly there.
+  propagate-step1:
+    needs: [determine-distro, build-test-source]
+    uses: ./.github/workflows/build-test.yaml
+    with:
+      distro:         ${{ needs.determine-distro.outputs.step1-distro }}
+      ref:            ${{ github.event.pull_request.head.sha }}
+      base-branch:    ${{ github.base_ref }}
+      target-branch:  ${{ needs.determine-distro.outputs.step1-branch }}
+
+  # ── Step 3: apply the squashed commit to the second downstream distro branch
+  #            and verify it builds and tests cleanly there.
+  propagate-step2:
+    needs: [determine-distro, propagate-step1]
+    uses: ./.github/workflows/build-test.yaml
+    with:
+      distro:         ${{ needs.determine-distro.outputs.step2-distro }}
+      ref:            ${{ github.event.pull_request.head.sha }}
+      base-branch:    ${{ github.base_ref }}
+      target-branch:  ${{ needs.determine-distro.outputs.step2-branch }}
