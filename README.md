@@ -111,3 +111,8 @@ colcon build --cmake-args '-DCMAKE_BUILD_TYPE=Release'
 ```
 
 for using colcon.
+
+## Use of genAI in this repository
+
+The repository partially contains AI-generated code by using GitHub Copilot Business.  
+This notice needs to remain attached to any reproduction of this repository.
