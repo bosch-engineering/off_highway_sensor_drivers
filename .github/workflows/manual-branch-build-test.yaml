@@ -1,0 +1,53 @@
+---
+# Manual workflow: build and test the main devel branches directly.
+# Select which ROS2 distros to include via the checkboxes in the UI.
+#
+# Reuses build-test.yaml; passing the branch as both 'ref' and 'base-branch'
+# makes the squash step a no-op (merge-base == HEAD) so the build runs against
+# the current tip of each branch without modification.
+
+name: Manual Branch Build and Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      build-humble:
+        description: "Build humble-devel (ROS2 Humble)"
+        type: boolean
+        default: true
+      build-jazzy:
+        description: "Build jazzy-devel (ROS2 Jazzy)"
+        type: boolean
+        default: true
+      build-rolling:
+        description: "Build rolling-devel (ROS2 Rolling)"
+        type: boolean
+        default: true
+
+jobs:
+  build-humble:
+    if: ${{ inputs.build-humble }}
+    uses: ./.github/workflows/build-test.yaml
+    with:
+      distro:      humble
+      ref:         humble-devel
+      base-branch: humble-devel
+      save-logs:   true
+
+  build-jazzy:
+    if: ${{ inputs.build-jazzy }}
+    uses: ./.github/workflows/build-test.yaml
+    with:
+      distro:      jazzy
+      ref:         jazzy-devel
+      base-branch: jazzy-devel
+      save-logs:   true
+
+  build-rolling:
+    if: ${{ inputs.build-rolling }}
+    uses: ./.github/workflows/build-test.yaml
+    with:
+      distro:      rolling
+      ref:         rolling-devel
+      base-branch: rolling-devel
+      save-logs:   true

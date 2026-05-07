@@ -1,0 +1,154 @@
+---
+# Reusable workflow: squash the PR's commits into one, optionally apply them
+# to a target distro branch, then build and test.
+#
+# Inputs
+#   distro        - ROS2 distribution (humble | jazzy | rolling)
+#   ref           - PR head SHA to checkout
+#   base-branch   - The PR's target branch (used to compute the squash base)
+#   target-branch - If non-empty, cherry-pick the squashed commit onto this
+#                   branch before building (cross-distro propagation check)
+
+name: Build and Test 
+
+on:
+  workflow_call:
+    inputs:
+      distro:
+        description: "ROS2 distribution name (humble, jazzy, rolling)"
+        required: true
+        type: string
+      ref:
+        description: "PR head SHA to checkout"
+        required: true
+        type: string
+      base-branch:
+        description: "The PR's target branch - used to compute the squash merge-base"
+        required: true
+        type: string
+      target-branch:
+        description: "Apply squashed commit to this branch before building (leave empty for source distro)"
+        required: false
+        type: string
+        default: ""
+      save-logs:
+        description: "Upload colcon build and test logs as artifacts"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build-test:
+    runs-on: ${{ fromJSON(vars.DYNAMIC_LABELS) }}
+    container:
+      image: ros:${{ inputs.distro }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Clean workspace
+        run: rm -rf colcon_ws
+
+      - name: Checkout PR head
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+          path: colcon_ws/src
+
+      - name: Configure git identity
+        run: |
+          git -C colcon_ws/src config user.email "ci@ci.local"
+          git -C colcon_ws/src config user.name "CI"
+
+      - name: Squash PR commits into a single commit
+        run: |
+          cd colcon_ws/src
+          git fetch origin "${{ inputs.base-branch }}"
+          MERGE_BASE=$(git merge-base HEAD "origin/${{ inputs.base-branch }}")
+          git reset --soft "$MERGE_BASE"
+          git commit --allow-empty -m "chore: squash PR changes for CI validation"
+          echo "SQUASH_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Apply squashed commit to ${{ inputs.target-branch }}
+        if: ${{ inputs.target-branch != '' }}
+        run: |
+          cd colcon_ws/src
+          git fetch origin "${{ inputs.target-branch }}"
+          git checkout -B propagation-check "origin/${{ inputs.target-branch }}"
+          git cherry-pick --allow-empty "$SQUASH_SHA"
+
+      - name: Install dependencies
+        run: |
+          apt-get update && apt-get install -y \
+            python3-colcon-common-extensions \
+            python3-rosdep
+          rosdep init || true
+          rosdep update
+          source /opt/ros/${{ inputs.distro }}/setup.bash
+          rosdep install --from-paths colcon_ws/src --ignore-src -y
+
+      - name: Build packages
+        run: |
+          source /opt/ros/${{ inputs.distro }}/setup.bash
+          cd colcon_ws
+          colcon build \
+            --merge-install \
+            --event-handlers console_cohesion+ \
+            --cmake-args -DCMAKE_BUILD_TYPE=Release
+
+      - name: Test packages
+        run: |
+          source /opt/ros/${{ inputs.distro }}/setup.bash
+          cd colcon_ws
+          source install/setup.bash
+          colcon test \
+            --merge-install \
+            --event-handlers console_cohesion+ \
+            --return-code-on-test-failure || true
+          colcon test-result --verbose
+
+      - name: Print build and test logs
+        if: always() && inputs.save-logs
+        run: |
+          BUILD_TMP=$(mktemp)
+          TEST_TMP=$(mktemp)
+
+          find colcon_ws/log/build_* colcon_ws/log/test_* \
+            -name "stdout_stderr.log" 2>/dev/null \
+          | sort \
+          | while read -r log; do
+              echo "::group::$log"
+              cat "$log"
+              echo "::endgroup::"
+
+              if [[ "$log" == *"/build_"* ]]; then
+                out_file="$BUILD_TMP"
+              else
+                out_file="$TEST_TMP"
+              fi
+
+              echo "<details><summary>$log</summary>" >> "$out_file"
+              echo >> "$out_file"
+              echo '```text' >> "$out_file"
+              cat "$log" >> "$out_file"
+              echo '```' >> "$out_file"
+              echo >> "$out_file"
+              echo '</details>' >> "$out_file"
+            done
+
+          if [[ -s "$BUILD_TMP" ]]; then
+            echo '<details><summary>Build logs</summary>' >> "$GITHUB_STEP_SUMMARY"
+            echo >> "$GITHUB_STEP_SUMMARY"
+            cat "$BUILD_TMP" >> "$GITHUB_STEP_SUMMARY"
+            echo '</details>' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          if [[ -s "$TEST_TMP" ]]; then
+            echo '<details><summary>Test logs</summary>' >> "$GITHUB_STEP_SUMMARY"
+            echo >> "$GITHUB_STEP_SUMMARY"
+            cat "$TEST_TMP" >> "$GITHUB_STEP_SUMMARY"
+            echo '</details>' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          rm -f "$BUILD_TMP" "$TEST_TMP"
