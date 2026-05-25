@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include <stdexcept>
+
 #include "off_highway_can/j1939.hpp"
 
 namespace off_highway_can
@@ -50,8 +52,6 @@ void Receiver::callback_can(const typename Msg::ConstSharedPtr & frame)
     return;
   }
 
-  last_message_received_ = now();
-
   if (is_timeout_) {
     is_timeout_ = false;
     force_diag_update();
@@ -59,7 +59,24 @@ void Receiver::callback_can(const typename Msg::ConstSharedPtr & frame)
 
   auto header = frame->header;
   header.frame_id = node_frame_id_;
-  process(header, id, msg);
+
+  // Catch exceptions thrown by the process method
+  try {
+    process(header, id, msg);
+    last_message_received_ = now();
+  } catch (const std::runtime_error & e) {
+    RCLCPP_WARN_THROTTLE(
+      get_logger(), *get_clock(), 500,
+      "Malformed frame caught in %s: %s", get_name(), e.what());
+  } catch (const std::exception & e) {
+    RCLCPP_WARN_THROTTLE(
+      get_logger(), *get_clock(), 500,
+      "Unexpected exception caught in %s: %s", get_name(), e.what());
+  } catch (...) {
+    RCLCPP_WARN_THROTTLE(
+      get_logger(), *get_clock(), 500,
+      "Unknown non-std exception caught in %s", get_name());
+  }
 
   RCLCPP_DEBUG(
     get_logger(), "Processing of frame in %s took %f s", get_name(),
