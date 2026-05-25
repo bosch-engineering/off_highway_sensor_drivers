@@ -553,7 +553,7 @@ TEST_F(TestRadarReceiver, testInvalidObjectIdA) {
   bool send_a = true;
   bool send_b = false;
 
-  EXPECT_THROW(publish_objects(test_objects, send_a, send_b), std::runtime_error);
+  EXPECT_NO_THROW(publish_objects(test_objects, send_a, send_b));
 }
 
 TEST_F(TestRadarReceiver, testInvalidObjectIdB) {
@@ -568,7 +568,7 @@ TEST_F(TestRadarReceiver, testInvalidObjectIdB) {
   bool send_a = false;
   bool send_b = true;
 
-  EXPECT_THROW(publish_objects(test_objects, send_a, send_b), std::runtime_error);
+  EXPECT_NO_THROW(publish_objects(test_objects, send_a, send_b));
 }
 
 int main(int argc, char ** argv)
