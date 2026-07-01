@@ -27,8 +27,7 @@ namespace off_highway_premium_radar_sample
 DefaultConverter::DefaultConverter()
 : diag_frequencies_locations_{13., 17.},
   diag_frequencies_sensor_feedback_{18., 22.},
-  diag_frequencies_sensor_state_information_{90., 110.},
-  diag_frequencies_sensor_broadcast_{0.5, 1.5}
+  diag_frequencies_sensor_state_information_{90., 110.}
 {
 }
 
@@ -54,13 +53,13 @@ void DefaultConverter::on_configure()
   publisher_sensor_state_information_ =
     node->create_publisher<off_highway_premium_radar_sample_msgs::msg::SensorStateInformation>(
     "~/sensor_state_information", 10);
-  publisher_sensor_broadcast_ =
-    node->create_publisher<off_highway_premium_radar_sample_msgs::msg::SensorBroadcast>(
-    "~/sensor_broadcast", 10);
   publisher_location_attributes_ =
     node->create_publisher<off_highway_premium_radar_sample_msgs::msg::LocationAttributes>(
     "~/location_attributes", 10);
   // Event based publishers, frequency-based diagnosis not applicable
+  publisher_sensor_broadcast_ =
+    node->create_publisher<off_highway_premium_radar_sample_msgs::msg::SensorBroadcast>(
+    "~/sensor_broadcast", 10);
   publisher_sensor_dtc_information_ =
     node->create_publisher<off_highway_premium_radar_sample_msgs::msg::SensorDtcInformation>(
     "~/sensor_dtc_information", 10);
@@ -80,12 +79,6 @@ void DefaultConverter::on_configure()
     FrequencyStatusParam(
       &diag_frequencies_sensor_state_information_.min,
       &diag_frequencies_sensor_state_information_.max),
-    TimeStampStatusParam(diag_timestamps_.min, diag_timestamps_.max));
-  diag_sensor_broadcast_ = std::make_shared<diagnostic_updater::TopicDiagnostic>(
-    publisher_sensor_broadcast_->get_topic_name(), *diag_updater_,
-    FrequencyStatusParam(
-      &diag_frequencies_sensor_broadcast_.min,
-      &diag_frequencies_sensor_broadcast_.max),
     TimeStampStatusParam(diag_timestamps_.min, diag_timestamps_.max));
   diag_location_attributes_ = std::make_shared<diagnostic_updater::TopicDiagnostic>(
     publisher_location_attributes_->get_topic_name(), *diag_updater_,
@@ -162,7 +155,15 @@ void DefaultConverter::on_sensor_state_information(const SensorStateInformation 
 
 void DefaultConverter::on_sensor_broadcast(const SensorBroadcast & data)
 {
-  publish_tick_diag(data, publisher_sensor_broadcast_, diag_sensor_broadcast_);
+  // Sensor broadcast is not sent reliably, so no frequency-based diagnosis is applied
+  if (!publisher_sensor_broadcast_->get_subscription_count()) {
+    // Do not publish if no one is subscribed
+    return;
+  }
+
+  auto msg = to_msg(data, clock_->now(), frame_id_);
+
+  publisher_sensor_broadcast_->publish(msg);
 }
 
 void DefaultConverter::on_location_attributes(const LocationAttributes & data)
