@@ -228,7 +228,7 @@ private:
   };
 
   // Diagnosis timestamp and frequency limits (set in ctor)
-  static constexpr Limit diag_timestamps_{0.0, 0.1};
+  static constexpr Limit diag_timestamps_{0.0, 0.15}; // 150 ms max age for data to be considered valid
   Limit diag_frequencies_locations_;
   Limit diag_frequencies_sensor_feedback_;
   Limit diag_frequencies_sensor_state_information_;
