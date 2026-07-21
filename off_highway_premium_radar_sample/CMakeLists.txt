@@ -18,7 +18,6 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(asio_cmake_module REQUIRED)
 find_package(ASIO REQUIRED)
-find_package(io_context REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 # For default converter
@@ -34,6 +33,7 @@ find_package(tf2_geometry_msgs REQUIRED)
 # Library
 add_library(${PROJECT_NAME} SHARED
   src/driver.cpp
+  src/io_context.cpp
   src/location_data_handler.cpp
   src/node.cpp
   src/pdu_definitions.cpp
@@ -47,7 +47,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   ${std_msgs_TARGETS}
   ${ASIO_LIBRARIES}
   diagnostic_updater::diagnostic_updater
-  ${io_context_LIBRARIES}
   rclcpp::rclcpp
   rclcpp_components::component
   rclcpp_components::component_manager
@@ -69,7 +68,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
   ${ASIO_INCLUDE_DIRS}
-  ${io_context_INCLUDE_DIRS}
 )
 
 install(
@@ -90,7 +88,6 @@ ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(
   ASIO
   diagnostic_updater
-  io_context
   off_highway_premium_radar_sample_msgs
   pcl_conversions
   PCL

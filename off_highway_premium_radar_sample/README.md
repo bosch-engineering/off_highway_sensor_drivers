@@ -168,9 +168,12 @@ See [driver.yaml](config/driver.yaml).
 
 ## Free and Open Source Software (FOSS)
 
-This library uses a modified `UdpSocket` class from the [udp_driver
-class](https://github.com/ros-drivers/transport_drivers/tree/main/udp_driver) to send and receive
-UDP frames. See the [FOSS documentation](foss_documentation/) for further information.
+This library uses a modified `UdpSocket` class from the 
+[udp_driver](https://github.com/ros-drivers/transport_drivers/tree/main/udp_driver) to send and 
+receive UDP frames. Additionally, it incorporates a modified `IoContext` class from the 
+[io_context](https://github.com/ros-drivers/transport_drivers/tree/main/io_context) to serve as a 
+wrapper for the receiving thread. See the [FOSS documentation](foss_documentation/) for further 
+information.
 
 [established-over-unconnected technique]:
 https://blog.cloudflare.com/everything-you-ever-wanted-to-know-about-udp-sockets-but-were-afraid-to-ask-part-1/
