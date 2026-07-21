@@ -18,7 +18,6 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(asio_cmake_module REQUIRED)
 find_package(ASIO REQUIRED)
-find_package(io_context REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 # For default converter
@@ -30,6 +29,7 @@ find_package(std_msgs REQUIRED)
 # Library
 add_library(${PROJECT_NAME} SHARED
   src/driver.cpp
+  src/io_context.cpp
   src/location_data_handler.cpp
   src/node.cpp
   src/pdu_definitions.cpp
@@ -42,7 +42,6 @@ target_link_libraries(off_highway_premium_radar PUBLIC
       ${sensor_msgs_TARGETS}
       ${std_msgs_TARGETS}
       diagnostic_updater::diagnostic_updater
-      ${io_context_LIBRARIES}
       rclcpp::rclcpp
       rclcpp_components::component
       rclcpp_components::component_manager
@@ -52,7 +51,6 @@ target_link_libraries(off_highway_premium_radar PUBLIC
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-  ${io_context_INCLUDE_DIRS}
 )
 
 install(
@@ -73,7 +71,6 @@ ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(
   ASIO
   diagnostic_updater
-  io_context
   off_highway_premium_radar_msgs
   rclcpp
   rclcpp_components
