@@ -65,6 +65,8 @@ public:
   static constexpr uint8_t kMaxNumPdu{64U};
   static constexpr uint8_t kBlockCounterOffset{24U};
   static constexpr uint8_t kBlockNumberLocsOffset{35U};
+  //! LocData_MeasStat_i_j value marking an unused location slot (signal not available)
+  static constexpr uint16_t kMeasStatSna{0xFFFFU};
 
 private:
   //! Count of current PDU for this measurement

@@ -84,7 +84,9 @@ LocationData LocationDataHandler::assemble()
     LocationDataPdu data_pdu{pdu};
 
     for (auto & loc_data_packet : data_pdu.loc_data_packets) {
-      if ((!loc_data_packet.LocData_MeasStat_i_j) & 1U) {
+      if ((loc_data_packet.LocData_MeasStat_i_j == kMeasStatSna) ||
+        ((loc_data_packet.LocData_MeasStat_i_j & 1U) == 0))
+      {
         // Measured and range check was not passed, skip this location
         continue;
       }

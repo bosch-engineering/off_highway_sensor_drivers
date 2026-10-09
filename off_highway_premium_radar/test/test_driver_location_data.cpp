@@ -211,6 +211,27 @@ void checkNaNFields(
   EXPECT_EQ(received.LocData_MeasStat_i_j, ref.LocData_MeasStat_i_j);
 }
 
+void set_location_nan(off_highway_premium_radar::LocData_Packet_i_j & packet)
+{
+  packet.LocData_RadDist_i_j = NAN;
+  packet.LocData_RadRelVel_i_j = NAN;
+  packet.LocData_AziAng_i_j = NAN;
+  packet.LocData_EleAng_i_j = NAN;
+  packet.LocData_Rcs_i_j = NAN;
+  packet.LocData_Snr_i_j = NAN;
+  packet.LocData_RadDistVar_i_j = NAN;
+  packet.LocData_RadRelVelVar_i_j = NAN;
+  packet.LocData_VarAzi_i_j = NAN;
+  packet.LocData_VarEle_i_j = NAN;
+  packet.LocData_DistVelCov_i_j = NAN;
+  packet.LocData_ProVelRes_i_j = NAN;
+  packet.LocData_ProAziAng_i_j = NAN;
+  packet.LocData_ProEleAng_i_j = NAN;
+  packet.LocData_IdAngAmb_i_j = 0xFFFF;
+  packet.LocData_Reserved_i_j =
+  {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+}
+
 void TestRadarDriver::verify_locations(
   std::vector<off_highway_premium_radar::LocationDataPdu> ref_locations,
   bool check_sna)
@@ -243,11 +264,14 @@ void TestRadarDriver::verify_locations(
     return;
   }
 
-  // Count expected valid locations (only those with LocData_MeasStat_i_j != 0)
+  // Count expected valid locations (only those with LocData_MeasStat_i_j != 0xFFFF and
+  // if bit 0 is set)
   uint32_t expected_valid_locations = 0;
   for (const auto & ref_location : ref_locations) {
     for (const auto & loc_data_packet : ref_location.loc_data_packets) {
-      if (loc_data_packet.LocData_MeasStat_i_j != 0) {
+      if ((loc_data_packet.LocData_MeasStat_i_j != 0xFFFF) &&
+        (loc_data_packet.LocData_MeasStat_i_j & 1U))
+      {
         expected_valid_locations++;
       }
     }
@@ -259,7 +283,9 @@ void TestRadarDriver::verify_locations(
     for (const auto & ref_location : ref_locations) {
       for (const auto & loc_data_packet : ref_location.loc_data_packets) {
         // Check if this reference location should be present in received data
-        if (loc_data_packet.LocData_MeasStat_i_j != 0) {
+        if ((loc_data_packet.LocData_MeasStat_i_j != 0xFFFF) &&
+          (loc_data_packet.LocData_MeasStat_i_j & 1U))
+        {
           compareFields(received_location_data_[rec_loc_index], loc_data_packet);
           rec_loc_index++;
         }
@@ -598,24 +624,8 @@ TEST_F(TestRadarDriver, testSensorLocationNANValues)
     {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
     for (size_t i = 0; i < test_location_.loc_data_packets.size(); i++) {
-      test_location_.loc_data_packets[i].LocData_RadDist_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_RadRelVel_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_AziAng_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_EleAng_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_Rcs_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_Snr_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_RadDistVar_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_RadRelVelVar_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_VarAzi_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_VarEle_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_DistVelCov_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_ProVelRes_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_ProAziAng_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_ProEleAng_i_j = NAN;
-      test_location_.loc_data_packets[i].LocData_MeasStat_i_j = 0xFFFF;
-      test_location_.loc_data_packets[i].LocData_IdAngAmb_i_j = 0xFFFF;
-      test_location_.loc_data_packets[i].LocData_Reserved_i_j =
-      {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+      set_location_nan(test_location_.loc_data_packets[i]);
+      test_location_.loc_data_packets[i].LocData_MeasStat_i_j = 1;
     }
     test_locations_.push_back(test_location_);
   }
@@ -623,6 +633,135 @@ TEST_F(TestRadarDriver, testSensorLocationNANValues)
   TestRadarDriver::send_pdu_data(test_locations_);
   TestRadarDriver::get_pdu_data();
   verify_locations(test_locations_, /*check_nan=*/ true);
+}
+
+TEST_F(TestRadarDriver, testSensorLocationRandomLocData_SNA_MeasStat_i_j)
+{
+  std::vector<off_highway_premium_radar::LocationDataPdu> test_locations_ = {};
+
+  std::vector<uint8_t> buffer;
+  buffer.resize(off_highway_premium_radar::LocationDataPdu::kPduSize);
+  off_highway_premium_radar::LocationDataPdu test_location_ =
+    to_pdu<off_highway_premium_radar::LocationDataPdu>(buffer);
+
+  uint16_t num_locations = 16;
+
+  // Number of valid locations, the rest will have SNA MeasStat_i_j
+  uint8_t num_valid_locations = 10;
+
+  for (size_t i = 0; i < (num_locations / test_location_.kMaxNumLocDataPacketsPerPdu); i++) {
+    test_location_.pdu_id =
+      static_cast<uint64_t>(
+      RandomQuantizedGenerator{
+      1.0,
+      off_highway_premium_radar::LocationDataPdu::kPacketIdFirst,
+      off_highway_premium_radar::LocationDataPdu::kPacketIdLast}());
+
+    test_location_.e2e_header.E2E_Counter = 0xFFFF;
+    test_location_.e2e_header.E2E_Crc = 0xFFFF;
+    test_location_.e2e_header.E2E_DataId = 0xFFFFFFFF;
+    test_location_.e2e_header.E2E_length = 0xFF;
+
+    // RandomQuantizedGenerator(resolution, min, max)
+    test_location_.loc_data_header.LocData_LgpVer_i =
+      RandomQuantizedGenerator{1.0, 0.0, 65535.0}();
+    test_location_.loc_data_header.LocData_BlockCounter_i =
+      RandomQuantizedGenerator{1.0, 0.0, 255.0}();
+    test_location_.loc_data_header.LocData_TimeSts_i =
+      RandomQuantizedGenerator{1.0, 0.0, 0xFFFFFFFF}();
+    test_location_.loc_data_header.LocData_TimeStns_i =
+      RandomQuantizedGenerator{1.0, 0.0, 0xFFFFFFFF}();
+    test_location_.loc_data_header.LocData_OpMode =
+      RandomQuantizedGenerator{1.0, 0.0, 255.0}();
+    test_location_.loc_data_header.LocData_DataMeas = 1;
+    test_location_.loc_data_header.LocData_NumLoc = num_locations;
+    test_location_.loc_data_header.LocData_MaxLocPerPdu =
+      RandomQuantizedGenerator{1.0, 0.0, 255.0}();
+    test_location_.loc_data_header.LocData_Reserved_i =
+    {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+
+    for (size_t i = 0; i < test_location_.loc_data_header.LocData_NumLoc; i++) {
+      test_location_.loc_data_packets[i].LocData_RadDist_i_j =
+        RandomQuantizedGenerator{
+        0.01,
+        std::numeric_limits<float>::lowest(),
+        std::numeric_limits<float>::max()}();
+      test_location_.loc_data_packets[i].LocData_RadRelVel_i_j =
+        RandomQuantizedGenerator{
+        0.01,
+        std::numeric_limits<float>::lowest(),
+        std::numeric_limits<float>::max()}();
+      test_location_.loc_data_packets[i].LocData_AziAng_i_j =
+        RandomQuantizedGenerator{
+        0.00174533,
+        std::numeric_limits<float>::lowest(),
+        std::numeric_limits<float>::max()}();
+      test_location_.loc_data_packets[i].LocData_EleAng_i_j =
+        RandomQuantizedGenerator{
+        0.00174533,
+        std::numeric_limits<float>::lowest(),
+        std::numeric_limits<float>::max()}();
+      test_location_.loc_data_packets[i].LocData_Rcs_i_j =
+        RandomQuantizedGenerator{
+        0.2,
+        std::numeric_limits<float>::lowest(),
+        std::numeric_limits<float>::max()}();
+      test_location_.loc_data_packets[i].LocData_Snr_i_j =
+        RandomQuantizedGenerator{
+        0.1,
+        std::numeric_limits<float>::lowest(),
+        std::numeric_limits<float>::max()}();
+      test_location_.loc_data_packets[i].LocData_RadDistVar_i_j =
+        RandomQuantizedGenerator{
+        0.00005,
+        std::numeric_limits<float>::lowest(),
+        std::numeric_limits<float>::max()}();
+      test_location_.loc_data_packets[i].LocData_RadRelVelVar_i_j =
+        RandomQuantizedGenerator{
+        0.0001,
+        std::numeric_limits<float>::lowest(),
+        std::numeric_limits<float>::max()}();
+      test_location_.loc_data_packets[i].LocData_VarAzi_i_j =
+        RandomQuantizedGenerator{
+        1.745329e-5,
+        std::numeric_limits<float>::lowest(),
+        std::numeric_limits<float>::max()}();
+      test_location_.loc_data_packets[i].LocData_VarEle_i_j =
+        RandomQuantizedGenerator{
+        1.7453293e-5,
+        std::numeric_limits<float>::lowest(),
+        std::numeric_limits<float>::max()}();
+      test_location_.loc_data_packets[i].LocData_DistVelCov_i_j =
+        RandomQuantizedGenerator{
+        0.0001,
+        std::numeric_limits<float>::lowest(),
+        std::numeric_limits<float>::max()}();
+      test_location_.loc_data_packets[i].LocData_ProVelRes_i_j =
+        RandomQuantizedGenerator{1.0, 0.0F, 255.0F}();
+      test_location_.loc_data_packets[i].LocData_ProAziAng_i_j =
+        RandomQuantizedGenerator{1.0, 0.0F, 255.0F}();
+      test_location_.loc_data_packets[i].LocData_ProEleAng_i_j =
+        RandomQuantizedGenerator{1.0, 0.0F, 255.0F}();
+      if (i < num_valid_locations) {
+        test_location_.loc_data_packets[i].LocData_MeasStat_i_j = static_cast<uint16_t>(
+          static_cast<uint16_t>(RandomQuantizedGenerator{1.0, 0.0F, 255.0F}()) | 1U);
+      } else {
+        set_location_nan(test_location_.loc_data_packets[i]);
+        test_location_.loc_data_packets[i].LocData_MeasStat_i_j = 0xFFFF;
+      }
+      test_location_.loc_data_packets[i].LocData_IdAngAmb_i_j =
+        static_cast<uint16_t>(RandomQuantizedGenerator{1.0, 0.0F, 1023.0F}());
+
+      test_location_.loc_data_packets[i].LocData_Reserved_i_j =
+      {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+    }
+    test_locations_.push_back(test_location_);
+  }
+
+  send_pdu_data(test_locations_);
+  get_pdu_data();
+  verify_locations(test_locations_);
+  EXPECT_EQ(received_location_data_.size(), num_valid_locations);
 }
 
 TEST_F(TestRadarDriver, testSensorLocationRandomValidValues)
