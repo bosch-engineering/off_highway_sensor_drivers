@@ -38,7 +38,7 @@ sensor_msgs::msg::PointCloud2 to_msg(
 
   sensor_msgs::PointCloud2Modifier modifier(msg);
   modifier.setPointCloud2Fields(
-    15,
+    18,
     "x", 1, sensor_msgs::msg::PointField::FLOAT32,
     "y", 1, sensor_msgs::msg::PointField::FLOAT32,
     "z", 1, sensor_msgs::msg::PointField::FLOAT32,
@@ -53,7 +53,10 @@ sensor_msgs::msg::PointCloud2 to_msg(
     "id_b", 1, sensor_msgs::msg::PointField::UINT8,
     "zone", 1, sensor_msgs::msg::PointField::UINT8,
     "meas", 1, sensor_msgs::msg::PointField::UINT8,
-    "valid", 1, sensor_msgs::msg::PointField::UINT8
+    "valid", 1, sensor_msgs::msg::PointField::UINT8,
+    "hist", 1, sensor_msgs::msg::PointField::UINT8,
+    "moving", 1, sensor_msgs::msg::PointField::UINT8,
+    "near", 1, sensor_msgs::msg::PointField::UINT8
   );
 
   modifier.resize(objects.objects.size());
@@ -73,6 +76,9 @@ sensor_msgs::msg::PointCloud2 to_msg(
   PointCloud2Iterator<uint8_t> zone(msg, "zone");
   PointCloud2Iterator<uint8_t> meas(msg, "meas");
   PointCloud2Iterator<uint8_t> valid(msg, "valid");
+  PointCloud2Iterator<uint8_t> hist(msg, "hist");
+  PointCloud2Iterator<uint8_t> moving(msg, "moving");
+  PointCloud2Iterator<uint8_t> near(msg, "near");
 
   for (const auto & object : objects.objects) {
     *x = static_cast<float>(object.a.position.x);
@@ -90,6 +96,9 @@ sensor_msgs::msg::PointCloud2 to_msg(
     *zone = object.b.zone;
     *meas = static_cast<uint8_t>(object.a.meas);
     *valid = static_cast<uint8_t>(object.a.valid);
+    *hist = static_cast<uint8_t>(object.a.hist);
+    *moving = static_cast<uint8_t>(object.b.moving);
+    *near = static_cast<uint8_t>(object.b.near);
 
     // Increment all iterators
     ++x;
@@ -107,6 +116,9 @@ sensor_msgs::msg::PointCloud2 to_msg(
     ++zone;
     ++meas;
     ++valid;
+    ++hist;
+    ++moving;
+    ++near;
   }
 
   return msg;
