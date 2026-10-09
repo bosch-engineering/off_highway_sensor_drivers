@@ -161,6 +161,9 @@ protected:
     sensor_msgs::PointCloud2ConstIterator<uint8_t> zone(pcl_msg, "zone");
     sensor_msgs::PointCloud2ConstIterator<uint8_t> meas(pcl_msg, "meas");
     sensor_msgs::PointCloud2ConstIterator<uint8_t> valid(pcl_msg, "valid");
+    sensor_msgs::PointCloud2ConstIterator<uint8_t> hist(pcl_msg, "hist");
+    sensor_msgs::PointCloud2ConstIterator<uint8_t> moving(pcl_msg, "moving");
+    sensor_msgs::PointCloud2ConstIterator<uint8_t> near(pcl_msg, "near");
 
     // Verify converted values match input
     EXPECT_FLOAT_EQ(*x, static_cast<float>(input_obj.a.position.x));
@@ -178,6 +181,9 @@ protected:
     EXPECT_EQ(*zone, input_obj.b.zone);
     EXPECT_EQ(*meas, input_obj.a.meas);
     EXPECT_EQ(*valid, input_obj.a.valid);
+    EXPECT_EQ(*hist, input_obj.a.hist);
+    EXPECT_EQ(*moving, input_obj.b.moving);
+    EXPECT_EQ(*near, input_obj.b.near);
   }
 };
 
