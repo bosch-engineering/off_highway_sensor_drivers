@@ -2,6 +2,9 @@
 Changelog for package off_highway_sensor_drivers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.3.0 (2026-03-10)
 ------------------
 * Update maintainers
@@ -36,8 +39,10 @@ Changelog for package off_highway_sensor_drivers
 0.6.0 (2024-05-14)
 ------------------
 * Rename premium radar driver to sample
-  Currently, the delivered Radar Off-Highway Premium and its firmware are just samples.
-  Separate package will be created for series firmware.
+
+    Currently, the delivered Radar Off-Highway Premium and its firmware are just samples.
+
+    Separate package will be created for series firmware.
 * Contributors: Robin Petereit
 
 0.5.1 (2024-03-27)

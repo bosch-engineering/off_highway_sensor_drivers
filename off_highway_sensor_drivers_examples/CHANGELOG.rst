@@ -2,6 +2,9 @@
 Changelog for package off_highway_sensor_drivers_examples
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.3.0 (2026-03-10)
 ------------------
 
@@ -23,8 +26,10 @@ Changelog for package off_highway_sensor_drivers_examples
 ------------------
 * Fix path for checkout
 * Checkout compatible pcl_ros version (#14)
-  Update README.md
-  Compatible pcl_ros versione with off_highway_sensor_drivers_examples
+
+    Update README.md
+
+    Compatible pcl_ros versione with off_highway_sensor_drivers_examples
 * Contributors: Jacopo Zecchi, Robin Petereit
 
 0.7.0 (2024-12-04)
@@ -44,8 +49,10 @@ Changelog for package off_highway_sensor_drivers_examples
 * Restructure README of examples package
 * Use single container for driver and filter
 * Rename premium radar driver to sample
-  Currently, the delivered Radar Off-Highway Premium and its firmware are just samples.
-  Separate package will be created for series firmware.
+
+    Currently, the delivered Radar Off-Highway Premium and its firmware are just samples.
+
+    Separate package will be created for series firmware.
 * Add example component to demonstrate extraction of velocity
 * Update executable names for premium radar in launch
 * Add launch argument for parameters and unify launch file names

@@ -2,6 +2,9 @@
 Changelog for package off_highway_mm7p10
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.3.0 (2026-03-10)
 ------------------
 * Update maintainers
