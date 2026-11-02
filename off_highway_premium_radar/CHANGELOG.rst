@@ -2,8 +2,8 @@
 Changelog for package off_highway_premium_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.13.0 (2026-11-02)
+-------------------
 * Add extra validity check for locations
 
     An extra validation check was added to verify if the received location is a measured one or padding.

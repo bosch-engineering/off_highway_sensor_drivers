@@ -2,8 +2,8 @@
 Changelog for package off_highway_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.13.0 (2026-11-02)
+-------------------
 * Add hist, moving, near signals to point cloud
 
     The mentioned signals were omitted during the removal of pcl dependency.
