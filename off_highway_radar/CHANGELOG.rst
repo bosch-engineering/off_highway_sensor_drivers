@@ -2,6 +2,20 @@
 Changelog for package off_highway_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add hist, moving, near signals to point cloud
+
+    The mentioned signals were omitted during the removal of pcl dependency.
+
+    Adapted test cases for new signals.
+* Fix node termination without error log by adding try/catch
+
+    Uncaught exceptions from malformed/manipulated CAN frames in callback_can() previously caused the node to terminate silently. This adds a try/catch block to handle the error gracefully, write to the error log, and keep the node running.
+
+    Tests were updated to reflect this change.
+* Contributors: Darius Man
+
 0.12.0 (2026-03-10)
 -------------------
 * Update maintainers
@@ -11,8 +25,10 @@ Changelog for package off_highway_radar
 0.11.0 (2026-01-26)
 -------------------
 * Revert "Depend on ros_environment where needed (Jazzy version)" (#31)
-  Revert "Depend on ros_environment where needed (Jazzy version) (#28)"
-  This reverts commit 843890591d6db93ea883a83c0cecac298c5dba7f.
+
+    Revert "Depend on ros_environment where needed (Jazzy version) (#28)"
+
+    This reverts commit 843890591d6db93ea883a83c0cecac298c5dba7f.
 * Fix pcl_conversions linking error in ROS buildfarm (#30)
 * Depend on ros_environment where needed (Humble version) (#27)
 * Contributors: Marco A. Gutierrez, Michal Sojka
@@ -22,7 +38,8 @@ Changelog for package off_highway_radar
 * Update dependency declarations for target_link_libraries
 * Fix issue 20, don't publish sensor data when there is a sensor timeout
 * ament_target_dependencies is deprecated for Kilted and Rolling
-  This syntax should work as of ROS 2 Foxy already
+
+    This syntax should work as of ROS 2 Foxy already
 * Add pcl_point_xxx.hpp deprecation warning
 * Contributors: Calin-Vasile Sopterean, Ferry Schoenmakers, Tim Clephas
 
@@ -43,14 +60,15 @@ Changelog for package off_highway_radar
 0.6.3 (2024-07-09)
 ------------------
 * Add missing dependency on PCL headers (#9)
-  When I try to build this package on jazzy with rosdep, the PCL headers
-  are missing. This package uses `find_package(PCL)` and includes it in
-  the headers. Therefore I think it would be best to add it to the
-  `build_depend` and `build_export_depend` tags of the `package.xml`
-  files.
-  In the buildfarm this is technically not needed because the PCL headers
-  are a `build_export_depend` of `pcl_conversions`, but rosdep ignores
-  this dependency so it misses the PCL headers.
+
+    When I try to build this package on jazzy with rosdep, the PCL headers
+    are missing. This package uses ``find_package(PCL)`` and includes it in
+    the headers. Therefore I think it would be best to add it to the
+    ``build_depend`` and ``build_export_depend`` tags of the ``package.xml``
+    files.
+    In the buildfarm this is technically not needed because the PCL headers
+    are a ``build_export_depend`` of ``pcl_conversions``, but rosdep ignores
+    this dependency so it misses the PCL headers.
 * Contributors: Ramon Wijnands
 
 0.6.2 (2024-06-13)
@@ -62,7 +80,8 @@ Changelog for package off_highway_radar
 0.6.0 (2024-05-14)
 ------------------
 * Switch from deprecated signature to const shared_ptr reference while still supporting efficient intra-process communication
-  See https://github.com/ros2/rclcpp/pull/1598.
+
+    See https://github.com/ros2/rclcpp/pull/1598.
 * Convert radar driver from node to component
 * Add launch argument for parameters and unify launch file names
 * Contributors: Robin Petereit, Sarah Huber
@@ -71,9 +90,11 @@ Changelog for package off_highway_radar
 ------------------
 * Include what you use
 * Disable irrelevant warnings for Clang
-  Anonymous structs are used in PCL for type punning:
-  https://github.com/PointCloudLibrary/pcl/issues/2303
-  Subobject braces are not needed:
-  https://bugs.llvm.org/show_bug.cgi?id=21629
-  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=25137
+
+    Anonymous structs are used in PCL for type punning:
+    https://github.com/PointCloudLibrary/pcl/issues/2303
+
+    Subobject braces are not needed:
+    https://bugs.llvm.org/show_bug.cgi?id=21629
+    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=25137
 * Contributors: Robin Petereit

@@ -2,6 +2,9 @@
 Changelog for package off_highway_premium_radar_sample_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.12.0 (2026-03-10)
 -------------------
 * Update maintainers
@@ -22,8 +25,9 @@ Changelog for package off_highway_premium_radar_sample_msgs
 
 0.8.0 (2025-03-24)
 ------------------
-* `rosidl_default_generators` is technically a `<buildtool_depend>` (#13)
-  rosidl_default_generators is technically a buildtool_depend
+* ``rosidl_default_generators`` is technically a ``<buildtool_depend>`` (#13)
+
+    rosidl_default_generators is technically a buildtool_depend
 * Contributors: Tim Clephas
 
 0.7.0 (2024-12-04)
@@ -43,8 +47,10 @@ Changelog for package off_highway_premium_radar_sample_msgs
 0.6.0 (2024-05-14)
 ------------------
 * Rename premium radar driver to sample
-  Currently, the delivered Radar Off-Highway Premium and its firmware are just samples.
-  Separate package will be created for series firmware.
+
+    Currently, the delivered Radar Off-Highway Premium and its firmware are just samples.
+
+    Separate package will be created for series firmware.
 * Add mapping to TCI
 * Contributors: Robin Petereit
 

@@ -2,6 +2,9 @@
 Changelog for package off_highway_radar_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.12.0 (2026-03-10)
 -------------------
 * Update maintainers
@@ -18,8 +21,9 @@ Changelog for package off_highway_radar_msgs
 
 0.8.0 (2025-03-24)
 ------------------
-* `rosidl_default_generators` is technically a `<buildtool_depend>` (#13)
-  rosidl_default_generators is technically a buildtool_depend
+* ``rosidl_default_generators`` is technically a ``<buildtool_depend>`` (#13)
+
+    rosidl_default_generators is technically a buildtool_depend
 * Contributors: Tim Clephas
 
 0.7.0 (2024-12-04)

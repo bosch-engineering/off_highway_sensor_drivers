@@ -2,6 +2,37 @@
 Changelog for package off_highway_premium_radar_sample
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add extra validity check for locations
+
+    An extra validation check was added to verify if the received location is a measured one or padding.
+
+    Adapted test cases for new condition.
+* Remove io_context dependency
+
+    Due to build issues caused by another package, it was decided to remove the dependency to it in order to have a successful build on rolling.
+* Ignore the sensor broadcast information as this is just published when no ip is set
+
+    Remove the frequency-based diagnosis for the sensor broadcast topic in
+    off_highway_premium_radar_sample, since it is only sporadically
+    published when no IP address is configured on the sensor. Publish the
+    message directly to subscribers instead.
+* Increase accepted timestamp delay for diagnostics to 150 ms
+
+    Larger delays can occur once PTP synchronization is active, so the
+    previous 100 ms limit was too strict for off_highway_premium_radar
+    and off_highway_premium_radar_sample default converters.
+* asio::ip::{address::from_string -> make_address} (#33)
+
+    fix for asio 1.36
+
+    ``from_string`` has been deprecated for at least 9 years (ref blame https://github.com/boostorg/asio/blame/b60e92b13ef68dfbb9af180d76eae41d22e19356/include/boost/asio/ip/address.hpp),
+    and removed in https://github.com/boostorg/asio/commit/c0d1cfce7767599c4cf00df36f8017a1073339ae
+
+    Applied to off_highway_premium_radar and off_highway_premium_radar_sample.
+* Contributors: Darius Man, David Mueller, Guilhem Saurel
+
 0.12.0 (2026-03-10)
 -------------------
 * Update maintainers
@@ -10,8 +41,10 @@ Changelog for package off_highway_premium_radar_sample
 0.11.0 (2026-01-26)
 -------------------
 * Revert "Depend on ros_environment where needed (Jazzy version)" (#31)
-  Revert "Depend on ros_environment where needed (Jazzy version) (#28)"
-  This reverts commit 843890591d6db93ea883a83c0cecac298c5dba7f.
+
+    Revert "Depend on ros_environment where needed (Jazzy version) (#28)"
+
+    This reverts commit 843890591d6db93ea883a83c0cecac298c5dba7f.
 * Fix pcl_conversions linking error in ROS buildfarm (#30)
 * Depend on ros_environment where needed (Humble version) (#27)
 * Contributors: Marco A. Gutierrez, Michal Sojka
@@ -21,7 +54,8 @@ Changelog for package off_highway_premium_radar_sample
 * Update dependency declarations for target_link_libraries
 * Remove ament deprecation warning from remaining packages
 * ament_target_dependencies is deprecated for Kilted and Rolling
-  This syntax should work as of ROS 2 Foxy already
+
+    This syntax should work as of ROS 2 Foxy already
 * Add unit test for Location Data PDU
 * Add unit test for Sensor State Information PDU
 * Contributors: Calin-Vasile Sopterean, Sarah Huber, Tim Clephas
@@ -46,14 +80,15 @@ Changelog for package off_highway_premium_radar_sample
 0.6.3 (2024-07-09)
 ------------------
 * Add missing dependency on PCL headers (#9)
-  When I try to build this package on jazzy with rosdep, the PCL headers
-  are missing. This package uses `find_package(PCL)` and includes it in
-  the headers. Therefore I think it would be best to add it to the
-  `build_depend` and `build_export_depend` tags of the `package.xml`
-  files.
-  In the buildfarm this is technically not needed because the PCL headers
-  are a `build_export_depend` of `pcl_conversions`, but rosdep ignores
-  this dependency so it misses the PCL headers.
+
+    When I try to build this package on jazzy with rosdep, the PCL headers
+    are missing. This package uses ``find_package(PCL)`` and includes it in
+    the headers. Therefore I think it would be best to add it to the
+    ``build_depend`` and ``build_export_depend`` tags of the ``package.xml``
+    files.
+    In the buildfarm this is technically not needed because the PCL headers
+    are a ``build_export_depend`` of ``pcl_conversions``, but rosdep ignores
+    this dependency so it misses the PCL headers.
 * Contributors: Ramon Wijnands
 
 0.6.2 (2024-06-13)
@@ -67,10 +102,13 @@ Changelog for package off_highway_premium_radar_sample
 0.6.0 (2024-05-14)
 ------------------
 * Rename premium radar driver to sample
-  Currently, the delivered Radar Off-Highway Premium and its firmware are just samples.
-  Separate package will be created for series firmware.
+
+    Currently, the delivered Radar Off-Highway Premium and its firmware are just samples.
+
+    Separate package will be created for series firmware.
 * Switch from deprecated signature to const shared_ptr reference while still supporting efficient intra-process communication
-  See https://github.com/ros2/rclcpp/pull/1598.
+
+    See https://github.com/ros2/rclcpp/pull/1598.
 * Interpret azimuth and elevation angle of premium radar locations as cone coordinates
 * Update executable names for premium radar in launch
 * Convert premium radar from node to component
@@ -80,11 +118,13 @@ Changelog for package off_highway_premium_radar_sample
 0.5.1 (2024-03-27)
 ------------------
 * Disable irrelevant warnings for Clang
-  Anonymous structs are used in PCL for type punning:
-  https://github.com/PointCloudLibrary/pcl/issues/2303
-  Subobject braces are not needed:
-  https://bugs.llvm.org/show_bug.cgi?id=21629
-  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=25137
+
+    Anonymous structs are used in PCL for type punning:
+    https://github.com/PointCloudLibrary/pcl/issues/2303
+
+    Subobject braces are not needed:
+    https://bugs.llvm.org/show_bug.cgi?id=21629
+    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=25137
 * Remove unnecessary self assignment
 * Clarify operation order
 * Remove C style cast
