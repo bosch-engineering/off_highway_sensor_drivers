@@ -2,8 +2,8 @@
 Changelog for package off_highway_general_purpose_radar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.4.0 (2026-11-02)
+------------------
 * Fix node termination without error log by adding try/catch
 
     Uncaught exceptions from malformed/manipulated CAN frames in callback_can() previously caused the node to terminate silently. This adds a try/catch block to handle the error gracefully, write to the error log, and keep the node running.
